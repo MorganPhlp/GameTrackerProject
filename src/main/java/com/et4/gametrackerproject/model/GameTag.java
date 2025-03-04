@@ -1,15 +1,27 @@
-package com.et4.testpgt.model;
+package com.et4.gametrackerproject.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "gametag")
+@Table(
+        name = "gametag",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"game_id", "tag_id"})
+        }
+)
 public class GameTag extends AbstractEntity{
+
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
+
+    @ManyToOne
+    @JoinColumn(name = "tag_id", nullable = false)
+    private Tag tag;
 }

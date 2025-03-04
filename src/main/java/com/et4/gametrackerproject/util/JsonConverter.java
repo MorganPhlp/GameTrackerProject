@@ -1,4 +1,4 @@
-package com.et4.testpgt.util;
+package com.et4.gametrackerproject.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

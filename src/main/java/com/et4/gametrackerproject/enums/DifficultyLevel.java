@@ -1,2 +1,7 @@
-package com.et4.gametrackerproject.enums;public enum DifficultyLevel {
+package com.et4.gametrackerproject.enums;
+
+public enum DifficultyLevel {
+    EASY,
+    MEDIUM,
+    HARD
 }

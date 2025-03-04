@@ -1,2 +1,7 @@
-package com.et4.gametrackerproject.enums;public enum OnlineStatus {
+package com.et4.gametrackerproject.enums;
+
+public enum OnlineStatus {
+    ONLINE,
+    OFFLINE,
+    BUSY
 }

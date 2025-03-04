@@ -1,15 +1,29 @@
-package com.et4.testpgt.model;
+package com.et4.gametrackerproject.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.et4.gametrackerproject.enums.NotifType;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "notification")
 public class Notification extends AbstractEntity{
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private NotifType type;
+
+    @Column(name = "content", columnDefinition = "json", nullable = false)
+    private String content;
+
+    @Column(name = "is_read")
+    private Boolean isRead = false;
 }

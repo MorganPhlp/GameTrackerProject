@@ -1,13 +1,13 @@
-package com.et4.testpgt;
+package com.et4.gametrackerproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TestPgtApplication {
+public class GameTrackerProjectApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TestPgtApplication.class, args);
+        SpringApplication.run(GameTrackerProjectApplication.class, args);
     }
 
 }

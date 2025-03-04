@@ -1,2 +1,10 @@
-package com.et4.gametrackerproject.enums;public enum GameCategory {
+package com.et4.gametrackerproject.enums;
+
+public enum GameCategory {
+    ACTION,
+    ADVENTURE,
+    ARCADE,
+    BOARD,
+    CARD,
+    CASINO,
 }

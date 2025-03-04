@@ -1,4 +1,4 @@
-package com.et4.testpgt.model;
+package com.et4.gametrackerproject.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

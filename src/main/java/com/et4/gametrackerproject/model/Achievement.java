@@ -1,18 +1,18 @@
-package com.et4.testpgt.model;
+package com.et4.gametrackerproject.model;
 
-import com.et4.testpgt.enums.AchievementRarity;
-import com.et4.testpgt.enums.AchievementType;
-import com.et4.testpgt.util.JsonConverter;
+import com.et4.gametrackerproject.enums.AchievementRarity;
+import com.et4.gametrackerproject.enums.AchievementType;
+import com.et4.gametrackerproject.util.JsonConverter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -37,14 +37,14 @@ public class Achievement extends AbstractEntity{
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private AchievementType type;
 
     @Column(name = "points_reward")
     private Integer pointsReward = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "rarity")
+    @Column(name = "rarity", nullable = false)
     private AchievementRarity rarity;
 
     @Column(name = "requires_achievement_id")
@@ -53,4 +53,6 @@ public class Achievement extends AbstractEntity{
     @Column(name = "is_secret")
     private Boolean isSecret = false;
 
+    @OneToMany(mappedBy = "achievement", cascade = CascadeType.ALL)
+    private Set<UserAchievement> achievementsEarned = new HashSet<>();
 }

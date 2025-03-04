@@ -1,2 +1,7 @@
-package com.et4.gametrackerproject.enums;public enum FriendshipStatus {
+package com.et4.gametrackerproject.enums;
+
+public enum FriendshipStatus {
+    PENDING,
+    ACCEPTED,
+    DECLINED
 }

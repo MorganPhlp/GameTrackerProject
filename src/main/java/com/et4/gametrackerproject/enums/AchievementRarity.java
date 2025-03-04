@@ -1,4 +1,4 @@
-package com.et4.testpgt.enums;
+package com.et4.gametrackerproject.enums;
 
 public enum AchievementRarity {
     COMMON, UNCOMMON, RARE, EPIC, LEGENDARY

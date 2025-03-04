@@ -1,15 +1,24 @@
-package com.et4.testpgt.model;
+package com.et4.gametrackerproject.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tag")
 public class Tag extends AbstractEntity{
+
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+    private Set<GameTag> gameTags = new HashSet<>();
 }

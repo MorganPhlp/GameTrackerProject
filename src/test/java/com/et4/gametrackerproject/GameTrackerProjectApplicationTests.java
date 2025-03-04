@@ -1,10 +1,10 @@
-package com.et4.testpgt;
+package com.et4.gametrackerproject;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TestPgtApplicationTests {
+class GameTrackerProjectApplicationTests {
 
     @Test
     void contextLoads() {

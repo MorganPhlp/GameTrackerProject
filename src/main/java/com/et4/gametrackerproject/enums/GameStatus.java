@@ -1,2 +1,6 @@
-package com.et4.gametrackerproject.enums;public enum GameStatus {
+package com.et4.gametrackerproject.enums;
+
+public enum GameStatus {
+    IN_PROGRESS,
+    COMPLETED
 }
