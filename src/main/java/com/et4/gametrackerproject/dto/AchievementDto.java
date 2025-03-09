@@ -4,10 +4,8 @@ import com.et4.gametrackerproject.enums.AchievementRarity;
 import com.et4.gametrackerproject.enums.AchievementType;
 import com.et4.gametrackerproject.model.Achievement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -26,19 +24,23 @@ public class AchievementDto {
 
     private Map<String, Object> conditions;
 
+    @Builder.Default
     private Boolean isActive = true;
 
     private AchievementType type;
 
+    @Builder.Default
     private Integer pointsReward = 0;
 
     private AchievementRarity rarity;
 
     private Integer requiresAchievementId;
 
+    @Builder.Default
     private Boolean isSecret = false;
 
     @JsonIgnore
+    @Builder.Default
     private Set<UserAchievementDto> achievementsEarned = new HashSet<>();
 
     public static AchievementDto fromEntity (Achievement achievement) {
@@ -71,7 +73,7 @@ public class AchievementDto {
         return Achievement.builder()
                 .id(achievementDto.getId())
                 .name(achievementDto.getName())
-                .description(achievementDto.getName())
+                .description(achievementDto.getDescription())
                 .icon(achievementDto.getIcon())
                 .conditions(achievementDto.getConditions())
                 .isActive(achievementDto.getIsActive())

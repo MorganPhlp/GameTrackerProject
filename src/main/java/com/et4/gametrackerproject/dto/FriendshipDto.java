@@ -2,7 +2,6 @@ package com.et4.gametrackerproject.dto;
 
 import com.et4.gametrackerproject.enums.FriendshipStatus;
 import com.et4.gametrackerproject.model.Friendship;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +18,7 @@ public class FriendshipDto {
 
     private UserDto user2;
 
+    @Builder.Default
     private FriendshipStatus status = FriendshipStatus.PENDING;
 
     public static FriendshipDto fromEntity(Friendship friendship) {

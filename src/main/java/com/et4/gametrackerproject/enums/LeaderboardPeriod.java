@@ -4,5 +4,6 @@ public enum LeaderboardPeriod {
     DAILY,
     WEEKLY,
     MONTHLY,
+    YEARLY,
     ALL_TIME
 }

@@ -2,10 +2,8 @@ package com.et4.gametrackerproject.dto;
 
 import com.et4.gametrackerproject.model.Avatar;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +16,7 @@ public class AvatarDto {
     private String photo;
 
     @JsonIgnore
+    @Builder.Default
     private Set<UserDto> users = new HashSet<>();
 
     public static AvatarDto fromEntity (Avatar avatar) {

@@ -6,10 +6,8 @@ import com.et4.gametrackerproject.enums.ProfilRank;
 import com.et4.gametrackerproject.enums.ScreenTheme;
 import com.et4.gametrackerproject.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -38,76 +36,105 @@ public class UserDto {
 
     private String country;
 
+    @Builder.Default
     private Boolean isActive = true;
 
+    @Builder.Default
     private Boolean isAdmin = false;
 
+    @Builder.Default
     private PrivacySetting privacySetting = PrivacySetting.PUBLIC;
 
+    @Builder.Default
     private Integer totalGamesPlayed = 0;
 
+    @Builder.Default
     private Integer totalPlayTime = 0;
 
+    @Builder.Default
     private Integer points = 0;
 
     private ProfilRank userRank;
 
+    @Builder.Default
     private ScreenTheme themePreference = ScreenTheme.LIGHT;
 
     private Instant lastLogin;
 
+    @Builder.Default
     private OnlineStatus onlineStatus = OnlineStatus.OFFLINE;
 
+    @Builder.Default
     private Set<DailyGameSessionDto> dailyGameSessions = new HashSet<>();
 
+    @Builder.Default
     private Set<FavoriteGameDto> favoriteGames = new HashSet<>();
 
     @JsonIgnore
-    private Set<FriendshipDto> friendShipsInitiated = new HashSet<>();
+    @Builder.Default
+    private Set<FriendshipDto> friendshipsInitiated = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<FriendshipDto> friendshipsReceived = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameCommentDto> comments = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameCommentLikeDto> likes = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameLeaderboardDto> leaderboardsLines = new HashSet<>();
 
+    @Builder.Default
     private Set<GameProgressDto> progressions = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameRatingDto> ratings = new HashSet<>();
 
+    @Builder.Default
     private Set<GameRecommendationDto> recommendationsSent = new HashSet<>();
 
+    @Builder.Default
     private Set<GameRecommendationDto> recommendationsReceived = new HashSet<>();
 
+    @Builder.Default
     private Set<MessageDto> messagesSent = new HashSet<>();
 
+    @Builder.Default
     private Set<MessageDto> messagesReceived = new HashSet<>();
 
+    @Builder.Default
     private Set<NotificationDto> notifications = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<ReportDto> reportsSent = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<ReportDto> reportsAgainst = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<ReportDto> reportsResolved = new HashSet<>();
 
+    @Builder.Default
     private Set<UserAchievementDto> achievementsEarned = new HashSet<>();
 
+    @Builder.Default
     private Set<UserSanctionDto> sanctionsReceived = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<UserSanctionDto> sanctionsDistributed = new HashSet<>();
 
+    @Builder.Default
     private Set<WinStreakDto> winStreaks = new HashSet<>();
 
     public static UserDto fromEntity(User user) {
