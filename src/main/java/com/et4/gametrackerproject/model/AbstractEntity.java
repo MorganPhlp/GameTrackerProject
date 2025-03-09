@@ -3,7 +3,11 @@ package com.et4.gametrackerproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +20,9 @@ Classe abstraite qui sert de base pour chaque entité qui a les champs communs �
 Permet aussi un audit automatique des entités
  */
 
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data // Permet de générer automatiquement getters, setters, toString, equals, hashCode
 @MappedSuperclass // SuperClasse pour entités JPA
 @EntityListeners(AuditingEntityListener.class) // Ecoute automatiquement les entités

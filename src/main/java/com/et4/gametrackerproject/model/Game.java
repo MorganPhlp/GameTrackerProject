@@ -4,12 +4,13 @@ import com.et4.gametrackerproject.enums.DifficultyLevel;
 import com.et4.gametrackerproject.enums.GameCategory;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -45,9 +46,6 @@ public class Game extends AbstractEntity{
 
     @Column(name = "is_active")
     private Boolean isActive = true;
-
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private Set<GameTag> gameTags = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private Set<FavoriteGame> favoriteGames = new HashSet<>();

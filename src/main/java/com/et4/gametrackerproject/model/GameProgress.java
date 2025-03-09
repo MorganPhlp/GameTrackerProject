@@ -4,11 +4,12 @@ import com.et4.gametrackerproject.enums.GameStatus;
 import com.et4.gametrackerproject.util.JsonConverter;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
