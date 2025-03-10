@@ -1,0 +1,40 @@
+package com.et4.gametrackerproject.exception;
+
+public enum ErrorCodes {
+
+    // TODO : Complete the list of error codes
+
+    ACHIEVEMENT_NOT_FOUND(1000),
+    AVATAR_NOT_FOUND(2000),
+    DAILY_GAME_SESSION_NOT_FOUND(3000),
+    FAVORITE_GAME_NOT_FOUND(4000),
+    FRIENDSHIP_NOT_FOUND(5000),
+    GAME_NOT_FOUND(6000),
+    GAME_COMMENT_NOT_FOUND(7000),
+    GAME_COMMENT_LIKE_NOT_FOUND(8000),
+    GAME_LEADERBOARD_NOT_FOUND(9000),
+    GAME_PROGRESS_NOT_FOUND(10000),
+    GAME_RATING_NOT_FOUND(11000),
+    GAME_RECOMMENDATION_NOT_FOUND(12000),
+    GAME_TAG_NOT_FOUND(13000),
+    MESSAGE_NOT_FOUND(14000),
+    NOTIFICATION_NOT_FOUND(15000),
+    REPORT_NOT_FOUND(16000),
+    TAG_NOT_FOUND(17000),
+    USER_NOT_FOUND(18000),
+    USER_ACHIEVEMENT_NOT_FOUND(19000),
+    USER_SANCTION_NOT_FOUND(20000),
+    WIN_STREAK_NOT_FOUND(21000)
+    ;
+
+
+    private int code;
+
+    private ErrorCodes(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+}
