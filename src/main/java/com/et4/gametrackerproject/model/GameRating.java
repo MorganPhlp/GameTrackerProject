@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
                 @UniqueConstraint(columnNames = {"user_id", "game_id"})
         }
 )
+
 public class GameRating extends AbstractEntity{
 
     @ManyToOne
