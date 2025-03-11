@@ -31,32 +31,43 @@ public class GameDto {
 
     private Double averageRating;
 
+    @Builder.Default
     private Integer playCount = 0;
 
+    @Builder.Default
     private DifficultyLevel difficultyLevel = DifficultyLevel.MEDIUM;
 
     private Integer minAge;
 
+    @Builder.Default
     private Boolean isActive = true;
 
     @JsonIgnore
+    @Builder.Default
     private Set<FavoriteGameDto> favoriteGames = new HashSet<>();
 
+    @Builder.Default
     private Set<GameCommentDto> comments = new HashSet<>();
 
+    @Builder.Default
     private Set<GameLeaderboardDto> leaderboardEntries = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameProgressDto> progressions = new HashSet<>();
 
+    @Builder.Default
     private Set<GameRatingDto> ratings = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameRecommendationDto> recommendations = new HashSet<>();
 
+    @Builder.Default
     private Set<GameTagDto> tags = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     private Set<WinStreakDto> winStreaks = new HashSet<>();
 
     public static GameDto fromEntity(Game game) {

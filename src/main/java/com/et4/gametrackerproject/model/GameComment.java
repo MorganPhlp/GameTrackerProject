@@ -31,9 +31,11 @@ public class GameComment extends AbstractEntity{
     @JoinColumn(name = "parent_comment_id")
     private GameComment parentComment;
 
+    @Builder.Default
     @OneToMany(mappedBy = "parentComment")
     private Set<GameComment> replies = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "comment")
     private Set<GameCommentLike> likes = new HashSet<>();
 }

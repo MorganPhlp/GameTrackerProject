@@ -20,6 +20,7 @@ public class GameProgressDto {
 
     private GameDto game;
 
+    @Builder.Default
     private GameStatus status = GameStatus.IN_PROGRESS;
 
     private Integer score;
@@ -28,16 +29,21 @@ public class GameProgressDto {
 
     private String progressData; // NE PAS CONVERTIR car ça va être stocké et réutilisé comme tel
 
+    @Builder.Default
     private Integer timePlayed = 0;
 
+    @Builder.Default
     private Integer attempts = 0;
 
+    @Builder.Default
     private Integer wins = 0;
 
+    @Builder.Default
     private Integer losses = 0;
 
     private Integer bestScore;
 
+    @Builder.Default
     private Integer currentStreak = 0;
 
     public static GameProgressDto fromEntity(GameProgress progress) {

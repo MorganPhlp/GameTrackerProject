@@ -19,6 +19,7 @@ public class ErrorDto {
 
     private String message;
 
+    @Builder.Default
     private List<String> errors = new ArrayList<>();
 
 

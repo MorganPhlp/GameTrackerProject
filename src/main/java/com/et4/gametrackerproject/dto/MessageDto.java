@@ -24,6 +24,7 @@ public class MessageDto {
 
     private String content;
 
+    @Builder.Default
     private Boolean isRead = false;
 
     public static MessageDto fromEntity(Message message) {

@@ -29,8 +29,10 @@ public class GameCommentDto {
     @JsonIgnore
     private GameCommentDto parentComment;
 
+    @Builder.Default
     private Set<GameCommentDto> replies = new HashSet<>();
 
+    @Builder.Default
     private Set<GameCommentLikeDto> likes = new HashSet<>();
 
     public static GameCommentDto fromEntity(GameComment gameComment) {

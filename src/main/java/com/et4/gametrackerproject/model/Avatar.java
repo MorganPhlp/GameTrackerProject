@@ -23,5 +23,6 @@ public class Avatar extends AbstractEntity{
     private String photo;
 
     @OneToMany(mappedBy = "avatar")
+    @Builder.Default
     private Set<User> users = new HashSet<>();
 }

@@ -17,10 +17,13 @@ public class DailyGameSessionDto {
 
     private Instant date;
 
+    @Builder.Default
     private Integer totalTimePlayed = 0;
 
+    @Builder.Default
     private Integer gamesPlayed = 0;
 
+    @Builder.Default
     private Integer uniqueGamesPlayed = 0;
 
     public static DailyGameSessionDto fromEntity (DailyGameSession dailyGameSession) {

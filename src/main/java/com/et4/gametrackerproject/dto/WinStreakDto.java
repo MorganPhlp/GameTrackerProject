@@ -19,8 +19,10 @@ public class WinStreakDto {
 
     private GameDto game;
 
+    @Builder.Default
     private Integer currentStreak = 0;
 
+    @Builder.Default
     private Integer bestStreak = 0;
 
     private Instant lastWin;

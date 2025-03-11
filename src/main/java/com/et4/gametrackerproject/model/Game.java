@@ -35,39 +35,50 @@ public class Game extends AbstractEntity{
     private Double averageRating;
 
     @Column(name = "play_count")
+    @Builder.Default
     private Integer playCount = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "difficulty_level")
+    @Builder.Default
     private DifficultyLevel difficultyLevel = DifficultyLevel.MEDIUM;
 
     @Column(name = "min_age")
     private Integer minAge;
 
     @Column(name = "is_active")
+    @Builder.Default
     private Boolean isActive = true;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<FavoriteGame> favoriteGames = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameComment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameLeaderboard> leaderboardEntries = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameProgress> progressions = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameRating> ratings = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameRecommendation> recommendations = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameTag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<WinStreak> winStreaks = new HashSet<>();
 }
