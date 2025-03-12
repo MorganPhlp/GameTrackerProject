@@ -22,6 +22,7 @@ public class NotificationDto {
 
     private String content;
 
+    @Builder.Default
     private Boolean isRead = false;
 
     public static NotificationDto fromEntity(Notification notification) {

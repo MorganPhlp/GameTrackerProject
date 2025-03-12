@@ -16,6 +16,7 @@ public class TagDto {
     private String name;
 
     @JsonIgnore
+    @Builder.Default
     private Set<GameTagDto> gameTags = new HashSet<>();
 
     public static TagDto fromEntity(Tag tag) {

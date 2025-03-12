@@ -1,5 +1,8 @@
 package com.et4.gametrackerproject.exception;
 
+import lombok.Getter;
+
+@Getter
 public enum ErrorCodes {
 
     // TODO : Complete the list of error codes
@@ -28,13 +31,10 @@ public enum ErrorCodes {
     ;
 
 
-    private int code;
+    private final int code;
 
     private ErrorCodes(int code) {
         this.code = code;
     }
 
-    public int getCode() {
-        return code;
-    }
 }

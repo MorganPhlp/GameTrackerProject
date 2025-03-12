@@ -29,5 +29,6 @@ public class Friendship extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
+    @Builder.Default
     private FriendshipStatus status = FriendshipStatus.PENDING;
 }

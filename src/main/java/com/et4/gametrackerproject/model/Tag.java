@@ -21,5 +21,6 @@ public class Tag extends AbstractEntity{
     private String name;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<GameTag> gameTags = new HashSet<>();
 }

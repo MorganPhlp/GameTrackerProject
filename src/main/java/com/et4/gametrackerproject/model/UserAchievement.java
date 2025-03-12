@@ -24,5 +24,6 @@ public class UserAchievement extends AbstractEntity{
     private Achievement achievement;
 
     @Column(name = "unlocked_at")
+    @Builder.Default
     private Instant unlockedAt = Instant.now();
 }

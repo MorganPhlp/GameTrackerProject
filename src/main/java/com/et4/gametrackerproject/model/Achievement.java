@@ -19,9 +19,9 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "achievement")
-public class Achievement extends AbstractEntity{
+public class Achievement extends AbstractEntity {
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "description")
@@ -35,6 +35,7 @@ public class Achievement extends AbstractEntity{
     private Map<String, Object> conditions;
 
     @Column(name = "is_active")
+    @Builder.Default
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
@@ -42,6 +43,7 @@ public class Achievement extends AbstractEntity{
     private AchievementType type;
 
     @Column(name = "points_reward")
+    @Builder.Default
     private Integer pointsReward = 0;
 
     @Enumerated(EnumType.STRING)
@@ -52,8 +54,10 @@ public class Achievement extends AbstractEntity{
     private Integer requiresAchievementId;
 
     @Column(name = "is_secret")
+    @Builder.Default
     private Boolean isSecret = false;
 
     @OneToMany(mappedBy = "achievement", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<UserAchievement> achievementsEarned = new HashSet<>();
 }

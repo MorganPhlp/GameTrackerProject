@@ -2,9 +2,9 @@ package com.et4.gametrackerproject.exception;
 
 import lombok.Getter;
 
+@Getter
 public class EntityNotFoundException extends RuntimeException{
 
-    @Getter
     private ErrorCodes errorCode;
 
     public EntityNotFoundException(String message) {

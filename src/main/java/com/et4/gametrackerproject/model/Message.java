@@ -26,5 +26,6 @@ public class Message extends AbstractEntity{
     private String content;
 
     @Column(name = "is_read")
+    @Builder.Default
     private Boolean isRead = false;
 }

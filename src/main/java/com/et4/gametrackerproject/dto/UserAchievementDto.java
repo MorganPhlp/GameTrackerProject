@@ -19,6 +19,7 @@ public class UserAchievementDto {
 
     private AchievementDto achievement;
 
+    @Builder.Default
     private Instant unlockedAt = Instant.now();
 
     public static UserAchievementDto fromEntity(UserAchievement userAchievement) {

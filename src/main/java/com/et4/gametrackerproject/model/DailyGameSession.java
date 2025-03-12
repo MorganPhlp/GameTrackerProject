@@ -23,11 +23,14 @@ public class DailyGameSession extends AbstractEntity{
     private Instant date;
 
     @Column(name = "total_time_played")
+    @Builder.Default
     private Integer totalTimePlayed = 0;
 
     @Column(name = "games_played")
+    @Builder.Default
     private Integer gamesPlayed = 0;
 
     @Column(name = "unique_games_played")
+    @Builder.Default
     private Integer uniqueGamesPlayed = 0;
 }
