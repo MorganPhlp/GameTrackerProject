@@ -1,4 +1,4 @@
-package com.et4.gametrackerproject.util;
+package com.et4.gametrackerproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
