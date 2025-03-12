@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Service
 public class FavoriteGameServiceImpl implements FavoriteGameService {
+
     @Override
     public FavoriteGameDto addToFavorites(FavoriteGameDto favoriteDto) {
         return null;
@@ -57,11 +58,6 @@ public class FavoriteGameServiceImpl implements FavoriteGameService {
     }
 
     @Override
-    public Map<Integer, Integer> getFavoriteCountsForGames(List<Integer> gameIds) {
-        return Map.of();
-    }
-
-    @Override
     public Long getTotalFavoritesCountForGame(Integer gameId) {
         return 0L;
     }
@@ -102,11 +98,6 @@ public class FavoriteGameServiceImpl implements FavoriteGameService {
     }
 
     @Override
-    public void migrateFavorites(Integer sourceUserId, Integer targetUserId) {
-
-    }
-
-    @Override
     public void removeAllFavoritesForGame(Integer gameId) {
 
     }
@@ -114,20 +105,5 @@ public class FavoriteGameServiceImpl implements FavoriteGameService {
     @Override
     public Map<UserDto, Integer> getTopUsersByFavorites(int limit) {
         return Map.of();
-    }
-
-    @Override
-    public List<GameDto> getCommonFavoritesBetweenUsers(Integer userId1, Integer userId2) {
-        return List.of();
-    }
-
-    @Override
-    public void processFavoritesFromImport(Integer userId, List<GameDto> games) {
-
-    }
-
-    @Override
-    public void handleGameDeletionInFavorites(Integer gameId) {
-
     }
 }

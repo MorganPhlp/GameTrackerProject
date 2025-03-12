@@ -1,4 +1,60 @@
 package com.et4.gametrackerproject.services;
 
+import com.et4.gametrackerproject.dto.FriendshipDto;
+import com.et4.gametrackerproject.dto.UserDto;
+import com.et4.gametrackerproject.enums.FriendshipStatus;
+
+import java.util.List;
+import java.util.Map;
+
 public interface FriendshipService {
+
+    //Opérations de base
+    FriendshipDto createFriendship(FriendshipDto friendshipDto);
+    FriendshipDto updateFriendshipStatus(Integer friendshipId, FriendshipStatus newStatus);
+    void deleteFriendship(Integer friendshipId);
+
+    //Récupération
+    FriendshipDto getFriendshipById(Integer friendshipId);
+    List<FriendshipDto> getAllFriendshipsForUser(Integer userId);
+    List<FriendshipDto> getFriendshipsByStatus(Integer userId, FriendshipStatus status);
+    FriendshipDto getFriendshipBetweenUsers(Integer user1Id, Integer user2Id);
+
+    //Gestion des demandes
+    FriendshipDto sendFriendRequest(Integer senderId, Integer receiverId);
+    FriendshipDto acceptFriendRequest(Integer friendshipId);
+    FriendshipDto rejectFriendRequest(Integer friendshipId);
+    FriendshipDto blockUser(Integer blockerId, Integer blockedId);
+    FriendshipDto cancelFriendship(Integer userId, Integer friendId);
+
+    //Listes relationnelles
+    List<UserDto> getFriendsList(Integer userId);
+    List<UserDto> getMutualFriends(Integer user1Id, Integer user2Id);
+    List<UserDto> getPendingRequests(Integer userId);
+    List<UserDto> getBlockedUsers(Integer userId);
+
+    // Vérifications
+    boolean friendshipExists(Integer user1Id, Integer user2Id);
+    boolean hasPendingRequestBetween(Integer user1Id, Integer user2Id);
+    FriendshipStatus getRelationshipStatus(Integer user1Id, Integer user2Id);
+
+    // Statistiques
+    Map<FriendshipStatus, Long> getFriendshipStatsForUser(Integer userId);
+    int getFriendCount(Integer userId);
+
+    //Administration
+    List<FriendshipDto> getAllFriendships();
+    List<FriendshipDto> searchFriendshipsByUser(String username);
+    void removeAllFriendshipsForUser(Integer userId);
+
+    //Gestion des conflits
+    void resolveDuplicateFriendships(Integer userId);
+    void mergeDuplicateFriendships(Integer user1Id, Integer user2Id);
+
+    //Synchronisation
+    void synchronizeFriendshipStatus(Integer friendshipId);
+    void updateAllFriendshipStatuses(FriendshipStatus oldStatus, FriendshipStatus newStatus);
+
+    //Notifications
+    void notifyFriendshipUpdate(FriendshipDto friendshipDto);
 }
