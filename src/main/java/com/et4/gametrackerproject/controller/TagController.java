@@ -1,0 +1,12 @@
+package com.et4.gametrackerproject.controller;
+
+import com.et4.gametrackerproject.services.TagService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class TagController {
+
+    @Autowired
+    private TagService tagService;
+}
