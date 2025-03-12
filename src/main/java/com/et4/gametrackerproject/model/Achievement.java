@@ -2,7 +2,7 @@ package com.et4.gametrackerproject.model;
 
 import com.et4.gametrackerproject.enums.AchievementRarity;
 import com.et4.gametrackerproject.enums.AchievementType;
-import com.et4.gametrackerproject.util.JsonConverter;
+import com.et4.gametrackerproject.utils.JsonConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
