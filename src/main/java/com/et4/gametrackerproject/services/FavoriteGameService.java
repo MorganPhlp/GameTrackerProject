@@ -12,7 +12,6 @@ public interface FavoriteGameService {
     //Opérations de base
     FavoriteGameDto addToFavorites(FavoriteGameDto favoriteDto);
     void removeFromFavorites(Integer favoriteId);
-    FavoriteGameDto updateFavoritePosition(Integer favoriteId, Integer newPosition);
 
     //Récupération
     List<GameDto> getFavoriteGamesForUser(Integer userId);
@@ -21,7 +20,6 @@ public interface FavoriteGameService {
     FavoriteGameDto getFavoriteById(Integer favoriteId);
 
     // Gestion des listes
-    List<FavoriteGameDto> reorderFavorites(Integer userId, List<Integer> newOrderIds);
     void clearUserFavorites(Integer userId);
 
     //Statistiques
@@ -31,17 +29,7 @@ public interface FavoriteGameService {
 
     // Vérifications
     boolean existsFavoriteRelationship(Integer userId, Integer gameId);
-    boolean hasReachedFavoriteLimit(Integer userId);
-
-    //Gestion batch
-    List<FavoriteGameDto> batchAddFavorites(Integer userId, List<Integer> gameIds);
-    int batchRemoveFavorites(Integer userId, List<Integer> gameIds);
-
-    //Synchronisation
-    void synchronizeFavorites(Integer userId, List<Integer> gameIds);
 
     //Administration
     void removeAllFavoritesForGame(Integer gameId);
-    Map<UserDto, Integer> getTopUsersByFavorites(int limit);
-
 }

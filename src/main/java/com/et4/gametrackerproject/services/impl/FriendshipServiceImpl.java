@@ -62,11 +62,6 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
-    public FriendshipDto blockUser(Integer blockerId, Integer blockedId) {
-        return null;
-    }
-
-    @Override
     public FriendshipDto cancelFriendship(Integer userId, Integer friendId) {
         return null;
     }
@@ -87,11 +82,6 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
-    public List<UserDto> getBlockedUsers(Integer userId) {
-        return List.of();
-    }
-
-    @Override
     public boolean friendshipExists(Integer user1Id, Integer user2Id) {
         return false;
     }
@@ -104,11 +94,6 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public FriendshipStatus getRelationshipStatus(Integer user1Id, Integer user2Id) {
         return null;
-    }
-
-    @Override
-    public Map<FriendshipStatus, Long> getFriendshipStatsForUser(Integer userId) {
-        return Map.of();
     }
 
     @Override
@@ -142,17 +127,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
-    public void synchronizeFriendshipStatus(Integer friendshipId) {
-
-    }
-
-    @Override
-    public void updateAllFriendshipStatuses(FriendshipStatus oldStatus, FriendshipStatus newStatus) {
-
-    }
-
-    @Override
-    public void notifyFriendshipUpdate(FriendshipDto friendshipDto) {
+    public void notifyFriendshipUpdate(Integer friendshipId) {
 
     }
 }

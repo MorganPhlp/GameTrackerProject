@@ -21,7 +21,6 @@ public interface DailyGameSessionService {
     //Statistiques de jeu
     Integer calculateTotalPlayTimeForUser(Integer userId);
     Double calculateDailyAveragePlayTime(Integer userId);
-    Map<String, Integer> getPlayTimeDistribution(Integer userId);
 
     //Gestion des sessions
     DailyGameSessionDto recordPlaySession(Integer userId, Integer gameId, Integer durationSeconds);

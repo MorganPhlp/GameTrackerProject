@@ -20,10 +20,6 @@ public interface AvatarService {
     AvatarDto getUserAvatar(Integer userId);
     AvatarDto updateUserAvatar(Integer userId, Integer avatarId);
 
-    //Gestion des fichiers
-    AvatarDto uploadAvatarImage(Integer avatarId, MultipartFile file);
-    void updateAvatarImage(Integer avatarId, MultipartFile file);
-
     //Méthodes de vérification
     boolean avatarExists(Integer id);
 

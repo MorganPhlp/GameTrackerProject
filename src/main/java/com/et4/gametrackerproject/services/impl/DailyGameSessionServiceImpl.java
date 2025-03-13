@@ -56,11 +56,6 @@ public class DailyGameSessionServiceImpl implements DailyGameSessionService {
     }
 
     @Override
-    public Map<String, Integer> getPlayTimeDistribution(Integer userId) {
-        return Map.of();
-    }
-
-    @Override
     public DailyGameSessionDto recordPlaySession(Integer userId, Integer gameId, Integer durationSeconds) {
         return null;
     }

@@ -47,16 +47,6 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public AvatarDto uploadAvatarImage(Integer avatarId, MultipartFile file) {
-        return null;
-    }
-
-    @Override
-    public void updateAvatarImage(Integer avatarId, MultipartFile file) {
-
-    }
-
-    @Override
     public boolean avatarExists(Integer id) {
         return false;
     }

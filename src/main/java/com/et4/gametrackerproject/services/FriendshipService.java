@@ -24,14 +24,12 @@ public interface FriendshipService {
     FriendshipDto sendFriendRequest(Integer senderId, Integer receiverId);
     FriendshipDto acceptFriendRequest(Integer friendshipId);
     FriendshipDto rejectFriendRequest(Integer friendshipId);
-    FriendshipDto blockUser(Integer blockerId, Integer blockedId);
     FriendshipDto cancelFriendship(Integer userId, Integer friendId);
 
     //Listes relationnelles
     List<UserDto> getFriendsList(Integer userId);
     List<UserDto> getMutualFriends(Integer user1Id, Integer user2Id);
     List<UserDto> getPendingRequests(Integer userId);
-    List<UserDto> getBlockedUsers(Integer userId);
 
     // Vérifications
     boolean friendshipExists(Integer user1Id, Integer user2Id);
@@ -39,7 +37,6 @@ public interface FriendshipService {
     FriendshipStatus getRelationshipStatus(Integer user1Id, Integer user2Id);
 
     // Statistiques
-    Map<FriendshipStatus, Long> getFriendshipStatsForUser(Integer userId);
     int getFriendCount(Integer userId);
 
     //Administration
@@ -51,10 +48,6 @@ public interface FriendshipService {
     void resolveDuplicateFriendships(Integer userId);
     void mergeDuplicateFriendships(Integer user1Id, Integer user2Id);
 
-    //Synchronisation
-    void synchronizeFriendshipStatus(Integer friendshipId);
-    void updateAllFriendshipStatuses(FriendshipStatus oldStatus, FriendshipStatus newStatus);
-
     //Notifications
-    void notifyFriendshipUpdate(FriendshipDto friendshipDto);
+    void notifyFriendshipUpdate(Integer friendshipId);
 }
