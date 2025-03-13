@@ -48,27 +48,7 @@ public class GameCommentLikeServiceImpl implements GameCommentLikeService {
     }
 
     @Override
-    public Map<Integer, Long> getLikeCountsForComments(List<Integer> commentIds) {
-        return Map.of();
-    }
-
-    @Override
     public Map<Integer, Long> getMostLikedComments(int limit) {
-        return Map.of();
-    }
-
-    @Override
-    public int batchRemoveLikesForComment(Integer commentId) {
-        return 0;
-    }
-
-    @Override
-    public int batchRemoveLikesByUser(Integer userId) {
-        return 0;
-    }
-
-    @Override
-    public Map<Integer, Integer> batchToggleLikes(Integer userId, List<Integer> commentIds) {
         return Map.of();
     }
 

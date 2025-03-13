@@ -41,18 +41,12 @@ public interface GameCommentService {
     Page<GameCommentDto> getReportedComments(Pageable pageable);
 
     //Statistiques
-    Map<Integer, Integer> getCommentCountsForGames(List<Integer> gameIds);
-    Map<String, Long> getCommentActivityStats(Integer gameId);
+
     Map<Integer, Long> getTopCommentedGames(int limit);
 
     //Gestion de version
     GameCommentDto restoreCommentVersion(Integer commentId, Integer versionNumber);
     List<GameCommentDto> getCommentHistory(Integer commentId);
-
-    //Administration
-    void batchDeleteComments(List<Integer> commentIds);
-    void updateCommentsVisibility(List<Integer> commentIds, boolean visible);
-    void migrateCommentsToNewGame(Integer oldGameId, Integer newGameId);
 
     //Vérifications
     boolean isCommentOwner(Integer commentId, Integer userId);

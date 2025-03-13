@@ -23,13 +23,7 @@ public interface GameCommentLikeService {
 
     //Statistiques
     Long getLikeCountForComment(Integer commentId);
-    Map<Integer, Long> getLikeCountsForComments(List<Integer> commentIds);
     Map<Integer, Long> getMostLikedComments(int limit);
-
-    //Gestion batch
-    int batchRemoveLikesForComment(Integer commentId);
-    int batchRemoveLikesByUser(Integer userId);
-    Map<Integer, Integer> batchToggleLikes(Integer userId, List<Integer> commentIds);
 
     //Modération
     Page<GameCommentLikeDto> getRecentLikes(Pageable pageable);

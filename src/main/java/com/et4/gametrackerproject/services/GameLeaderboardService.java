@@ -42,11 +42,6 @@ public interface GameLeaderboardService {
     boolean isScoreEligible(Integer gameId, Integer score);
     boolean hasUserSubmittedScore(Integer userId, Integer gameId, LeaderboardPeriod period);
 
-    //Batch operations
-    void batchUpdateScores(List<GameLeaderboardDto> entries);
-    int batchDeleteOldEntries(int daysThreshold);
-    void migrateLeaderboardData(Integer sourceGameId, Integer targetGameId);
-
     //Administration
     Page<GameLeaderboardDto> searchLeaderboardEntries(String query, Pageable pageable);
     Map<Integer, Long> getLeaderboardParticipationStats(Integer gameId);
@@ -55,7 +50,6 @@ public interface GameLeaderboardService {
     //Intégration
     void notifyRankChanges(Integer gameId, LeaderboardPeriod period);
     void updateAchievementsFromLeaderboard(Integer gameId);
-    void syncWithExternalLeaderboards(Integer gameId);
 
     //Gestion du temps
     void schedulePeriodicLeaderboardRotation();

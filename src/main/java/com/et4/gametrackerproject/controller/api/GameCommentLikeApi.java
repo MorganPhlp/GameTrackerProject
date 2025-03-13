@@ -34,26 +34,32 @@ public interface GameCommentLikeApi {
     @GetMapping(value = APP_ROOT + "/game-comment-likes/comment/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentLikeDto> getLikesForComment(@PathVariable Integer commentId, Pageable pageable);
 
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameCommentLikeDto> getLikesByUser(@PathVariable Integer userId, Pageable pageable);
 
-    Page<GameCommentLikeDto> getLikesByUser(Integer userId, Pageable pageable);
-    boolean hasUserLikedComment(Integer userId, Integer commentId);
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}/comment/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    boolean hasUserLikedComment(@PathVariable Integer userId,@PathVariable Integer commentId);
 
     //Statistiques
-    Long getLikeCountForComment(Integer commentId);
-    Map<Integer, Long> getLikeCountsForComments(List<Integer> commentIds);
-    Map<Integer, Long> getMostLikedComments(int limit);
 
-    //Gestion batch
-    int batchRemoveLikesForComment(Integer commentId);
-    int batchRemoveLikesByUser(Integer userId);
-    Map<Integer, Integer> batchToggleLikes(Integer userId, List<Integer> commentIds);
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/count/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long getLikeCountForComment(@PathVariable Integer commentId);
+
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/most-liked/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Long> getMostLikedComments(@PathVariable int limit);
 
     //Modération
+
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/recent", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentLikeDto> getRecentLikes(Pageable pageable);
 
     //Administration
+
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/admin/all", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentLikeDto> getAllLikes(Pageable pageable);
 
     //Relations
-    Set<Integer> getLikedCommentIdsForUser(Integer userId);
+
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}/liked-comments", produces = MediaType.APPLICATION_JSON_VALUE)
+    Set<Integer> getLikedCommentIdsForUser(@PathVariable Integer userId);
 }

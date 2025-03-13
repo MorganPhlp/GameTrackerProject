@@ -109,16 +109,6 @@ public class GameCommentServiceImpl implements GameCommentService {
     }
 
     @Override
-    public Map<Integer, Integer> getCommentCountsForGames(List<Integer> gameIds) {
-        return Map.of();
-    }
-
-    @Override
-    public Map<String, Long> getCommentActivityStats(Integer gameId) {
-        return Map.of();
-    }
-
-    @Override
     public Map<Integer, Long> getTopCommentedGames(int limit) {
         return Map.of();
     }
@@ -131,21 +121,6 @@ public class GameCommentServiceImpl implements GameCommentService {
     @Override
     public List<GameCommentDto> getCommentHistory(Integer commentId) {
         return List.of();
-    }
-
-    @Override
-    public void batchDeleteComments(List<Integer> commentIds) {
-
-    }
-
-    @Override
-    public void updateCommentsVisibility(List<Integer> commentIds, boolean visible) {
-
-    }
-
-    @Override
-    public void migrateCommentsToNewGame(Integer oldGameId, Integer newGameId) {
-
     }
 
     @Override

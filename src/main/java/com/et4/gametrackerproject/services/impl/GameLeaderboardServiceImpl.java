@@ -105,21 +105,6 @@ public class GameLeaderboardServiceImpl implements GameLeaderboardService {
     }
 
     @Override
-    public void batchUpdateScores(List<GameLeaderboardDto> entries) {
-
-    }
-
-    @Override
-    public int batchDeleteOldEntries(int daysThreshold) {
-        return 0;
-    }
-
-    @Override
-    public void migrateLeaderboardData(Integer sourceGameId, Integer targetGameId) {
-
-    }
-
-    @Override
     public Page<GameLeaderboardDto> searchLeaderboardEntries(String query, Pageable pageable) {
         return null;
     }
@@ -141,11 +126,6 @@ public class GameLeaderboardServiceImpl implements GameLeaderboardService {
 
     @Override
     public void updateAchievementsFromLeaderboard(Integer gameId) {
-
-    }
-
-    @Override
-    public void syncWithExternalLeaderboards(Integer gameId) {
 
     }
 
