@@ -54,24 +54,4 @@ public class GameTagServiceImpl implements GameTagService {
     public int removeMultipleTagsFromGame(Integer gameId, Set<Integer> tagIds) {
         return 0;
     }
-
-    @Override
-    public void syncGameTags(Integer gameId, Set<Integer> newTagIds) {
-
-    }
-
-    @Override
-    public void recalculateTagUsageStats() {
-
-    }
-
-    @Override
-    public void exportTagRelationships(String outputPath) {
-
-    }
-
-    @Override
-    public void importTagRelationships(String inputPath) {
-
-    }
 }

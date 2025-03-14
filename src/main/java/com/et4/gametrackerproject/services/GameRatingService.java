@@ -23,17 +23,11 @@ public interface GameRatingService {
     //Statistiques
     Double calculateAverageRatingForGame(Integer gameId);
     Map<Integer, Long> getRatingDistributionForGame(Integer gameId);
-    Map<Integer, Double> getAverageRatingsForGames(List<Integer> gameIds);
     Long countRatingsForGame(Integer gameId);
 
     //Vérifications
     boolean hasUserRatedGame(Integer userId, Integer gameId);
     boolean isValidRatingValue(Integer rating);
-
-    //Gestion batch
-    void batchDeleteRatings(List<Integer> ratingIds);
-    int batchUpdateRatingsForUser(Integer userId, Integer newRating);
-    void recalculateAllAverageRatings();
 
     //Modération
     Page<GameRatingDto> getRecentRatings(Pageable pageable);
@@ -48,7 +42,6 @@ public interface GameRatingService {
 
     //Intégration
     void updateGameAverageRating(Integer gameId);
-    void syncWithExternalRatingSystems(Integer gameId);
 
     //Sécurité/Validation
     boolean isRatingOwner(Integer ratingId, Integer userId);

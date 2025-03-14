@@ -66,8 +66,8 @@ public interface GameCommentApi {
     @GetMapping(value = APP_ROOT + "/comments/recent/{hours}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<GameCommentDto> getRecentComments(@PathVariable int hours);
 
-    @GetMapping(value = APP_ROOT + "/comments/search/{searchTerm}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameCommentDto> searchComments(@PathVariable String searchTerm, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/comments/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameCommentDto> searchComments(@RequestBody String searchTerm, Pageable pageable);
 
     // Modération
 

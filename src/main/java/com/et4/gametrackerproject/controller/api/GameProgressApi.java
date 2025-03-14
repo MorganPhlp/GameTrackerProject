@@ -90,15 +90,4 @@ public interface GameProgressApi {
 
     @GetMapping(value = APP_ROOT + "/progress/started", produces = MediaType.APPLICATION_JSON_VALUE)
     boolean hasStartedGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
-
-    //Administration
-    @PutMapping(value = APP_ROOT + "/progress/admin/reset/{gameId}")
-    void batchResetProgressForGame(@PathVariable("gameId") Integer gameId);
-
-    @PutMapping(value = APP_ROOT + "/progress/admin/migrate")
-    void migrateProgressData(@RequestParam("sourceGameId") Integer sourceGameId, @RequestParam("targetGameId") Integer targetGameId);
-
-    //Analyse
-    @GetMapping(value = APP_ROOT + "/progress/{progressId}/community-comparison", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<String, Object> compareWithCommunityStats(@PathVariable("progressId") Integer progressId);
 }

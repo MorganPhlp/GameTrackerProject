@@ -129,19 +129,4 @@ public class GameProgressServiceImpl implements GameProgressService {
     public boolean hasStartedGame(Integer userId, Integer gameId) {
         return false;
     }
-
-    @Override
-    public void batchResetProgressForGame(Integer gameId) {
-
-    }
-
-    @Override
-    public void migrateProgressData(Integer sourceGameId, Integer targetGameId) {
-
-    }
-
-    @Override
-    public Map<String, Object> compareWithCommunityStats(Integer progressId) {
-        return Map.of();
-    }
 }

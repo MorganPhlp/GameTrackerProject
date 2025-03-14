@@ -45,11 +45,4 @@ public interface GameProgressService {
     GameProgressDto transitionStatus(Integer progressId, GameStatus newStatus);
     boolean hasCompletedGame(Integer userId, Integer gameId);
     boolean hasStartedGame(Integer userId, Integer gameId);
-
-    //Administration
-    void batchResetProgressForGame(Integer gameId);
-    void migrateProgressData(Integer sourceGameId, Integer targetGameId);
-
-    //Analyse
-    Map<String, Object> compareWithCommunityStats(Integer progressId);
 }

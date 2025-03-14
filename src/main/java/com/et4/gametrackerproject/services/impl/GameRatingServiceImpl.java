@@ -57,11 +57,6 @@ public class GameRatingServiceImpl implements GameRatingService {
     }
 
     @Override
-    public Map<Integer, Double> getAverageRatingsForGames(List<Integer> gameIds) {
-        return Map.of();
-    }
-
-    @Override
     public Long countRatingsForGame(Integer gameId) {
         return 0L;
     }
@@ -74,21 +69,6 @@ public class GameRatingServiceImpl implements GameRatingService {
     @Override
     public boolean isValidRatingValue(Integer rating) {
         return false;
-    }
-
-    @Override
-    public void batchDeleteRatings(List<Integer> ratingIds) {
-
-    }
-
-    @Override
-    public int batchUpdateRatingsForUser(Integer userId, Integer newRating) {
-        return 0;
-    }
-
-    @Override
-    public void recalculateAllAverageRatings() {
-
     }
 
     @Override
@@ -118,11 +98,6 @@ public class GameRatingServiceImpl implements GameRatingService {
 
     @Override
     public void updateGameAverageRating(Integer gameId) {
-
-    }
-
-    @Override
-    public void syncWithExternalRatingSystems(Integer gameId) {
 
     }
 

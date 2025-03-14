@@ -43,7 +43,6 @@ public interface MessageService {
     void exportUserMessages(Integer userId, String outputPath);
 
     //Synchronisation
-    void syncReadStatusAcrossDevices(Integer userId);
     void notifyNewMessage(Integer messageId);
     void pushUnreadNotifications(Integer userId);
 

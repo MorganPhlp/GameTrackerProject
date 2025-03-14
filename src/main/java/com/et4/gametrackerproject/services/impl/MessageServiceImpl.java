@@ -102,11 +102,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void syncReadStatusAcrossDevices(Integer userId) {
-
-    }
-
-    @Override
     public void notifyNewMessage(Integer messageId) {
 
     }

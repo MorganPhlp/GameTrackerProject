@@ -84,8 +84,8 @@ public interface GameLeaderboardApi {
 
     //Administration
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/search/{query}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameLeaderboardDto> searchLeaderboardEntries(@PathVariable String query, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/leaderboard/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameLeaderboardDto> searchLeaderboardEntries(@RequestBody String query, Pageable pageable);
 
     @GetMapping(value = APP_ROOT + "/leaderboard/participation/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     Map<Integer, Long> getLeaderboardParticipationStats(@PathVariable Integer gameId);

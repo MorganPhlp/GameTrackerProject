@@ -91,9 +91,4 @@ public class NotificationServiceImpl implements NotificationService {
     public void batchMarkAsRead(List<Integer> notificationIds) {
 
     }
-
-    @Override
-    public void syncNotificationsAcrossDevices(Integer userId) {
-
-    }
 }

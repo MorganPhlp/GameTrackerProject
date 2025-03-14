@@ -3,6 +3,7 @@ package com.et4.gametrackerproject.services;
 import com.et4.gametrackerproject.dto.GameDto;
 import com.et4.gametrackerproject.enums.DifficultyLevel;
 import com.et4.gametrackerproject.enums.GameCategory;
+import com.et4.gametrackerproject.model.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -34,8 +35,8 @@ public interface GameService {
     void updateAverageRating(Integer gameId);
 
     // Relations
-    GameDto addTagToGame(Integer gameId, String tag);
-    GameDto removeTagFromGame(Integer gameId, String tag);
+    GameDto addTagToGame(Integer gameId, Tag tag);
+    GameDto removeTagFromGame(Integer gameId, Tag tag);
     Page<GameDto> getSimilarGames(Integer gameId, Pageable pageable);
 
     // Statistiques
@@ -52,10 +53,6 @@ public interface GameService {
     //Validation
     boolean checkNameAvailability(String name);
     boolean validateAgeRequirements(Integer gameId, Integer userAge);
-
-    //Intégration
-    void refreshGameCache(Integer gameId);
-    void handleRelatedEntitiesOnDeletion(Integer gameId);
 
     //Recommandations
     List<GameDto> getTrendingGames(int limit);

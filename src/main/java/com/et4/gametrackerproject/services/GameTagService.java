@@ -25,11 +25,5 @@ public interface GameTagService {
     //Gestion batch
     Set<GameTagDto> addMultipleTagsToGame(Integer gameId, Set<Integer> tagIds);
     int removeMultipleTagsFromGame(Integer gameId, Set<Integer> tagIds);
-    void syncGameTags(Integer gameId, Set<Integer> newTagIds);
-
-    // Administration
-    void recalculateTagUsageStats();
-    void exportTagRelationships(String outputPath);
-    void importTagRelationships(String inputPath);
 
 }

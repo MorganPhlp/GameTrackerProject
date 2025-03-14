@@ -3,6 +3,7 @@ package com.et4.gametrackerproject.services.impl;
 import com.et4.gametrackerproject.dto.GameDto;
 import com.et4.gametrackerproject.enums.DifficultyLevel;
 import com.et4.gametrackerproject.enums.GameCategory;
+import com.et4.gametrackerproject.model.Tag;
 import com.et4.gametrackerproject.services.GameService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,12 +81,12 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameDto addTagToGame(Integer gameId, String tag) {
+    public GameDto addTagToGame(Integer gameId, Tag tag) {
         return null;
     }
 
     @Override
-    public GameDto removeTagFromGame(Integer gameId, String tag) {
+    public GameDto removeTagFromGame(Integer gameId, Tag tag) {
         return null;
     }
 
@@ -137,16 +138,6 @@ public class GameServiceImpl implements GameService {
     @Override
     public boolean validateAgeRequirements(Integer gameId, Integer userAge) {
         return false;
-    }
-
-    @Override
-    public void refreshGameCache(Integer gameId) {
-
-    }
-
-    @Override
-    public void handleRelatedEntitiesOnDeletion(Integer gameId) {
-
     }
 
     @Override

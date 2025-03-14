@@ -40,7 +40,4 @@ public interface NotificationService {
     //Batch operations
     void batchDeleteNotifications(List<Integer> notificationIds);
     void batchMarkAsRead(List<Integer> notificationIds);
-
-    //Intégration
-    void syncNotificationsAcrossDevices(Integer userId);
 }
