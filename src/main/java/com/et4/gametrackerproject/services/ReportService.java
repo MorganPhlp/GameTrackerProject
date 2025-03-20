@@ -19,7 +19,6 @@ public interface ReportService {
 
     //Gestion du cycle de vie
     ReportDto resolveReport(Integer reportId, Integer adminId, String resolutionNotes);
-    ReportDto escalateReport(Integer reportId, Integer escalatedBy);
     ReportDto changeReportStatus(Integer reportId, ReportStatus newStatus);
 
     //Récupération
@@ -28,15 +27,8 @@ public interface ReportService {
     Page<ReportDto> getReportsByType(ReportType type, Pageable pageable);
     Page<ReportDto> getUserReports(Integer userId, boolean isReporter, Pageable pageable);
 
-    //Statistiques
-    Map<ReportType, Long> getReportTypeDistribution();
-    Map<ReportStatus, Long> getReportStatusStats();
-    Double getAverageResolutionTime();
-    Map<Integer, Long> getMostReportedUsers();
-
     //Modération
     Page<ReportDto> getUnresolvedReports(Pageable pageable);
-    void bulkResolveReports(List<Integer> reportIds, Integer adminId);
     ReportDto assignReportToAdmin(Integer reportId, Integer adminId);
     void mergeDuplicateReports(List<Integer> reportIds);
 
@@ -54,23 +46,7 @@ public interface ReportService {
     List<ReportDto> getReportResolutionHistory(Integer reportId);
     Page<ReportDto> getAdminActivity(Integer adminId, Pageable pageable);
 
-    // Sécurité
-    boolean validateReportOwnership(Integer reportId, Integer userId);
-    void auditReportChanges(Integer reportId);
-    void anonymizeOldReports(int yearsThreshold);
-
     // Administration
     void exportReports(String outputPath, ReportStatus status);
-    void recalculateReportStatistics();
     Page<ReportDto> searchReports(String searchQuery, Pageable pageable);
-
-    // Analyse
-    Map<String, Object> generateModerationReport(Instant startDate, Instant endDate);
-    List<ReportDto> detectReportPatterns(Integer userId);
-    Map<String, Double> getResolutionEfficiencyStats();
-
-    // Gestion des preuves
-    void attachEvidence(Integer reportId, String evidenceUrl);
-    void removeEvidence(Integer reportId, String evidenceUrl);
-    List<String> getReportEvidences(Integer reportId);
 }

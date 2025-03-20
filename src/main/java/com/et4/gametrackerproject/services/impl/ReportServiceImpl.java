@@ -35,11 +35,6 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ReportDto escalateReport(Integer reportId, Integer escalatedBy) {
-        return null;
-    }
-
-    @Override
     public ReportDto changeReportStatus(Integer reportId, ReportStatus newStatus) {
         return null;
     }
@@ -65,33 +60,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Map<ReportType, Long> getReportTypeDistribution() {
-        return Map.of();
-    }
-
-    @Override
-    public Map<ReportStatus, Long> getReportStatusStats() {
-        return Map.of();
-    }
-
-    @Override
-    public Double getAverageResolutionTime() {
-        return 0.0;
-    }
-
-    @Override
-    public Map<Integer, Long> getMostReportedUsers() {
-        return Map.of();
-    }
-
-    @Override
     public Page<ReportDto> getUnresolvedReports(Pageable pageable) {
         return null;
-    }
-
-    @Override
-    public void bulkResolveReports(List<Integer> reportIds, Integer adminId) {
-
     }
 
     @Override
@@ -145,62 +115,12 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public boolean validateReportOwnership(Integer reportId, Integer userId) {
-        return false;
-    }
-
-    @Override
-    public void auditReportChanges(Integer reportId) {
-
-    }
-
-    @Override
-    public void anonymizeOldReports(int yearsThreshold) {
-
-    }
-
-    @Override
     public void exportReports(String outputPath, ReportStatus status) {
-
-    }
-
-    @Override
-    public void recalculateReportStatistics() {
 
     }
 
     @Override
     public Page<ReportDto> searchReports(String searchQuery, Pageable pageable) {
         return null;
-    }
-
-    @Override
-    public Map<String, Object> generateModerationReport(Instant startDate, Instant endDate) {
-        return Map.of();
-    }
-
-    @Override
-    public List<ReportDto> detectReportPatterns(Integer userId) {
-        return List.of();
-    }
-
-    @Override
-    public Map<String, Double> getResolutionEfficiencyStats() {
-        return Map.of();
-    }
-
-    @Override
-    public void attachEvidence(Integer reportId, String evidenceUrl) {
-
-    }
-
-    @Override
-    public void removeEvidence(Integer reportId, String evidenceUrl) {
-
-    }
-
-    @Override
-    public List<String> getReportEvidences(Integer reportId) {
-        return List.of();
     }
 }
