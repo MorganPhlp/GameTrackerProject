@@ -15,7 +15,6 @@ public interface UserAchievementService {
 
     //Opérations de base
     UserAchievementDto unlockAchievement(UserAchievementDto userAchievementDto);
-    UserAchievementDto revokeAchievement(Integer userAchievementId);
     void deleteUserAchievement(Integer userAchievementId);
 
     // Récupération
@@ -43,16 +42,11 @@ public interface UserAchievementService {
     // Administration
     UserAchievementDto grantAchievement(Integer userId, Integer achievementId);
     void bulkGrantAchievement(Integer achievementId, List<Integer> userIds);
-    void recalculateAllUserPoints();
 
     // Personnalisation
     Page<UserAchievementDto> getRarestAchievements(Pageable pageable);
     Set<UserAchievementDto> getSecretAchievements(Integer userId);
     Map<AchievementDto, Instant> getAchievementUnlockTimes(Integer userId);
-
-    // Synchronisation
-    void syncAchievementsAcrossPlatforms(Integer userId);
-    void migrateAchievementProgress(Integer sourceUserId, Integer targetUserId);
 
     // Social
     Page<UserAchievementDto> getFriendAchievements(Integer userId, Integer friendId, Pageable pageable);

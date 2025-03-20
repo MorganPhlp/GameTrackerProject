@@ -84,21 +84,6 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public void checkAchievements() {
-
-    }
-
-    @Override
-    public void checkGameCompletionAchievements(Integer userId, Integer gameId, Map<String, Object> gameStats) {
-
-    }
-
-    @Override
-    public Map<AchievementRarity, Long> getGlobalAchievementStats() {
-        return Map.of();
-    }
-
-    @Override
     public List<AchievementDto> getSecretAchievements() {
         return List.of();
     }

@@ -60,14 +60,9 @@ public interface AchievementApi {
     int calculateUserAchievementPoints(@PathVariable Integer userId);
 
     //Évaluation des conditions
-    void checkUserProgress(Integer userId, String contextType, Map<String, Object> contextData);
-    void checkAchievements();
 
-    //Méthodes de vérification
-    void checkGameCompletionAchievements(Integer userId, Integer gameId, Map<String, Object> gameStats);
-
-    //Statistiques
-    Map<AchievementRarity, Long> getGlobalAchievementStats();
+    @GetMapping(value = APP_ROOT + "/achievements/check/{userId}/{contextType}", produces = MediaType.APPLICATION_JSON_VALUE)
+    void checkUserProgress(@PathVariable Integer userId,@PathVariable String contextType,@RequestBody Map<String, Object> contextData);
 
     //Achievement secrets
 

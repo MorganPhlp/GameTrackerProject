@@ -46,7 +46,5 @@ public interface WinStreakService {
     void updateUserRanking(Integer userId, Integer gameId);
 
     // Sécurité
-    boolean validateStreakOwnership(Integer streakId, Integer userId);
-    void auditStreakModifications(Integer streakId);
     void detectAnomalousStreaks(Integer gameId);
 }

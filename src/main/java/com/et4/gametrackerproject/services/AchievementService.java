@@ -32,13 +32,6 @@ public interface AchievementService {
 
     //Évaluation des conditions
     void checkUserProgress(Integer userId, String contextType, Map<String, Object> contextData);
-    void checkAchievements();
-
-    //Méthodes de vérification
-    void checkGameCompletionAchievements(Integer userId, Integer gameId, Map<String, Object> gameStats);
-
-    //Statistiques
-    Map<AchievementRarity, Long> getGlobalAchievementStats();
 
     //Achievement secrets
     List<AchievementDto> getSecretAchievements();
