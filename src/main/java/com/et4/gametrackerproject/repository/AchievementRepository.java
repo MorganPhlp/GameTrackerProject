@@ -13,30 +13,6 @@ import java.util.Optional;
 
 public interface AchievementRepository extends JpaRepository<Achievement, Integer> {
 
-    List<Achievement> findByUsers_Id(Integer userId);
-
-
-    Optional<Achievement> findByName(String name);
-
-    List<Achievement> findByNameContainingIgnoreCase(String name);
-
-    List<Achievement> findByType(AchievementType type);
-
-    List<Achievement> findByRarity(AchievementRarity rarity);
-    
-    List<Achievement> findByIsActiveTrue();
-
-    List<Achievement> findByIsSecretTrue();
-
-    List<Achievement> findByRequiresAchievementId(Integer achievementId);
-
-    List<Achievement> findByRequiresAchievementIdIsNull();
-
-    List<Achievement> findByPointsRewardGreaterThanEqual(Integer points);
-
-    List<Achievement> findByTypeAndRarity(AchievementType type, AchievementRarity rarity);
-
-    List<Achievement> findByTypeAndIsActiveTrue(AchievementType type);
 
     @Query("SELECT a FROM Achievement a WHERE a.description LIKE %:keyword%")
     List<Achievement> findByDescriptionContaining(@Param("keyword") String keyword);
@@ -47,9 +23,11 @@ public interface AchievementRepository extends JpaRepository<Achievement, Intege
     @Query("SELECT a.type, COUNT(a) FROM Achievement a GROUP BY a.type")
     List<Object[]> countByType();
 
+    List<Achievement> findByType(AchievementType type);
 
-    Map<Achievement, Boolean> findUserAchievementProgress(Integer userId);
+    List<Achievement> findByRarity(AchievementRarity rarity);
 
+    List<Achievement> findByIsActiveTrue();
 
-    boolean existsUserAchievement(Integer userId, Integer achievementId);
+    List<Achievement> findByIsSecretTrue();
 }

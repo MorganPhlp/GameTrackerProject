@@ -44,7 +44,6 @@ public class AchievementServiceImpl implements AchievementService {
                 .collect(Collectors.toList());
     }
 
-
     private static final Logger log = LoggerFactory.getLogger(AchievementServiceImpl.class);
 
     @Override
@@ -120,27 +119,6 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public List<AchievementDto> getVisibleAchievementsForUser(Integer userId) {
-        if (userId == null) {
-            log.error("L'ID utilisateur est null");
-            throw new IllegalArgumentException("L'ID utilisateur ne peut pas être null");
-        }
-
-        Optional<Achievement> achievements = achievementRepository.findById(userId);
-
-        if (achievements.isEmpty()) {
-            log.warn("Aucun achievement visible trouvé pour l'utilisateur ID : " + userId);
-            throw new EntityNotFoundException("Aucun achievement visible trouvé pour l'utilisateur ID : " + userId,
-                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
-        }
-
-        return achievements.stream()
-                .map(AchievementDto::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-
-    @Override
     public AchievementDto createAchievement(AchievementDto achievementDto) {
         if (achievementDto == null) {
             log.error("L'achievement à créer est null");
@@ -180,74 +158,17 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public Set<AchievementDto> getUnlockedAchievementsForUser(Integer userId) {
-        if (userId == null) {
-            log.error("L'ID utilisateur est null");
-            throw new IllegalArgumentException("L'ID utilisateur ne peut pas être null");
-        }
-
-        List<Achievement> unlockedAchievements = achievementRepository.findByUsers_Id(userId);
-
-        if (unlockedAchievements.isEmpty()) {
-            log.warn("Aucun achievement débloqué trouvé pour l'utilisateur ID : " + userId);
-            return Set.of();
-        }
-
-        return unlockedAchievements.stream()
-                .map(AchievementDto::fromEntity)
-                .collect(Collectors.toSet());
-    }
-
-
-    @Override
-    public Map<AchievementDto, Boolean> getUserAchievementProgress(Integer userId) {
-        if (userId == null) {
-            log.error("L'ID utilisateur est null");
-            throw new IllegalArgumentException("L'ID utilisateur ne peut pas être null");
-        }
-
-        Map<Achievement, Boolean> achievementProgress = achievementRepository.findUserAchievementProgress(userId);
-
-        if (achievementProgress.isEmpty()) {
-            log.warn("Aucune progression d'achievement trouvée pour l'utilisateur ID : " + userId);
-            return Map.of();
-        }
-
-        return achievementProgress.entrySet().stream()
-                .collect(Collectors.toMap(
-                        entry -> AchievementDto.fromEntity(entry.getKey()),
-                        Map.Entry::getValue
-                ));
-    }
-
-    @Override
-    public boolean hasUserUnlockedAchievement(Integer userId, Integer achievementId) {
-        if (userId == null || achievementId == null) {
-            log.error("L'ID utilisateur ou l'ID de l'achievement est null");
-            throw new IllegalArgumentException("L'ID utilisateur et l'ID de l'achievement ne peuvent pas être null");
-        }
-
-        return achievementRepository.existsUserAchievement(userId, achievementId);
-    }
-
-
-    @Override
-    public AchievementDto unlockAchievementForUser(Integer userId, Integer achievementId) {
-        return null;
-    }
-
-    @Override
-    public int calculateUserAchievementPoints(Integer userId) {
-        return 0;
-    }
-
-    @Override
-    public void checkUserProgress(Integer userId, String contextType, Map<String, Object> contextData) {
-
-    }
-
-    @Override
     public List<AchievementDto> getSecretAchievements() {
-        return List.of();
+        List<Achievement> achievements = achievementRepository.findByIsSecretTrue();
+
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement secret trouvé");
+            throw new EntityNotFoundException("Aucun achievement actif trouvé",
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }
