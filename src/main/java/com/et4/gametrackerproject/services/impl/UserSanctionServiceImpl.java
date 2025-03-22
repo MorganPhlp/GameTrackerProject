@@ -2,7 +2,15 @@ package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.UserSanctionDto;
 import com.et4.gametrackerproject.enums.SanctionType;
+import com.et4.gametrackerproject.exception.EntityNotFoundException;
+import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.exception.InvalidEntityException;
+import com.et4.gametrackerproject.model.UserSanction;
+import com.et4.gametrackerproject.repository.UserSanctionRepository;
+import com.et4.gametrackerproject.repository.WinStreakRepository;
 import com.et4.gametrackerproject.services.UserSanctionService;
+import com.et4.gametrackerproject.validator.UserSanctionValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,135 +19,177 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class UserSanctionServiceImpl implements UserSanctionService {
+
+    private final UserSanctionRepository userSanctionRepository;
+
+    public UserSanctionServiceImpl(UserSanctionRepository userSanctionRepository) {
+        this.userSanctionRepository = userSanctionRepository;
+    }
+
     @Override
     public UserSanctionDto applySanction(UserSanctionDto sanctionDto) {
-        return null;
+        List<String> errors = UserSanctionValidator.validate(sanctionDto);
+        if (!errors.isEmpty()) {
+            log.error("Erreur de validation : {}", errors);
+            throw new InvalidEntityException("La sanction n'est pas valide", ErrorCodes.USER_SANCTION_NOT_VALID ,errors);
+        }
+
+        log.info("Apply sanction {}", sanctionDto);
+
+        return UserSanctionDto.fromEntity(
+                userSanctionRepository.save(
+                        UserSanctionDto.toEntity(sanctionDto)
+                )
+        );
+
     }
 
     @Override
     public UserSanctionDto updateSanction(Integer sanctionId, UserSanctionDto sanctionDto) {
-        return null;
+        List<String> errors = UserSanctionValidator.validate(sanctionDto);
+        if (!errors.isEmpty()) {
+            log.error("Erreur de validation : {}", errors);
+            throw new InvalidEntityException("La sanction n'est pas valide", ErrorCodes.USER_SANCTION_NOT_VALID ,errors);
+        }
+        if(sanctionId == null || !sanctionId.equals(sanctionDto.getId())){
+            log.error("Erreur de validation : L'ID de la sanction doit valide");
+            throw new EntityNotFoundException("L'id de la sanction n'existe pas", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+
+        log.info("Update sanction {}", sanctionDto);
+
+        return UserSanctionDto.fromEntity(
+                userSanctionRepository.save(
+                        UserSanctionDto.toEntity(sanctionDto)
+                )
+        );
     }
 
     @Override
     public void removeSanction(Integer sanctionId) {
+        if(sanctionId == null){
+            log.error("Erreur de validation : L'ID de la sanction doit être valide");
+            throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+        if(!userSanctionRepository.existsById(sanctionId)){
+            log.error("Erreur de validation : Aucune sanction n'a cet ID");
+            throw new EntityNotFoundException("Aucune sanction n'a cet ID", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
 
-    }
-
-    @Override
-    public UserSanctionDto liftSanction(Integer sanctionId) {
-        return null;
+        log.info("Remove sanction with ID {}", sanctionId);
+        // TODO : Check si d'autres choses à supprimer avant
+        userSanctionRepository.deleteById(sanctionId);
     }
 
     @Override
     public UserSanctionDto modifySanctionDuration(Integer sanctionId, Instant newEndDate) {
-        return null;
-    }
+        if(sanctionId == null){
+            log.error("Erreur de validation : L'ID de la sanction doit être valide");
+            throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+        if(newEndDate == null){
+            log.error("Erreur de validation : La date de fin de la sanction doit être valide");
+            throw new InvalidEntityException("La date de fin est nulle", ErrorCodes.USER_SANCTION_NOT_VALID);
+        }
+        if(!userSanctionRepository.existsById(sanctionId)){
+            log.error("Erreur de validation : Aucune sanction n'a cet ID");
+            throw new EntityNotFoundException("Aucune sanction n'a cet ID", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+        if(newEndDate.isBefore(Instant.now())){
+            log.error("Erreur de validation : La date de fin de la sanction doit être dans le futur");
+            throw new InvalidEntityException("La date de fin de la sanction doit être dans le futur", ErrorCodes.USER_SANCTION_NOT_VALID);
+        }
 
-    @Override
-    public void processExpiredSanctions() {
+        UserSanction sanction = userSanctionRepository.findById(sanctionId).orElseThrow(() ->
+                new EntityNotFoundException("Aucune sanction n'a cet ID",
+                        ErrorCodes.USER_SANCTION_NOT_FOUND)
+        );
 
+        sanction.setEndDate(newEndDate);
+        userSanctionRepository.save(sanction);
+
+        log.info("Modify sanction duration with ID {} to {}", sanctionId, newEndDate);
+
+        return UserSanctionDto.fromEntity(sanction);
     }
 
     @Override
     public UserSanctionDto getSanctionById(Integer sanctionId) {
-        return null;
+        if(sanctionId == null){
+            log.error("Erreur de validation : L'ID de la sanction doit être valide");
+            throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+
+        log.info("Get sanction with ID {}", sanctionId);
+
+        return UserSanctionDto.fromEntity(
+                userSanctionRepository.findById(sanctionId).orElseThrow(() ->
+                        new EntityNotFoundException("Aucune sanction n'a cet ID",
+                                ErrorCodes.USER_SANCTION_NOT_FOUND)
+                )
+        );
     }
 
     @Override
     public Page<UserSanctionDto> getActiveSanctionsForUser(Integer userId, Pageable pageable) {
-        return null;
+        if(userId == null){
+            log.error("Erreur de validation : L'ID de l'utilisateur doit être valide");
+            throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+        if(!userSanctionRepository.existsById(userId)){
+            log.error("Erreur de validation : Aucun utilisateur n'a cet ID");
+            throw new EntityNotFoundException("Aucun utilisateur n'a cet ID", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+
+        log.info("Get active sanctions for user with ID {}", userId);
+
+        return userSanctionRepository.findByUserId(userId, pageable).map(UserSanctionDto::fromEntity);
     }
 
     @Override
     public Page<UserSanctionDto> getSanctionsByType(SanctionType type, Pageable pageable) {
-        return null;
+        if(type == null){
+            log.error("Erreur de validation : Le type de sanction doit être valide");
+            throw new InvalidEntityException("Le type de sanction est nul", ErrorCodes.USER_SANCTION_NOT_VALID);
+        }
+
+        log.info("Get sanctions by type {}", type);
+
+        return userSanctionRepository.findByType(type, pageable).map(UserSanctionDto::fromEntity);
     }
 
     @Override
     public Page<UserSanctionDto> getSanctionsHistory(Integer userId, Pageable pageable) {
-        return null;
-    }
+        if(userId == null){
+            log.error("Erreur de validation : L'ID de l'utilisateur doit être valide");
+            throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+        if(!userSanctionRepository.existsById(userId)){
+            log.error("Erreur de validation : Aucun utilisateur n'a cet ID");
+            throw new EntityNotFoundException("Aucun utilisateur n'a cet ID", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
 
-    @Override
-    public Map<SanctionType, Long> getSanctionTypeDistribution() {
-        return Map.of();
+        log.info("Get sanctions history for user with ID {}", userId);
+
+        return userSanctionRepository.findByUserIdOrderByStartDateDesc(userId, pageable).map(UserSanctionDto::fromEntity);
     }
 
     @Override
     public Integer countActiveSanctions(Integer userId) {
-        return 0;
-    }
+        if(userId == null){
+            log.error("Erreur de validation : L'ID de l'utilisateur doit être valide");
+            throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+        if(!userSanctionRepository.existsById(userId)){
+            log.error("Erreur de validation : Aucun utilisateur n'a cet ID");
+            throw new EntityNotFoundException("Aucun utilisateur n'a cet ID", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
 
-    @Override
-    public Map<String, Object> generateModerationReport(Instant startDate, Instant endDate) {
-        return Map.of();
-    }
+        log.info("Count active sanctions for user with ID {}", userId);
 
-    @Override
-    public Double getAverageSanctionDuration(SanctionType type) {
-        return 0.0;
-    }
-
-    @Override
-    public void checkAndApplyAutomaticSanctions(Integer userId) {
-
-    }
-
-    @Override
-    public void escalateSanctionSeverity(Integer sanctionId) {
-
-    }
-
-    @Override
-    public void applyTemporaryRestrictions(Integer userId) {
-
-    }
-
-    @Override
-    public void bulkApplySanctions(List<Integer> userIds, UserSanctionDto templateSanction) {
-
-    }
-
-    @Override
-    public void bulkLiftSanctions(List<Integer> sanctionIds) {
-
-    }
-
-    @Override
-    public void convertWarningsToBans(int daysThreshold) {
-
-    }
-
-    @Override
-    public void notifyUserAboutSanction(Integer sanctionId) {
-
-    }
-
-    @Override
-    public void restrictUserFeatures(Integer userId) {
-
-    }
-
-    @Override
-    public Page<UserSanctionDto> getSanctionModificationHistory(Integer sanctionId, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public UserSanctionDto pauseSanction(Integer sanctionId) {
-        return null;
-    }
-
-    @Override
-    public UserSanctionDto extendSanction(Integer sanctionId, int days) {
-        return null;
-    }
-
-    @Override
-    public void applyTemplateToUser(Integer templateId, Integer userId) {
-
+        return userSanctionRepository.findActiveByUserId(userId).size();
     }
 }

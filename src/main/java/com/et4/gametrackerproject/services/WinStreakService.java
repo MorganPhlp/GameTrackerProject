@@ -29,22 +29,10 @@ public interface WinStreakService {
     // Statistiques
     Map<Integer, Integer> getGlobalBestStreaks(int limit);
     Map<Integer, Integer> getGameBestStreaks(Integer gameId, int limit);
-    Integer getUserRanking(Integer userId, Integer gameId);
 
     // Vérifications
     boolean isActiveStreak(Integer userId, Integer gameId);
-    boolean isEligibleForReward(Integer userId, Integer gameId);
-    boolean validateStreakConsistency(Integer streakId);
 
     // Batch operations
-    void batchUpdateStreaks(List<WinStreakDto> streaks);
     void resetAllStreaksForGame(Integer gameId);
-
-    // Intégration
-    void notifyStreakMilestone(Integer streakId);
-    void syncWithLeaderboard(Integer streakId);
-    void updateUserRanking(Integer userId, Integer gameId);
-
-    // Sécurité
-    void detectAnomalousStreaks(Integer gameId);
 }

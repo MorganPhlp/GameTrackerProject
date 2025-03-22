@@ -13,14 +13,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
 
     // Requêtes de base pour l'authentification et la gestion des utilisateurs
+    Optional<User> findById(int id);
+
     Optional<User> findByEmail(String email);
 
     Optional<User> findByUsername(String username);

@@ -17,9 +17,7 @@ public interface UserSanctionService {
     void removeSanction(Integer sanctionId);
 
     // Gestion du cycle de vie
-    UserSanctionDto liftSanction(Integer sanctionId);
     UserSanctionDto modifySanctionDuration(Integer sanctionId, Instant newEndDate);
-    void processExpiredSanctions();
 
     // Récupération
     UserSanctionDto getSanctionById(Integer sanctionId);
@@ -28,32 +26,5 @@ public interface UserSanctionService {
     Page<UserSanctionDto> getSanctionsHistory(Integer userId, Pageable pageable);
 
     // Statistiques
-    Map<SanctionType, Long> getSanctionTypeDistribution();
     Integer countActiveSanctions(Integer userId);
-    Map<String, Object> generateModerationReport(Instant startDate, Instant endDate);
-    Double getAverageSanctionDuration(SanctionType type);
-
-    // Automatisation
-    void checkAndApplyAutomaticSanctions(Integer userId);
-    void escalateSanctionSeverity(Integer sanctionId);
-    void applyTemporaryRestrictions(Integer userId);
-
-    // Batch operations
-    void bulkApplySanctions(List<Integer> userIds, UserSanctionDto templateSanction);
-    void bulkLiftSanctions(List<Integer> sanctionIds);
-    void convertWarningsToBans(int daysThreshold);
-
-    // Intégration
-    void notifyUserAboutSanction(Integer sanctionId);
-    void restrictUserFeatures(Integer userId);
-
-    // Historique
-    Page<UserSanctionDto> getSanctionModificationHistory(Integer sanctionId, Pageable pageable);
-
-    // Gestion des durées
-    UserSanctionDto pauseSanction(Integer sanctionId);
-    UserSanctionDto extendSanction(Integer sanctionId, int days);
-
-    // Relations
-    void applyTemplateToUser(Integer templateId, Integer userId);
 }
