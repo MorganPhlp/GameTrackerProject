@@ -66,24 +66,8 @@ public interface UserService {
     // Intégration sociale
     UserDto shareProfile(Integer userId, String platform);
 
-    // Sécurité avancée
-    void enableTwoFactorAuth(Integer userId);
-    void disableTwoFactorAuth(Integer userId);
-    void revokeAllSessions(Integer userId);
-
     // Gestion des données
     UserDto importUserData(Integer userId, String jsonData);
     String exportUserData(Integer userId);
-    void anonymizeUserData(Integer userId);
-
-
-    // Personnalisation avancée
-    UserDto saveProfileLayout(Integer userId, String layoutConfig);
-    UserDto updateSocialLinks(Integer userId, Map<String, String> links);
-    UserDto setBiography(Integer userId, String bio);
-
-    // Métadonnées
-    Map<String, Object> getUserMetadata(Integer userId);
-    Map<String, Long> getActivityHeatmap(Integer userId);
 
 }

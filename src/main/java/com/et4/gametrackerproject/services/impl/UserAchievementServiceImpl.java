@@ -105,11 +105,6 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     }
 
     @Override
-    public void recalculateAllUserPoints() {
-
-    }
-
-    @Override
     public Page<UserAchievementDto> getRarestAchievements(Pageable pageable) {
         return null;
     }
@@ -122,16 +117,6 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     @Override
     public Map<AchievementDto, Instant> getAchievementUnlockTimes(Integer userId) {
         return Map.of();
-    }
-
-    @Override
-    public void syncAchievementsAcrossPlatforms(Integer userId) {
-
-    }
-
-    @Override
-    public void migrateAchievementProgress(Integer sourceUserId, Integer targetUserId) {
-
     }
 
     @Override

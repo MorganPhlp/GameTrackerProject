@@ -169,21 +169,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void enableTwoFactorAuth(Integer userId) {
-
-    }
-
-    @Override
-    public void disableTwoFactorAuth(Integer userId) {
-
-    }
-
-    @Override
-    public void revokeAllSessions(Integer userId) {
-
-    }
-
-    @Override
     public UserDto importUserData(Integer userId, String jsonData) {
         return null;
     }
@@ -191,35 +176,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public String exportUserData(Integer userId) {
         return "";
-    }
-
-    @Override
-    public void anonymizeUserData(Integer userId) {
-
-    }
-
-    @Override
-    public UserDto saveProfileLayout(Integer userId, String layoutConfig) {
-        return null;
-    }
-
-    @Override
-    public UserDto updateSocialLinks(Integer userId, Map<String, String> links) {
-        return null;
-    }
-
-    @Override
-    public UserDto setBiography(Integer userId, String bio) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> getUserMetadata(Integer userId) {
-        return Map.of();
-    }
-
-    @Override
-    public Map<String, Long> getActivityHeatmap(Integer userId) {
-        return Map.of();
     }
 }

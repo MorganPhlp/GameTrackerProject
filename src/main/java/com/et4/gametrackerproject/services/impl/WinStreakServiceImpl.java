@@ -117,16 +117,6 @@ public class WinStreakServiceImpl implements WinStreakService {
     }
 
     @Override
-    public boolean validateStreakOwnership(Integer streakId, Integer userId) {
-        return false;
-    }
-
-    @Override
-    public void auditStreakModifications(Integer streakId) {
-
-    }
-
-    @Override
     public void detectAnomalousStreaks(Integer gameId) {
 
     }
