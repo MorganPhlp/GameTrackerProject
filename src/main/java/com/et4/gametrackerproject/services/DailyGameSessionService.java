@@ -1,6 +1,9 @@
 package com.et4.gametrackerproject.services;
 
 import com.et4.gametrackerproject.dto.DailyGameSessionDto;
+import com.et4.gametrackerproject.dto.UserDto;
+import com.et4.gametrackerproject.model.User;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -13,18 +16,36 @@ public interface DailyGameSessionService {
     DailyGameSessionDto updateSession(Integer id, DailyGameSessionDto sessionDto);
     void deleteSession(Integer id);
 
-    //Récupération des sessions
-    DailyGameSessionDto getSessionByUserAndDate(Integer userId, Instant date);
-    List<DailyGameSessionDto> getSessionsForUser(Integer userId);
+    List<DailyGameSessionDto> getSessionByDate(Instant date);
+
+
+    DailyGameSessionDto getSessionByUserAndDate(User user, Instant date);
+
+    List<DailyGameSessionDto> getSessionsForUser(User user);
+
     List<DailyGameSessionDto> getSessionsForUserBetweenDates(Integer userId, Instant start, Instant end);
 
     //Statistiques de jeu
-    Integer calculateTotalPlayTimeForUser(Integer userId);
+
+    Map<UserDto, Long> getMostActiveUsers();
+
+    Integer calculateTotalPlaytimeByUser(User user);
+
+    Integer calculatePlaytimeByUserInPeriod(User user, Instant startDate, Instant endDate);
+
+    Long countSessionsByUser(User user);
+
+    Integer countGamesPlayedByUser(User user);
+
+    DailyGameSessionDto getLongestSessionForUser(User user);
+
+    List<DailyGameSessionDto> getRecentSessionsForUser(User user, int limit);
+
+    Double calculateAveragePlaytimeByUser(User user);
+
     Double calculateDailyAveragePlayTime(Integer userId);
 
     //Gestion des sessions
-    DailyGameSessionDto recordPlaySession(Integer userId, Integer gameId, Integer durationSeconds);
-    DailyGameSessionDto incrementGamesPlayed(Integer userId, Integer gameId);
     void resetDailySession(Integer userId);
 
     //Méthodes de rapport
