@@ -24,4 +24,7 @@ public interface AchievementService {
 
     //Achievement secrets
     List<AchievementDto> getSecretAchievements();
+    List<AchievementDto> getAchievementsByDescriptionContaining(String keyword);
+
+    List<AchievementDto> countNumberAchievementsByType();
 }

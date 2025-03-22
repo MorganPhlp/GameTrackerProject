@@ -17,9 +17,6 @@ public interface AchievementRepository extends JpaRepository<Achievement, Intege
     @Query("SELECT a FROM Achievement a WHERE a.description LIKE %:keyword%")
     List<Achievement> findByDescriptionContaining(@Param("keyword") String keyword);
 
-    @Query("SELECT a FROM Achievement a WHERE a.id NOT IN (SELECT ua.achievement.id FROM UserAchievement ua WHERE ua.user.id = :userId)")
-    List<Achievement> findNotEarnedByUserId(@Param("userId") Integer userId);
-
     @Query("SELECT a.type, COUNT(a) FROM Achievement a GROUP BY a.type")
     List<Object[]> countByType();
 

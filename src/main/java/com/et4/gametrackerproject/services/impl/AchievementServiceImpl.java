@@ -1,23 +1,25 @@
 package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.AchievementDto;
+import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.AchievementRarity;
 import com.et4.gametrackerproject.enums.AchievementType;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.model.Achievement;
+import com.et4.gametrackerproject.model.Avatar;
 import com.et4.gametrackerproject.repository.AchievementRepository;
 import com.et4.gametrackerproject.services.AchievementService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 @Service
 public class AchievementServiceImpl implements AchievementService {
@@ -171,4 +173,41 @@ public class AchievementServiceImpl implements AchievementService {
                 .map(AchievementDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AchievementDto> getAchievementsByDescriptionContaining(String keyword){
+        List<Achievement> achievements = achievementRepository.findByDescriptionContaining(keyword);
+
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement secret trouvé");
+            throw new EntityNotFoundException("Aucun achievement actif trouvé",
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AchievementDto> countNumberAchievementsByType() {
+        // Récupère la liste d'objets Object[] où chaque élément contient [AchievementType, Long count]
+        List<Object[]> results = achievementRepository.countByType();
+
+        // Transformation des résultats en une liste de AchievementDto
+        return results.stream()
+                .map(row -> {
+                    AchievementType type = (AchievementType) row[0];
+                    Long count = (Long) row[1];
+                    // Ici, on utilise le champ pointsReward pour stocker le compte, à adapter selon ton besoin
+                    return AchievementDto.builder()
+                            .type(type)
+                            .pointsReward(count.intValue())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }
+
