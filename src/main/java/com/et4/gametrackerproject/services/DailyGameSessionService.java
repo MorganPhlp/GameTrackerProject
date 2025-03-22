@@ -43,21 +43,7 @@ public interface DailyGameSessionService {
 
     Double calculateAveragePlaytimeByUser(User user);
 
-    Double calculateDailyAveragePlayTime(Integer userId);
-
-    //Gestion des sessions
-    void resetDailySession(Integer userId);
-
-    //Méthodes de rapport
-    Map<String, Object> generateWeeklyReport(Integer userId);
-    Map<String, Object> generateMonthlyReport(Integer userId);
-
-    //Administration
-    void recalculateSessionStats(Integer sessionId);
-    void cleanOldSessions(int daysThreshold);
-
     //Utilitaires
-    boolean hasSessionForDate(Integer userId, Instant date);
     Instant getLastPlayedDate(Integer userId);
-    boolean isFirstSessionOfDay(Integer userId, Instant timestamp);
+
 }
