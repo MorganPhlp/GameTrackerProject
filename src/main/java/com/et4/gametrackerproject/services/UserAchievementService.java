@@ -15,7 +15,6 @@ public interface UserAchievementService {
 
     //Opérations de base
     UserAchievementDto unlockAchievement(UserAchievementDto userAchievementDto);
-    UserAchievementDto revokeAchievement(Integer userAchievementId);
     void deleteUserAchievement(Integer userAchievementId);
 
     // Récupération

@@ -21,13 +21,7 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     }
 
     @Override
-    public UserAchievementDto revokeAchievement(Integer userAchievementId) {
-        return null;
-    }
-
-    @Override
     public void deleteUserAchievement(Integer userAchievementId) {
-
     }
 
     @Override

@@ -8,9 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface AchievementRepository extends JpaRepository<Achievement, Integer> {
+
+    List<Achievement> findByUsers_Id(Integer userId);
+
 
     Optional<Achievement> findByName(String name);
 
@@ -19,7 +23,7 @@ public interface AchievementRepository extends JpaRepository<Achievement, Intege
     List<Achievement> findByType(AchievementType type);
 
     List<Achievement> findByRarity(AchievementRarity rarity);
-
+    
     List<Achievement> findByIsActiveTrue();
 
     List<Achievement> findByIsSecretTrue();
@@ -42,4 +46,10 @@ public interface AchievementRepository extends JpaRepository<Achievement, Intege
 
     @Query("SELECT a.type, COUNT(a) FROM Achievement a GROUP BY a.type")
     List<Object[]> countByType();
+
+
+    Map<Achievement, Boolean> findUserAchievementProgress(Integer userId);
+
+
+    boolean existsUserAchievement(Integer userId, Integer achievementId);
 }
