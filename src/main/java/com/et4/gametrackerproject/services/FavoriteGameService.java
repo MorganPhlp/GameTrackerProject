@@ -6,6 +6,7 @@ import com.et4.gametrackerproject.dto.UserDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface FavoriteGameService {
 
@@ -27,9 +28,18 @@ public interface FavoriteGameService {
     Map<String, Long> getMostFavoritedGames(int limit);
     Map<Integer, Long> getFavoriteCountByGameCategory();
 
-    // Vérifications
-    boolean existsFavoriteRelationship(Integer userId, Integer gameId);
+    //Vérifier si un jeu est favori pour un utilisateur spécifique
+    Optional<FavoriteGameDto> findFavoriteByUserAndGame(Integer userId, Integer gameId);
 
-    //Administration
-    void removeAllFavoritesForGame(Integer gameId);
+    //Récupérer les jeux favoris ajoutés récemment par un utilisateur
+    List<FavoriteGameDto> getRecentlyAddedFavoritesForUser(Integer userId);
+
+    // 3. Trouver les favoris communs entre deux utilisateurs
+    List<GameDto> getCommonFavoriteGames(Integer userId1, Integer userId2);
+
+    //Compter le nombre de jeux favoris pour un utilisateur
+    Long countFavoritesByUser(Integer userId);
+
+    //Supprimer un jeu favori pour un utilisateur spécifique
+    void deleteFavoriteByUserAndGame(Integer userId, Integer gameId);
 }

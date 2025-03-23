@@ -12,6 +12,9 @@ import java.util.Optional;
 
 public interface FriendshipRepository extends JpaRepository<Friendship,Integer> {
 
+    @Query("SELECT f FROM Friendship f WHERE f.user1.id = :userId1 OR f.user2.id = :userId2")
+    List<Friendship> findByUser1IdOrUser2Id(@Param("userId1") Integer userId1, @Param("userId2") Integer userId2);
+
     // Trouver une amitié spécifique entre deux utilisateurs (dans n'importe quel sens)
     @Query("SELECT f FROM Friendship f WHERE (f.user1 = :user1 AND f.user2 = :user2) OR (f.user1 = :user2 AND f.user2 = :user1)")
     Optional<Friendship> findFriendship(@Param("user1") User user1, @Param("user2") User user2);
@@ -19,10 +22,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
     // Vérifier si une amitié existe entre deux utilisateurs
     @Query("SELECT COUNT(f) > 0 FROM Friendship f WHERE (f.user1 = :user1 AND f.user2 = :user2) OR (f.user1 = :user2 AND f.user2 = :user1)")
     boolean existsFriendship(@Param("user1") User user1, @Param("user2") User user2);
-
-    // Récupérer toutes les amitiés d'un utilisateur (où il est user1 ou user2)
-    @Query("SELECT f FROM Friendship f WHERE f.user1 = :user OR f.user2 = :user")
-    List<Friendship> findAllByUser(@Param("user") User user);
 
     // Récupérer toutes les amitiés d'un utilisateur avec un statut spécifique
     @Query("SELECT f FROM Friendship f WHERE (f.user1 = :user OR f.user2 = :user) AND f.status = :status")
@@ -32,9 +31,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
     @Query("SELECT f FROM Friendship f WHERE f.user2 = :user AND f.status = 'PENDING'")
     List<Friendship> findPendingRequestsByReceiver(@Param("user") User user);
 
-    // Récupérer les demandes d'amitié envoyées par un utilisateur (où il est user1 et le statut est PENDING)
-    @Query("SELECT f FROM Friendship f WHERE f.user1 = :user AND f.status = 'PENDING'")
-    List<Friendship> findPendingRequestsBySender(@Param("user") User user);
 
     // Récupérer les amis confirmés d'un utilisateur
     @Query("SELECT f.user2 FROM Friendship f WHERE f.user1 = :user AND f.status = 'ACCEPTED' " +
@@ -46,15 +42,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
     @Query("SELECT COUNT(f) FROM Friendship f WHERE (f.user1 = :user OR f.user2 = :user) AND f.status = 'ACCEPTED'")
     Long countFriendsByUser(@Param("user") User user);
 
-    // Trouver les utilisateurs les plus populaires (avec le plus d'amis)
-    @Query(value =
-            "SELECT u.id, u.username, COUNT(*) as friend_count FROM user u " +
-                    "JOIN friendship f ON (u.id = f.user_id_1 OR u.id = f.user_id_2) " +
-                    "WHERE f.status = 'ACCEPTED' " +
-                    "GROUP BY u.id, u.username " +
-                    "ORDER BY friend_count DESC",
-            nativeQuery = true)
-    List<Object[]> findMostPopularUsers();
 
     // Trouver les amis en commun entre deux utilisateurs
     @Query(value =
