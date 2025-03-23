@@ -27,7 +27,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
 
     // Récupérer toutes les amitiés d'un utilisateur avec un statut spécifique
     @Query("SELECT f FROM Friendship f WHERE (f.user1 = :user OR f.user2 = :user) AND f.status = :status")
-    Page<Friendship> findAllByUserAndStatus(@Param("user") User user, @Param("status") FriendshipStatus status, Pageable pageable);
+    List<Friendship> findAllByUserAndStatus(@Param("user") User user, @Param("status") FriendshipStatus status);
 
     @Query("SELECT f FROM Friendship f WHERE (f.user1 = :user OR f.user2 = :user) AND f.status = :status")
     Page<User> findAllUsersByUserAndStatus(User user, FriendshipStatus status, Pageable pageable);

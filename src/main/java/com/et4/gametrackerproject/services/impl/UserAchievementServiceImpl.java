@@ -3,7 +3,19 @@ package com.et4.gametrackerproject.services.impl;
 import com.et4.gametrackerproject.dto.AchievementDto;
 import com.et4.gametrackerproject.dto.UserAchievementDto;
 import com.et4.gametrackerproject.dto.UserDto;
+import com.et4.gametrackerproject.exception.EntityNotFoundException;
+import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.exception.InvalidEntityException;
+import com.et4.gametrackerproject.model.Achievement;
+import com.et4.gametrackerproject.model.User;
+import com.et4.gametrackerproject.model.UserAchievement;
+import com.et4.gametrackerproject.repository.AchievementRepository;
+import com.et4.gametrackerproject.repository.UserAchievementRepository;
+import com.et4.gametrackerproject.repository.UserRepository;
 import com.et4.gametrackerproject.services.UserAchievementService;
+import com.et4.gametrackerproject.validator.UserAchievementValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,120 +24,217 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserAchievementServiceImpl implements UserAchievementService {
+
+    private final UserAchievementRepository userAchievementRepository;
+    private final UserRepository userRepository;
+    private final AchievementRepository achievementRepository;
+
+    @Autowired
+    public UserAchievementServiceImpl(UserAchievementRepository userAchievementRepository, UserRepository userRepository, AchievementRepository achievementRepository) {
+        this.userAchievementRepository = userAchievementRepository;
+        this.userRepository = userRepository;
+        this.achievementRepository = achievementRepository;
+    }
+
     @Override
     public UserAchievementDto unlockAchievement(UserAchievementDto userAchievementDto) {
-        return null;
+        List<String> errors = UserAchievementValidator.validate(userAchievementDto);
+        if (errors.isEmpty()) {
+            log.error("User is not valid : {}", errors);
+            throw new InvalidEntityException("User is not valid", ErrorCodes.USER_ACHIEVEMENT_NOT_VALID, errors);
+        }
+
+        log.info("Unlocking achievement : {}", userAchievementDto);
+
+        return UserAchievementDto.fromEntity(userAchievementRepository.save(UserAchievementDto.toEntity(userAchievementDto)));
     }
 
     @Override
     public void deleteUserAchievement(Integer userAchievementId) {
+        if(userAchievementId == null){
+            log.error("UserAchievement id is null");
+            throw new EntityNotFoundException("No userAchievement found with id : " + userAchievementId, ErrorCodes.USER_ACHIEVEMENT_NOT_FOUND);
+        }
+        if(!userAchievementRepository.existsById(userAchievementId)){
+            log.error("UserAchievement with id : {} is not found", userAchievementId);
+            throw new EntityNotFoundException("No userAchievement found with id : " + userAchievementId, ErrorCodes.USER_ACHIEVEMENT_NOT_FOUND);
+        }
+
+        log.info("Deleting userAchievement with id : {}", userAchievementId);
+
+        // TODO : Ajouter suppression des relations avant de supprimer l'entité
+        userAchievementRepository.deleteById(userAchievementId);
     }
 
     @Override
     public UserAchievementDto getUserAchievementById(Integer userAchievementId) {
-        return null;
+        if(userAchievementId == null){
+            log.error("UserAchievement id is null");
+            throw new EntityNotFoundException("No userAchievement found with id : " + userAchievementId, ErrorCodes.USER_ACHIEVEMENT_NOT_FOUND);
+        }
+
+        log.info("Fetching userAchievement with id : {}", userAchievementId);
+
+        return userAchievementRepository.findById(userAchievementId).map(UserAchievementDto::fromEntity).orElseThrow(() ->
+                new EntityNotFoundException("No userAchievement found with id : " + userAchievementId, ErrorCodes.USER_ACHIEVEMENT_NOT_FOUND));
     }
 
     @Override
     public Page<UserAchievementDto> getAchievementsByUser(Integer userId, Pageable pageable) {
-        return null;
-    }
+        if(userId == null){
+            log.error("User id is null");
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
 
-    @Override
-    public Page<UserAchievementDto> getAchievementsByType(String achievementType, Pageable pageable) {
-        return null;
+        log.info("Fetching achievements for user with id : {}", userId);
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND));
+
+        return userAchievementRepository.findByUser(user, pageable).map(UserAchievementDto::fromEntity);
     }
 
     @Override
     public Set<UserAchievementDto> getRecentUnlocks(Integer userId, int days) {
-        return Set.of();
+        if(userId == null){
+            log.error("User id is null");
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+
+        log.info("Fetching recent unlocks for user with id : {}", userId);
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND));
+
+        Instant start = Instant.now().minusSeconds(days * 24 * 60 * 60);
+        Instant end = Instant.now();
+
+        List<UserAchievement> userAchievements = userAchievementRepository.findByUserAndUnlockedAtBetween(user, start, end);
+
+        return userAchievements.stream().map(UserAchievementDto::fromEntity).collect(Collectors.toSet());
     }
 
     @Override
     public boolean hasAchievement(Integer userId, Integer achievementId) {
-        return false;
+        if(userId == null){
+            log.error("User id is null");
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+        if(achievementId == null){
+            log.error("Achievement id is null");
+            throw new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+        if(!userRepository.existsById(userId)){
+            log.error("User with id : {} is not found", userId);
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+        if(!achievementRepository.existsById(achievementId)){
+            log.error("Achievement with id : {} is not found", achievementId);
+            throw new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        log.info("Checking if user with id : {} has achievement with id : {}", userId, achievementId);
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND));
+
+        Achievement achievement = achievementRepository.findById(achievementId).orElseThrow(() ->
+                new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND));
+
+        return userAchievementRepository.existsByUserAndAchievement(user, achievement);
     }
 
     @Override
     public boolean hasAllPrerequisites(Integer userId, Integer achievementId) {
+        if(userId == null){
+            log.error("User id is null");
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+        if(achievementId == null){
+            log.error("Achievement id is null");
+            throw new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+        if(!userRepository.existsById(userId)){
+            log.error("User with id : {} is not found", userId);
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+        if(!achievementRepository.existsById(achievementId)){
+            log.error("Achievement with id : {} is not found", achievementId);
+            throw new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        log.info("Checking if user with id : {} has all prerequisites for achievement with id : {}", userId, achievementId);
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND));
+
+        Achievement achievement = achievementRepository.findById(achievementId).orElseThrow(() ->
+                new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND));
+
+        // TODO : Implémenter la vérification des dépendances
         return false;
     }
 
     @Override
     public Map<AchievementDto, Boolean> getAchievementProgress(Integer userId) {
+        if(userId == null){
+            log.error("User id is null");
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+        if(!userRepository.existsById(userId)){
+            log.error("User with id : {} is not found", userId);
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+
+        log.info("Fetching achievement progress for user with id : {}", userId);
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND));
+
+        // TODO : Implémenter la récupération de la progression des succès
         return Map.of();
-    }
-
-    @Override
-    public void unlockDependentAchievements(Integer userId, Integer baseAchievementId) {
-
-    }
-
-    @Override
-    public void checkAndUnlockChainAchievements(Integer userId, Integer achievementChainId) {
-
-    }
-
-    @Override
-    public void validateAchievementDependencies(Integer userAchievementId) {
-
     }
 
     @Override
     public Integer getTotalAchievementPoints(Integer userId) {
-        return 0;
-    }
+        if(userId == null){
+            log.error("User id is null");
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
+        if(!userRepository.existsById(userId)){
+            log.error("User with id : {} is not found", userId);
+            throw new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND);
+        }
 
-    @Override
-    public Map<String, Long> getAchievementDistribution(Integer userId) {
-        return Map.of();
-    }
+        log.info("Fetching total achievement points for user with id : {}", userId);
 
-    @Override
-    public Map<UserDto, Integer> getTopAchievementCollectors(int limit) {
-        return Map.of();
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("No user found with id : " + userId, ErrorCodes.USER_NOT_FOUND));
+
+        return userAchievementRepository.countAchievementsUnlockedByUser(user).intValue();
     }
 
     @Override
     public Double getGlobalUnlockRate(Integer achievementId) {
-        return 0.0;
-    }
+        if (achievementId == null) {
+            log.error("Achievement id is null");
+            throw new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+        if (!achievementRepository.existsById(achievementId)) {
+            log.error("Achievement with id : {} is not found", achievementId);
+            throw new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
 
-    @Override
-    public UserAchievementDto grantAchievement(Integer userId, Integer achievementId) {
-        return null;
-    }
+        log.info("Calculating global unlock rate for achievement with id : {}", achievementId);
 
-    @Override
-    public void bulkGrantAchievement(Integer achievementId, List<Integer> userIds) {
+        Achievement achievement = achievementRepository.findById(achievementId).orElseThrow(() ->
+                new EntityNotFoundException("No achievement found with id : " + achievementId, ErrorCodes.ACHIEVEMENT_NOT_FOUND));
 
-    }
-
-    @Override
-    public Page<UserAchievementDto> getRarestAchievements(Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Set<UserAchievementDto> getSecretAchievements(Integer userId) {
-        return Set.of();
-    }
-
-    @Override
-    public Map<AchievementDto, Instant> getAchievementUnlockTimes(Integer userId) {
-        return Map.of();
-    }
-
-    @Override
-    public Page<UserAchievementDto> getFriendAchievements(Integer userId, Integer friendId, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Map<UserDto, Integer> getSocialLeaderboard(Integer userId) {
-        return Map.of();
+        return userAchievementRepository.calculateGlobalUnlockRate(achievement);
     }
 }

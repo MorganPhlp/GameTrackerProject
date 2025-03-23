@@ -8,7 +8,6 @@ import com.et4.gametrackerproject.enums.ScreenTheme;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidEntityException;
-import com.et4.gametrackerproject.model.Friendship;
 import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.repository.AvatarRepository;
 import com.et4.gametrackerproject.repository.FriendshipRepository;
@@ -22,8 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @Service
