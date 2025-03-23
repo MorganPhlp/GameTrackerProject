@@ -1,146 +1,208 @@
 package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.GameLeaderboardDto;
-import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.LeaderboardPeriod;
+import com.et4.gametrackerproject.exception.EntityNotFoundException;
+import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.model.Game;
+import com.et4.gametrackerproject.model.GameLeaderboard;
+import com.et4.gametrackerproject.model.User;
+import com.et4.gametrackerproject.repository.GameLeaderboardRepository;
+import com.et4.gametrackerproject.repository.GameRepository;
+import com.et4.gametrackerproject.repository.UserRepository;
 import com.et4.gametrackerproject.services.GameLeaderboardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GameLeaderboardServiceImpl implements GameLeaderboardService {
+    private static final Logger log = LoggerFactory.getLogger(GameLeaderboardServiceImpl.class);
+    private final GameLeaderboardRepository gameLeaderboardRepository;
+    private final GameRepository gameRepository;
+    private final UserRepository userRepository;
+
+    public GameLeaderboardServiceImpl(GameLeaderboardRepository gameLeaderboardRepository, GameRepository gameRepository, UserRepository userRepository) {
+        this.gameLeaderboardRepository = gameLeaderboardRepository;
+        this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
+    }
+
+    // Soumet un nouveau score et retourne l'entrée sauvegardée.
     @Override
     public GameLeaderboardDto submitScore(GameLeaderboardDto scoreEntry) {
-        return null;
+        if (scoreEntry == null) {
+            throw new IllegalArgumentException("Les données du score ne peuvent être null");
+        }
+        GameLeaderboard entity = GameLeaderboardDto.toEntity(scoreEntry);
+        entity.setLastModifiedDate(Instant.now());
+        GameLeaderboard saved = gameLeaderboardRepository.save(entity);
+        log.info("Score soumis avec l'ID {}", saved.getId());
+        return GameLeaderboardDto.fromEntity(saved);
     }
 
+    // Met à jour le score d'une entrée existante et retourne l'entrée mise à jour.
     @Override
     public GameLeaderboardDto updateScore(Integer entryId, Integer newScore) {
-        return null;
+        if (entryId == null) {
+            throw new IllegalArgumentException("L'ID de l'entrée ne peut être null");
+        }
+        if (newScore == null) {
+            throw new IllegalArgumentException("Le nouveau score ne peut être null");
+        }
+        GameLeaderboard existing = gameLeaderboardRepository.findById(entryId)
+                .orElseThrow(() -> new EntityNotFoundException("Entrée de leaderboard non trouvée avec l'ID " + entryId, ErrorCodes.GAME_LEADERBOARD_NOT_FOUND));
+        existing.setScore(newScore);
+        existing.setLastModifiedDate(Instant.now());
+        GameLeaderboard updated = gameLeaderboardRepository.save(existing);
+        log.info("Score mis à jour pour l'entrée ID {} : nouveau score {}", entryId, newScore);
+        return GameLeaderboardDto.fromEntity(updated);
     }
 
+    // Supprime une entrée de leaderboard par son ID.
     @Override
     public void deleteScoreEntry(Integer entryId) {
-
-    }
-
-    @Override
-    public Page<GameLeaderboardDto> getLeaderboardForGame(Integer gameId, LeaderboardPeriod period, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Page<GameLeaderboardDto> getFullLeaderboard(LeaderboardPeriod period, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Page<GameLeaderboardDto> getHistoricalLeaderboard(Integer gameId, Instant date, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Integer getUserRank(Integer userId, Integer gameId, LeaderboardPeriod period) {
-        return 0;
-    }
-
-    @Override
-    public Map<LeaderboardPeriod, Integer> getUserRanksAcrossPeriods(Integer userId, Integer gameId) {
-        return Map.of();
-    }
-
-    @Override
-    public List<GameLeaderboardDto> getSurroundingEntries(Integer userId, Integer gameId, LeaderboardPeriod period, int range) {
-        return List.of();
-    }
-
-    @Override
-    public Map<Integer, Integer> getTopScoresForGame(Integer gameId, int limit) {
-        return Map.of();
-    }
-
-    @Override
-    public Map<String, Long> getScoreDistribution(Integer gameId, LeaderboardPeriod period) {
-        return Map.of();
-    }
-
-    @Override
-    public Map<LeaderboardPeriod, Integer> getPerformanceTrend(Integer userId, Integer gameId) {
-        return Map.of();
-    }
-
-    @Override
-    public void recalculateLeaderboard(Integer gameId, LeaderboardPeriod period) {
-
+        if (entryId == null) {
+            throw new IllegalArgumentException("L'ID de l'entrée ne peut être null");
+        }
+        GameLeaderboard existing = gameLeaderboardRepository.findById(entryId)
+                .orElseThrow(() -> new EntityNotFoundException("Entrée de leaderboard non trouvée avec l'ID " + entryId, ErrorCodes.GAME_LEADERBOARD_NOT_FOUND));
+        gameLeaderboardRepository.delete(existing);
+        log.info("Entrée de leaderboard avec l'ID {} supprimée", entryId);
     }
 
     @Override
     public void resetLeaderboard(Integer gameId, LeaderboardPeriod period) {
+        // On ignore le paramètre "period" car on réinitialise le leaderboard pour l'ensemble du jeu.
+        if (gameId == null) {
+            throw new IllegalArgumentException("L'ID du jeu ne peut être null");
+        }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        gameLeaderboardRepository.deleteGameLeaderboardByGame(game);
+        log.info("Leaderboard réinitialisé pour le jeu {}", gameId);
+    }
 
+
+
+
+    //====================GETTER ======================
+
+    @Override
+    public Page<GameLeaderboardDto> getLeaderboardForGame(Integer gameId, LeaderboardPeriod period, Pageable pageable) {
+        // Vérifie que l'ID du jeu et la période ne sont pas null, récupère le jeu, et renvoie le leaderboard paginé pour ce jeu et cette période.
+        if (gameId == null) {
+            throw new IllegalArgumentException("L'ID du jeu ne peut être null");
+        }
+        if (period == null) {
+            throw new IllegalArgumentException("La période ne peut être null");
+        }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        Page<GameLeaderboard> pageLeaderboard = gameLeaderboardRepository.findByGameAndPeriod(game, period, pageable);
+        return pageLeaderboard.map(GameLeaderboardDto::fromEntity);
     }
 
     @Override
-    public void freezeLeaderboard(Integer gameId, LeaderboardPeriod period) {
-
+    public Page<GameLeaderboardDto> getLeaderboardByPeriod(LeaderboardPeriod period, Pageable pageable) {
+        // Vérifie que la période ne peut être null et renvoie le leaderboard complet paginé pour cette période.
+        if (period == null) {
+            throw new IllegalArgumentException("La période ne peut être null");
+        }
+        Page<GameLeaderboard> pageLeaderboard = gameLeaderboardRepository.findByPeriod(period, pageable);
+        return pageLeaderboard.map(GameLeaderboardDto::fromEntity);
     }
 
     @Override
-    public void archiveLeaderboard(Integer gameId, LeaderboardPeriod period) {
-
+    public Optional<GameLeaderboardDto> getLeaderBoardByGameUserPeriod(Integer gameId, Integer userId, LeaderboardPeriod period) {
+        // Vérifie les paramètres, récupère le jeu et l'utilisateur, puis le classement spécifique
+        if (gameId == null || userId == null || period == null) {
+            throw new IllegalArgumentException("L'ID du jeu, l'ID de l'utilisateur et la période ne peuvent être null");
+        }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID " + userId, ErrorCodes.USER_NOT_FOUND));
+        Optional<GameLeaderboard> entryOpt = gameLeaderboardRepository.findByGameAndUserAndPeriod(game, user, period);
+        return entryOpt.map(GameLeaderboardDto::fromEntity);
     }
 
     @Override
-    public boolean isScoreEligible(Integer gameId, Integer score) {
-        return false;
+    public List<GameLeaderboardDto> getLeaderboardByGamePeriodScore(Integer gameId, LeaderboardPeriod period) {
+        // Vérifie les paramètres, récupère le jeu, puis renvoie le classement complet trié par score décroissant
+        if (gameId == null || period == null) {
+            throw new IllegalArgumentException("L'ID du jeu et la période ne peuvent être null");
+        }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        List<GameLeaderboard> leaderboard = gameLeaderboardRepository.findByGameAndPeriodOrderByScoreDesc(game, period);
+        return leaderboard.stream()
+                .map(GameLeaderboardDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean hasUserSubmittedScore(Integer userId, Integer gameId, LeaderboardPeriod period) {
-        return false;
+    public Page<GameLeaderboardDto> getLeaderboardPageByRank(Integer gameId, LeaderboardPeriod period, Pageable pageable) {
+        // Vérifie les paramètres, récupère le jeu, puis renvoie une page du classement trié par numéro de rang
+        if (gameId == null || period == null) {
+            throw new IllegalArgumentException("L'ID du jeu et la période ne peuvent être null");
+        }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        Page<GameLeaderboard> page = gameLeaderboardRepository.findByGameAndPeriodOrderByRankNumber(game, period, pageable);
+        return page.map(GameLeaderboardDto::fromEntity);
     }
 
     @Override
-    public Page<GameLeaderboardDto> searchLeaderboardEntries(String query, Pageable pageable) {
-        return null;
+    public List<GameLeaderboardDto> getTopRankedPlayersByGamePeriod(Integer gameId, LeaderboardPeriod period, int limit) {
+        // Vérifie les paramètres, crée un Pageable pour limiter les résultats, récupère le jeu et renvoie les N meilleurs joueurs
+        if (gameId == null || period == null) {
+            throw new IllegalArgumentException("L'ID du jeu et la période ne peuvent être null");
+        }
+        Pageable pageable = PageRequest.of(0, limit);
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        List<GameLeaderboard> topList = gameLeaderboardRepository.findTopRankedByGameAndPeriod(game, period, pageable);
+        return topList.stream()
+                .map(GameLeaderboardDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Map<Integer, Long> getLeaderboardParticipationStats(Integer gameId) {
-        return Map.of();
+    public List<GameLeaderboardDto> getLeaderboardEntriesForUserAndGame(Integer userId, Integer gameId) {
+        // Vérifie que les IDs utilisateur et jeu ne sont pas null et récupère le classement correspondant
+        if (userId == null || gameId == null) {
+            throw new IllegalArgumentException("Les IDs de l'utilisateur et du jeu ne peuvent être null");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID " + userId, ErrorCodes.USER_NOT_FOUND));
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + gameId, ErrorCodes.GAME_NOT_FOUND));
+        List<GameLeaderboard> entries = gameLeaderboardRepository.findByUserAndGame(user, game);
+        return entries.stream()
+                .map(GameLeaderboardDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Map<UserDto, Integer> getTopPerformersGlobal(int limit) {
-        return Map.of();
+    public List<GameLeaderboardDto> getLeaderboardEntriesByDate(Instant date) {
+        // Vérifie que la date n'est pas null et récupère les entrées de classement correspondantes
+        if (date == null) {
+            throw new IllegalArgumentException("La date ne peut être null");
+        }
+        List<GameLeaderboard> entries = gameLeaderboardRepository.findByDate(date);
+        return entries.stream()
+                .map(GameLeaderboardDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public void notifyRankChanges(Integer gameId, LeaderboardPeriod period) {
 
-    }
-
-    @Override
-    public void updateAchievementsFromLeaderboard(Integer gameId) {
-
-    }
-
-    @Override
-    public void schedulePeriodicLeaderboardRotation() {
-
-    }
-
-    @Override
-    public Instant getCurrentPeriodEnd(LeaderboardPeriod period) {
-        return null;
-    }
-
-    @Override
-    public Instant getNextPeriodStart(LeaderboardPeriod period) {
-        return null;
-    }
 }
