@@ -18,22 +18,37 @@ public interface GameCommentRepository extends JpaRepository<GameComment,Integer
     List<GameComment> findByGame(Game game);
 
     // Récupérer tous les commentaires d'un utilisateur
-    List<GameComment> findByUser(User user);
-
-    // Récupérer tous les commentaires de premier niveau (sans parent) pour un jeu
-    List<GameComment> findByGameAndParentCommentIsNull(Game game);
+    Page<GameComment> findByUser(User user, Pageable pageable);
 
     // Récupérer tous les commentaires en réponse à un commentaire parent
     List<GameComment> findByParentComment(GameComment parentComment);
 
-    // Récupérer tous les commentaires d'un utilisateur pour un jeu spécifique
-    List<GameComment> findByUserAndGame(User user, Game game);
+    // Récupérer tous les commentaires en réponse à un commentaire parent
+    Page<GameComment> findByParentComment(GameComment parentComment, Pageable pageable);
 
     // Pagination pour les commentaires d'un jeu
     Page<GameComment> findByGame(Game game, Pageable pageable);
 
-    // Pagination pour les commentaires de premier niveau d'un jeu
-    Page<GameComment> findByGameAndParentCommentIsNull(Game game, Pageable pageable);
+    // Récupérer tous les commentaires créés après une certaine date
+    @Query("SELECT gc FROM GameComment gc WHERE gc.creationDate > :date")
+    List<GameComment> findByCreationDateAfter(@Param("date") Instant date);
+
+    // Rechercher des commentaires dont le contenu contient un terme précis (insensible à la casse) avec pagination
+    @Query("SELECT gc FROM GameComment gc WHERE LOWER(gc.content) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<GameComment> findByContentContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    // Récupérer les commentaires signalés (en joignant la table Report, où le type est 'comment')
+    @Query(value = "SELECT gc.* FROM gamecomment gc " +
+            "JOIN report r ON r.content_id = gc.id " +
+            "WHERE r.type = 'comment'", nativeQuery = true)
+    Page<GameComment> findReportedComments(Pageable pageable);
+
+    // Récupérer l'ID du jeu et le nombre de commentaires, trié par le nombre de commentaires décroissant
+    @Query("SELECT gc.game.id, COUNT(gc) FROM GameComment gc GROUP BY gc.game.id ORDER BY COUNT(gc) DESC")
+    List<Object[]> findTopCommentedGames();
+
+
+
 
     // Compter le nombre de commentaires pour un jeu
     @Query("SELECT COUNT(gc) FROM GameComment gc WHERE gc.game = :game")
@@ -47,8 +62,9 @@ public interface GameCommentRepository extends JpaRepository<GameComment,Integer
     @Query("SELECT COUNT(gc) FROM GameComment gc WHERE gc.parentComment = :parentComment")
     Long countReplies(@Param("parentComment") GameComment parentComment);
 
-    // Trouver les commentaires les plus récents pour un jeu
-    List<GameComment> findByGameOrderByCreationDateDesc(Game game);
+    @Query("SELECT gc FROM GameComment gc WHERE gc.game = :game ORDER BY gc.creationDate DESC")
+    List<GameComment> findByGameOrderByCreationDateDesc(@Param("game") Game game);
+
 
     // Trouver les commentaires les plus populaires (plus de likes)
     @Query("SELECT gc, COUNT(gcl) AS likeCount FROM GameComment gc LEFT JOIN gc.likes gcl " +
@@ -59,21 +75,7 @@ public interface GameCommentRepository extends JpaRepository<GameComment,Integer
     @Query("SELECT gc, COUNT(gr) AS replyCount FROM GameComment gc LEFT JOIN gc.replies gr WHERE gc.game = :game GROUP BY gc ORDER BY replyCount DESC")
     List<Object[]> findMostDiscussedCommentsByGame(@Param("game") Game game);
 
-    // Trouver les utilisateurs les plus actifs (avec le plus de commentaires) sur tous les jeux
-    @Query("SELECT gc.user, COUNT(gc) as commentCount FROM GameComment gc GROUP BY gc.user ORDER BY commentCount DESC")
-    List<Object[]> findMostActiveCommenters();
 
-    // Trouver les commentaires d'un utilisateur qui ont reçu des réponses
-    @Query("SELECT DISTINCT gc FROM GameComment gc WHERE gc.user = :user AND SIZE(gc.replies) > 0")
-    List<GameComment> findCommentsWithRepliesByUser(@Param("user") User user);
 
-    // Analyse des tendances: jeux avec l'augmentation la plus rapide de commentaires
-    @Query(value =
-            "SELECT g.id, g.name, COUNT(gc.id) as comment_count FROM game g " +
-                    "JOIN gamecomment gc ON gc.game_id = g.id " +
-                    "WHERE gc.creation_date >= :since " +
-                    "GROUP BY g.id, g.name " +
-                    "ORDER BY comment_count DESC",
-            nativeQuery = true)
-    List<Object[]> findTrendingGamesByComments(@Param("since") Instant since);
+
 }

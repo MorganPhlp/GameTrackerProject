@@ -1,6 +1,7 @@
 package com.et4.gametrackerproject.services;
 
 import com.et4.gametrackerproject.dto.GameCommentDto;
+import com.et4.gametrackerproject.dto.GameCommentLikeDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +23,6 @@ public interface GameCommentService {
     Page<GameCommentDto> getCommentReplies(Integer parentCommentId, Pageable pageable);
     void removeAllRepliesFromComment(Integer parentCommentId);
 
-    //Likes et interactions
-    GameCommentDto toggleLikeOnComment(Integer commentId, Integer userId);
-    int getCommentLikesCount(Integer commentId);
-    boolean hasUserLikedComment(Integer commentId, Integer userId);
     Set<UserDto> getCommentLikers(Integer commentId);
 
     // Récupération des commentaires
@@ -34,21 +31,24 @@ public interface GameCommentService {
     List<GameCommentDto> getRecentComments(int hours);
     Page<GameCommentDto> searchComments(String searchTerm, Pageable pageable);
 
-    // Modération
-    GameCommentDto moderateComment(Integer commentId, String moderationReason);
-    GameCommentDto hideComment(Integer commentId, boolean hidden);
-    void reportComment(Integer commentId, Integer reporterId, String reason);
     Page<GameCommentDto> getReportedComments(Pageable pageable);
 
     //Statistiques
 
     Map<Integer, Long> getTopCommentedGames(int limit);
 
-    //Gestion de version
-    GameCommentDto restoreCommentVersion(Integer commentId, Integer versionNumber);
-    List<GameCommentDto> getCommentHistory(Integer commentId);
 
-    //Vérifications
-    boolean isCommentOwner(Integer commentId, Integer userId);
-    boolean hasReplies(Integer commentId);
+    List<GameCommentDto> getCommentsForGame(Integer gameId);
+
+    Long countCommentsForGame(Integer gameId);
+
+    Long countCommentsByUser(Integer userId);
+
+    Long countRepliesForComment(Integer commentId);
+
+    List<GameCommentDto> getRecentCommentsForGame(Integer gameId);
+
+    Map<Integer, Long> getMostLikedCommentsForGame(Integer gameId, int limit);
+
+    Map<Integer, Long> getMostDiscussedCommentsForGame(Integer gameId, int limit);
 }
