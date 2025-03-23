@@ -18,7 +18,6 @@ public interface FriendshipService {
     //Récupération
     FriendshipDto getFriendshipById(Integer friendshipId);
     List<FriendshipDto> getAllFriendshipsForUser(Integer userId);
-    List<FriendshipDto> getFriendshipsByStatus(Integer userId, FriendshipStatus status);
 
 
     List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status);
@@ -48,13 +47,6 @@ public interface FriendshipService {
     List<FriendshipDto> getAllFriendships();
     List<FriendshipDto> searchFriendshipsByUser(String username);
     void removeAllFriendshipsForUser(Integer userId);
-
-    //Gestion des conflits
-    void resolveDuplicateFriendships(Integer userId);
-    void mergeDuplicateFriendships(Integer user1Id, Integer user2Id);
-
-    //Notifications
-    void notifyFriendshipUpdate(Integer friendshipId);
 
     List<UserDto> suggestFriends(Integer userId);
 }
