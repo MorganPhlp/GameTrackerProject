@@ -22,7 +22,6 @@ public class UserAchievementServiceImpl implements UserAchievementService {
 
     @Override
     public void deleteUserAchievement(Integer userAchievementId) {
-
     }
 
     @Override

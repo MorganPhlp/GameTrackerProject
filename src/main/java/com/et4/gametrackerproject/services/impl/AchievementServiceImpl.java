@@ -1,90 +1,213 @@
 package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.AchievementDto;
+import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.AchievementRarity;
 import com.et4.gametrackerproject.enums.AchievementType;
+import com.et4.gametrackerproject.exception.EntityNotFoundException;
+import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.model.Achievement;
+import com.et4.gametrackerproject.model.Avatar;
+import com.et4.gametrackerproject.repository.AchievementRepository;
 import com.et4.gametrackerproject.services.AchievementService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class AchievementServiceImpl implements AchievementService {
 
-    @Override
-    public List<AchievementDto> getAllAchievements() {
-        return List.of();
+    private final AchievementRepository achievementRepository;
+
+    public AchievementServiceImpl(AchievementRepository achievementRepository) {
+        this.achievementRepository = achievementRepository;
     }
 
     @Override
+    public List<AchievementDto> getAllAchievements() {
+        List<Achievement> achievements = achievementRepository.findAll();
+
+        if (achievements.isEmpty()) {
+            log.error("Aucun achievement trouvé");
+            throw new EntityNotFoundException("Aucun achievement trouvé",
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        // Convertir chaque achievement en DTO et les retourner sous forme de liste
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(AchievementServiceImpl.class);
+
+    @Override
     public AchievementDto getAchievementById(Integer id) {
-        return null;
+        if (id == null){
+            log.error("Article ID is null");
+            return null;
+        }
+
+        Optional<Achievement> achievement = achievementRepository.findById(id);
+
+        AchievementDto dto = AchievementDto.fromEntity(achievement.get());
+
+        return Optional.of(dto).orElseThrow(() ->
+        new EntityNotFoundException("Aucun artcle avec l'ID "+ id + "Trouvée",
+                ErrorCodes.ACHIEVEMENT_NOT_FOUND)
+                );
     }
 
     @Override
     public List<AchievementDto> getAchievementsByType(AchievementType type) {
-        return List.of();
+        if (type == null) {
+            log.error("Le type d'achievement est null");
+            throw new IllegalArgumentException("Le type d'achievement ne peut pas être null");
+        }
+
+        List<Achievement> achievements = achievementRepository.findByType(type);
+
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement trouvé pour le type : " + type);
+            throw new EntityNotFoundException("Aucun achievement trouvé pour le type : " + type,
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<AchievementDto> getAchievementsByRarity(AchievementRarity rarity) {
-        return List.of();
+        if (rarity == null) {
+            log.error("La rareté de l'achievement est null");
+            throw new IllegalArgumentException("La rareté de l'achievement ne peut pas être null");
+        }
+
+        List<Achievement> achievements = achievementRepository.findByRarity(rarity);
+
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement trouvé pour la rareté : " + rarity);
+            throw new EntityNotFoundException("Aucun achievement trouvé pour la rareté : " + rarity,
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<AchievementDto> getActiveAchievements() {
-        return List.of();
-    }
+        List<Achievement> achievements = achievementRepository.findByIsActiveTrue();
 
-    @Override
-    public List<AchievementDto> getVisibleAchievementsForUser(Integer userId) {
-        return List.of();
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement actif trouvé");
+            throw new EntityNotFoundException("Aucun achievement actif trouvé",
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public AchievementDto createAchievement(AchievementDto achievementDto) {
-        return null;
+        if (achievementDto == null) {
+            log.error("L'achievement à créer est null");
+            throw new IllegalArgumentException("L'achievement ne peut pas être null");
+        }
+
+        Achievement achievement = AchievementDto.toEntity(achievementDto);
+        achievement = achievementRepository.save(achievement);
+
+        return AchievementDto.fromEntity(achievement);
     }
 
     @Override
     public AchievementDto updateAchievement(Integer id, AchievementDto achievementDto) {
-        return null;
-    }
+        if (id == null) {
+            log.error("L'ID de l'achievement à mettre à jour est null");
+            throw new IllegalArgumentException("L'ID de l'achievement ne peut pas être null");
+        }
 
-    @Override
-    public Set<AchievementDto> getUnlockedAchievementsForUser(Integer userId) {
-        return Set.of();
-    }
+        if (achievementDto == null) {
+            log.error("Les nouvelles données de l'achievement sont null");
+            throw new IllegalArgumentException("Les données de mise à jour ne peuvent pas être null");
+        }
 
-    @Override
-    public Map<AchievementDto, Boolean> getUserAchievementProgress(Integer userId) {
-        return Map.of();
-    }
+        Optional<Achievement> existingAchievement = achievementRepository.findById(id);
+        if (existingAchievement.isEmpty()) {
+            log.error("Aucun achievement trouvé avec l'ID : " + id);
+            throw new EntityNotFoundException("Aucun achievement trouvé avec l'ID " + id,
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
 
-    @Override
-    public boolean hasUserUnlockedAchievement(Integer userId, Integer achievementId) {
-        return false;
-    }
+        Achievement updatedAchievement = AchievementDto.toEntity(achievementDto);
+        updatedAchievement.setId(id); // S'assurer que l'ID reste le même
+        updatedAchievement = achievementRepository.save(updatedAchievement);
 
-    @Override
-    public AchievementDto unlockAchievementForUser(Integer userId, Integer achievementId) {
-        return null;
-    }
-
-    @Override
-    public int calculateUserAchievementPoints(Integer userId) {
-        return 0;
-    }
-
-    @Override
-    public void checkUserProgress(Integer userId, String contextType, Map<String, Object> contextData) {
-
+        return AchievementDto.fromEntity(updatedAchievement);
     }
 
     @Override
     public List<AchievementDto> getSecretAchievements() {
-        return List.of();
+        List<Achievement> achievements = achievementRepository.findByIsSecretTrue();
+
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement secret trouvé");
+            throw new EntityNotFoundException("Aucun achievement actif trouvé",
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AchievementDto> getAchievementsByDescriptionContaining(String keyword){
+        List<Achievement> achievements = achievementRepository.findByDescriptionContaining(keyword);
+
+        if (achievements.isEmpty()) {
+            log.warn("Aucun achievement secret trouvé");
+            throw new EntityNotFoundException("Aucun achievement actif trouvé",
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        return achievements.stream()
+                .map(AchievementDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AchievementDto> countNumberAchievementsByType() {
+        // Récupère la liste d'objets Object[] où chaque élément contient [AchievementType, Long count]
+        List<Object[]> results = achievementRepository.countByType();
+
+        // Transformation des résultats en une liste de AchievementDto
+        return results.stream()
+                .map(row -> {
+                    AchievementType type = (AchievementType) row[0];
+                    Long count = (Long) row[1];
+                    // Ici, on utilise le champ pointsReward pour stocker le compte, à adapter selon ton besoin
+                    return AchievementDto.builder()
+                            .type(type)
+                            .pointsReward(count.intValue())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }
+

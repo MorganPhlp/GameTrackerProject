@@ -1,5 +1,6 @@
 package com.et4.gametrackerproject.repository;
 
+import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.model.DailyGameSession;
 import com.et4.gametrackerproject.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,23 +13,35 @@ import java.util.Optional;
 
 public interface DailyGameSessionRepository extends JpaRepository<DailyGameSession,Integer> {
 
-    // Recherche par utilisateur
+    //=============================================Recherche==========================================
+    List<DailyGameSession> findByDate(Instant date);
     List<DailyGameSession> findByUser(User user);
 
-    // Recherche par date
-    List<DailyGameSession> findByDate(Instant date);
+    @Query("SELECT d FROM DailyGameSession d WHERE d.user.id = :#{#user.id} AND d.date = :date")
+    Optional<DailyGameSession> findByUserAndDate(@Param("user") UserDto user, @Param("date") Instant date);
 
-    // Recherche par utilisateur et date (combinaison unique)
-    Optional<DailyGameSession> findByUserAndDate(User user, Instant date);
+    @Query("SELECT d FROM DailyGameSession d WHERE d.user.id = :userId AND d.date BETWEEN :start AND :end")
+    List<DailyGameSession> findByUserBetweenDates(@Param("userId") Integer userId,
+                                                  @Param("start") Instant start,
+                                                  @Param("end") Instant end);
 
-    // Recherche des sessions pour un utilisateur sur une période donnée
-    List<DailyGameSession> findByUserAndDateBetween(User user, Instant startDate, Instant endDate);
+    // Récupérer la session avec le plus de temps de jeu pour un utilisateur
+    @Query("SELECT d FROM DailyGameSession d WHERE d.user = :user ORDER BY d.totalTimePlayed DESC")
+    List<DailyGameSession> findLongestSessionsByUser(@Param("user") User user);
 
-    // Recherche des sessions où le temps de jeu dépasse un certain seuil
-    List<DailyGameSession> findByTotalTimePlayedGreaterThan(Integer minutes);
+    // Récupérer les N dernières sessions d'un utilisateur
+    @Query("SELECT d FROM DailyGameSession d WHERE d.user = :user ORDER BY d.date DESC")
+    List<DailyGameSession> findRecentSessionsByUser(@Param("user") User user);
 
-    // Recherche des sessions où le nombre de jeux uniques joués dépasse un seuil
-    List<DailyGameSession> findByUniqueGamesPlayedGreaterThanEqual(Integer count);
+    // Récupérer les utilisateurs les plus actifs (en termes de temps de jeu total)
+    @Query("SELECT d.user, SUM(d.totalTimePlayed) as totalTime FROM DailyGameSession d GROUP BY d.user ORDER BY totalTime DESC")
+    List<Object[]> findMostActiveUsers();
+
+    @Query("SELECT MAX(d.date) FROM DailyGameSession d WHERE d.user.id = :userId")
+    Instant findLastPlayedDateByUserId(@Param("userId") Integer userId);
+
+
+    //=============================================CALCULS==========================================
 
     // Calcul du temps de jeu total pour un utilisateur
     @Query("SELECT SUM(d.totalTimePlayed) FROM DailyGameSession d WHERE d.user = :user")
@@ -50,19 +63,10 @@ public interface DailyGameSessionRepository extends JpaRepository<DailyGameSessi
     @Query("SELECT SUM(d.gamesPlayed) FROM DailyGameSession d WHERE d.user = :user")
     Integer countGamesPlayedByUser(@Param("user") User user);
 
-    // Récupérer la session avec le plus de temps de jeu pour un utilisateur
-    @Query("SELECT d FROM DailyGameSession d WHERE d.user = :user ORDER BY d.totalTimePlayed DESC")
-    List<DailyGameSession> findLongestSessionsByUser(@Param("user") User user);
-
-    // Récupérer les N dernières sessions d'un utilisateur
-    @Query("SELECT d FROM DailyGameSession d WHERE d.user = :user ORDER BY d.date DESC")
-    List<DailyGameSession> findRecentSessionsByUser(@Param("user") User user);
-
     // Calculer la moyenne quotidienne de jeu pour un utilisateur
     @Query("SELECT AVG(d.totalTimePlayed) FROM DailyGameSession d WHERE d.user = :user")
     Double calculateAveragePlaytimeByUser(@Param("user") User user);
 
-    // Récupérer les utilisateurs les plus actifs (en termes de temps de jeu total)
-    @Query("SELECT d.user, SUM(d.totalTimePlayed) as totalTime FROM DailyGameSession d GROUP BY d.user ORDER BY totalTime DESC")
-    List<Object[]> findMostActiveUsers();
+
+
 }

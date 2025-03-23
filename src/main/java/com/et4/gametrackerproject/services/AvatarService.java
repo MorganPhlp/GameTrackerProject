@@ -12,21 +12,20 @@ public interface AvatarService {
     //Méthodes de base
     AvatarDto getAvatarById(Integer id);
     List<AvatarDto> getAllAvatars();
-    AvatarDto uploadAvatar(AvatarDto avatarDto);
+
+    AvatarDto uploadAvatar(MultipartFile file);
     AvatarDto updateAvatar(Integer id, AvatarDto avatarDto);
     void deleteAvatar(Integer id);
-
-    //Gestion des utilisateurs
-    AvatarDto getUserAvatar(Integer userId);
-    AvatarDto updateUserAvatar(Integer userId, Integer avatarId);
 
     //Méthodes de vérification
     boolean avatarExists(Integer id);
 
     //Avatars par défaut
-    AvatarDto getDefaultAvatar();
     List<AvatarDto> getAllDefaultAvatars();
 
     //Administration
-    Set<UserDto> getCurrentUsersUsingAvatar(Integer avatarId);
+    List<AvatarDto> getUnusedAvatars();
+
+    Long getUserCountByAvatarId(Integer avatarId);
+    List<AvatarDto> getMostPopularAvatars();
 }
