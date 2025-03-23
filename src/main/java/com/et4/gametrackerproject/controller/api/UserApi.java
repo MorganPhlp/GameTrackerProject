@@ -23,9 +23,6 @@ public interface UserApi {
     @PutMapping(value = APP_ROOT + "/users/update/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     UserDto updateUser(@PathVariable Integer userId,@RequestBody UserDto userDto);
 
-    @PutMapping(value = APP_ROOT + "/users/deactivate/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void deactivateUser(@PathVariable Integer userId);
-
     @DeleteMapping(value = APP_ROOT + "/users/delete/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     void deleteUser(@PathVariable Integer userId);
 
@@ -44,12 +41,6 @@ public interface UserApi {
     Page<UserDto> getAllUsers(Pageable pageable);
 
     // Authentification et sécurité
-
-    @PostMapping(value = APP_ROOT + "/users/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    UserDto registerUser(@RequestBody UserDto userDto);
-
-    @PostMapping(value = APP_ROOT + "/users/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    UserDto loginUser(@RequestBody String identifier,@RequestBody String password);
 
     @PutMapping(value = APP_ROOT + "/users/reset-password/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     void resetPassword(@PathVariable Integer userId,@RequestBody String newPassword);
@@ -76,12 +67,6 @@ public interface UserApi {
     @GetMapping(value = APP_ROOT + "/users/friends/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<UserDto> getFriendsList(@PathVariable Integer userId, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/users/mutual-friends/{user1Id}/{user2Id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<UserDto> getMutualFriends(@PathVariable Integer user1Id,@PathVariable Integer user2Id, Pageable pageable);
-
-    @GetMapping(value = APP_ROOT + "/users/blocked/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<UserDto> getBlockedUsers(@PathVariable Integer userId, Pageable pageable);
-
     // Statistiques et progression
 
     @PutMapping(value = APP_ROOT + "/users/update-stats/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,12 +74,6 @@ public interface UserApi {
 
     @PutMapping(value = APP_ROOT + "/users/add-points/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     UserDto addPoints(@PathVariable Integer userId,@RequestBody Integer points);
-
-    @GetMapping(value = APP_ROOT + "/users/dashboard/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<String, Object> getUserDashboard(@PathVariable Integer userId);
-
-    @GetMapping(value = APP_ROOT + "/users/leaderboard", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<UserDto> getLeaderboard(Pageable pageable);
 
     // Administration
 
@@ -108,9 +87,6 @@ public interface UserApi {
 
     @PutMapping(value = APP_ROOT + "/users/record-login/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     UserDto recordLogin(@PathVariable Integer userId);
-
-    @DeleteMapping(value = APP_ROOT + "/users/expire-sessions/{daysThreshold}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void expireOldSessions(@PathVariable int daysThreshold);
 
     // Validation
 

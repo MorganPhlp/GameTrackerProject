@@ -3,6 +3,8 @@ package com.et4.gametrackerproject.repository;
 import com.et4.gametrackerproject.enums.FriendshipStatus;
 import com.et4.gametrackerproject.model.Friendship;
 import com.et4.gametrackerproject.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,7 +28,10 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
 
     // Récupérer toutes les amitiés d'un utilisateur avec un statut spécifique
     @Query("SELECT f FROM Friendship f WHERE (f.user1 = :user OR f.user2 = :user) AND f.status = :status")
-    List<Friendship> findAllByUserAndStatus(@Param("user") User user, @Param("status") FriendshipStatus status);
+    Page<Friendship> findAllByUserAndStatus(@Param("user") User user, @Param("status") FriendshipStatus status, Pageable pageable);
+
+    @Query("SELECT f FROM Friendship f WHERE (f.user1 = :user OR f.user2 = :user) AND f.status = :status")
+    Page<User> findAllUsersByUserAndStatus(User user, FriendshipStatus status, Pageable pageable);
 
     // Récupérer les demandes d'amitié reçues par un utilisateur (où il est user2 et le statut est PENDING)
     @Query("SELECT f FROM Friendship f WHERE f.user2 = :user AND f.status = 'PENDING'")
