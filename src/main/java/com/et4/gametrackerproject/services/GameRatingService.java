@@ -4,6 +4,7 @@ import com.et4.gametrackerproject.dto.GameRatingDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -16,18 +17,15 @@ public interface GameRatingService {
 
     //Récupération des évaluations
     GameRatingDto getRatingById(Integer ratingId);
+
+    GameRatingDto getRatingByDate(Instant date);
+
     GameRatingDto getUserRatingForGame(Integer userId, Integer gameId);
     Page<GameRatingDto> getRatingsForGame(Integer gameId, Pageable pageable);
-    Page<GameRatingDto> getRatingsByUser(Integer userId, Pageable pageable);
 
     //Statistiques
     Double calculateAverageRatingForGame(Integer gameId);
-    Map<Integer, Long> getRatingDistributionForGame(Integer gameId);
     Long countRatingsForGame(Integer gameId);
-
-    //Vérifications
-    boolean hasUserRatedGame(Integer userId, Integer gameId);
-    boolean isValidRatingValue(Integer rating);
 
     //Modération
     Page<GameRatingDto> getRecentRatings(Pageable pageable);
@@ -39,11 +37,5 @@ public interface GameRatingService {
 
     //Analyse
     Map<Integer, Long> getTopRatedGames(int limit);
-
-    //Intégration
-    void updateGameAverageRating(Integer gameId);
-
-    //Sécurité/Validation
-    boolean isRatingOwner(Integer ratingId, Integer userId);
 
 }

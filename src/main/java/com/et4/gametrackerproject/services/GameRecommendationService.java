@@ -25,40 +25,21 @@ public interface GameRecommendationService {
 
     Page<GameRecommendationDto> getRecommendationsBetweenUsers(Integer user1Id, Integer user2Id, Pageable pageable);
 
-    //Interactions
-    GameRecommendationDto markAsViewed(Integer recommendationId);
-
-    GameRecommendationDto acceptRecommendation(Integer recommendationId);
-
-    //Statistiques
-    Map<Integer, Long> getMostRecommendedGames(int limit);
-
-    Map<Integer, Long> getTopRecommenders(int limit);
+    Map<Integer, Long> getMostRecommendedGames(Pageable pageable);
 
     Long countRecommendationsForGame(Integer gameId);
-
-    //Vérifications
-    boolean canRecommendGame(Integer senderId, Integer receiverId, Integer gameId);
-
-    boolean hasRecommendedGameToUser(Integer senderId, Integer receiverId, Integer gameId);
-
-    boolean isRecommendationActive(Integer recommendationId);
-
     // Modération
     Page<GameRecommendationDto> getAllRecommendations(Pageable pageable);
 
+    Long countRecommendationsReceivedByUser(Integer receiverId);
+
+    Long countRecommendationsSentByUser(Integer senderId);
+
     Page<GameRecommendationDto> searchRecommendations(String searchQuery, Pageable pageable);
 
-    //Intégration
-    void notifyReceiver(Integer recommendationId);
-
-    void syncWithFriendshipService(Integer user1Id, Integer user2Id);
-
-    //Gestion des relations
-    void removeAllRecommendationsBetweenUsers(Integer user1Id, Integer user2Id);
+    // Supprime toutes les recommandations entre deux utilisateurs (dans les deux sens)
+    void removeAllRecommendationsBetweenUsers(Integer user1Id, Integer user2Id, Pageable pageable);
 
     void removeAllRecommendationsForGame(Integer gameId);
-
-    void refreshRecommendationStatuses();
 
 }
