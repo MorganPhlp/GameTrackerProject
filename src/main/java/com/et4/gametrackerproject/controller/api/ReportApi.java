@@ -57,9 +57,6 @@ public interface ReportApi {
     @PutMapping(value = APP_ROOT + "/report/{reportId}/assign", produces = MediaType.APPLICATION_JSON_VALUE)
     ReportDto assignReportToAdmin(@PathVariable Integer reportId,@RequestBody Integer adminId);
 
-    @PutMapping(value = APP_ROOT + "/report/merge", consumes = MediaType.APPLICATION_JSON_VALUE)
-    void mergeDuplicateReports(@RequestBody List<Integer> reportIds);
-
     // Vérifications
 
     @GetMapping(value = APP_ROOT + "/report/previous", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -68,33 +65,8 @@ public interface ReportApi {
     @GetMapping(value = APP_ROOT + "/report/content", produces = MediaType.APPLICATION_JSON_VALUE)
     boolean isContentAlreadyReported(@RequestBody Integer contentId,@RequestBody ReportType type);
 
-    //Intégration
-
-    @PutMapping(value = APP_ROOT + "/report/{reportId}/applySanctions")
-    void applyReportSanctions(@PathVariable Integer reportId);
-
-    @PutMapping(value = APP_ROOT + "/report/{reportId}/notifyParties")
-    void notifyParties(@PathVariable Integer reportId);
-
-    @PutMapping(value = APP_ROOT + "/report/{reportId}/hideContent")
-    void hideReportedContent(@PathVariable Integer reportId);
-
     // Historique
 
     @GetMapping(value = APP_ROOT + "/report/{contentId}/{type}/history", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<ReportDto> getReportHistory(@PathVariable Integer contentId,@PathVariable ReportType type, Pageable pageable);
-
-    @GetMapping(value = APP_ROOT + "/report/{reportId}/resolutionHistory", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<ReportDto> getReportResolutionHistory(@PathVariable Integer reportId);
-
-    @GetMapping(value = APP_ROOT + "/report/admin/{adminId}/activity", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ReportDto> getAdminActivity(@PathVariable Integer adminId, Pageable pageable);
-
-    // Administration
-
-    @PutMapping(value = APP_ROOT + "/report/export", produces = MediaType.APPLICATION_JSON_VALUE)
-    void exportReports(@RequestBody String outputPath,@RequestBody ReportStatus status);
-
-    @GetMapping(value = APP_ROOT + "/report/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ReportDto> searchReports(@RequestBody String searchQuery, Pageable pageable);
 }
