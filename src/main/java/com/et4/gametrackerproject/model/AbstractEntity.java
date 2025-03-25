@@ -32,7 +32,7 @@ public class AbstractEntity implements Serializable {
     private Integer id;
 
     @CreatedDate // Automatise remplissage date de création entité
-    @Column(name = "creationDate", nullable = false) // Configuration colonne BD
+    @Column(name = "creationDate", nullable = false, updatable = false) // Configuration colonne BD
     @JsonIgnore // Exclut le champ de sérialisation JSON
     private Instant creationDate;
 
