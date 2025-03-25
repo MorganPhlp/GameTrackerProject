@@ -36,22 +36,4 @@ public interface MessageService {
 
     // Sécurité
     void encryptMessageContent(Integer messageId);
-
-    //Batch operations
-    void batchDeleteMessages(List<Integer> messageIds);
-    void archiveOldMessages(int monthsThreshold);
-    void exportUserMessages(Integer userId, String outputPath);
-
-    //Synchronisation
-    void notifyNewMessage(Integer messageId);
-    void pushUnreadNotifications(Integer userId);
-
-    //Gestion des relations
-    void blockMessagesFromUser(Integer blockerId, Integer blockedId);
-    void unblockUser(Integer userId, Integer unblockedId);
-    boolean isCommunicationAllowed(Integer senderId, Integer receiverId);
-
-    //Personnalisation
-    void setConversationMute(Integer userId, Integer conversationPartnerId, boolean muted);
-
 }

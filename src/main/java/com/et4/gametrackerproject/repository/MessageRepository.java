@@ -112,4 +112,11 @@ public interface MessageRepository extends JpaRepository<Message,Integer> {
             "WHERE m.receiver = :user AND m.isRead = false " +
             "ORDER BY m.creationDate DESC")
     Page<Message> findUnreadMessagesOrderedByDate(@Param("user") User user, Pageable pageable);
+
+    Page<Message> findByReceiverAndCreationDateBetween(User user, Instant from, Instant to, Pageable pageable);
+
+    Page<Message> findByReceiverAndContentContaining(User user, String query, Pageable pageable);
+
+    @Query("SELECT m FROM Message m WHERE m.receiver = :user AND m.creationDate > :date")
+    List<Message> findRecentMessages(@Param("user") User user,@Param("date") Instant date);
 }
