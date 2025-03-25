@@ -11,26 +11,23 @@ import java.util.Set;
 
 public interface GameCommentLikeService {
 
-    //Opérations de base
-    GameCommentLikeDto toggleLike(Integer userId, Integer commentId);
-    void removeLike(Integer likeId);
-    GameCommentLikeDto getLikeById(Integer likeId);
+    //AJOUT/RETIRER
+    GameCommentLikeDto addCommentLike(Integer userId, Integer commentId);
+    void removeCommentLike(Integer likeId);
 
-    // Récupération
+
+
+    // GETTER
+    GameCommentLikeDto getLikeById(Integer likeId);
     Page<GameCommentLikeDto> getLikesForComment(Integer commentId, Pageable pageable);
     Page<GameCommentLikeDto> getLikesByUser(Integer userId, Pageable pageable);
-    boolean hasUserLikedComment(Integer userId, Integer commentId);
-
-    //Statistiques
     Long getLikeCountForComment(Integer commentId);
     Map<Integer, Long> getMostLikedComments(int limit);
-
-    //Modération
     Page<GameCommentLikeDto> getRecentLikes(Pageable pageable);
-
-    //Administration
     Page<GameCommentLikeDto> getAllLikes(Pageable pageable);
+    List<UserDto> getUsersWhoLikedComment(Integer commentId);
 
-    //Relations
-    Set<Integer> getLikedCommentIdsForUser(Integer userId);
+    Long countLikesByUser(Integer userId);
+
+
 }

@@ -5,8 +5,6 @@ import lombok.Getter;
 @Getter
 public enum ErrorCodes {
 
-    // TODO : Complete the list of error codes
-
     ACHIEVEMENT_NOT_FOUND(1000),
     ACHIEVEMENT_NOT_VALID(1001),
     AVATAR_NOT_FOUND(2000),

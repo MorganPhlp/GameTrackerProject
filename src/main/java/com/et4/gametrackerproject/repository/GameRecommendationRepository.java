@@ -13,15 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GameRecommendationRepository extends JpaRepository<GameRecommendation,Integer>{
-
-    // Rechercher les recommandations envoyées par un utilisateur
-    List<GameRecommendation> findBySender(User sender);
-
+    
     // Rechercher les recommandations envoyées par un utilisateur avec pagination
     Page<GameRecommendation> findBySender(User sender, Pageable pageable);
-
-    // Rechercher les recommandations reçues par un utilisateur
-    List<GameRecommendation> findByReceiver(User receiver);
 
     // Rechercher les recommandations reçues par un utilisateur avec pagination
     Page<GameRecommendation> findByReceiver(User receiver, Pageable pageable);
@@ -32,8 +26,24 @@ public interface GameRecommendationRepository extends JpaRepository<GameRecommen
     // Rechercher les recommandations pour un jeu spécifique avec pagination
     Page<GameRecommendation> findByGame(Game game, Pageable pageable);
 
-    // Trouver une recommandation spécifique entre deux utilisateurs pour un jeu
-    Optional<GameRecommendation> findBySenderAndReceiverAndGame(User sender, User receiver, Game game);
+    // Trouver les recommandations d'un utilisateur à un autre
+    @Query("SELECT gr FROM GameRecommendation gr " +
+            "WHERE (gr.sender = :sender AND gr.receiver = :receiver) " +
+            "   OR (gr.sender = :receiver AND gr.receiver = :sender)")
+    Page<GameRecommendation> findBySenderAndReceiver(@Param("sender") User sender,
+                                                     @Param("receiver") User receiver,
+                                                     Pageable pageable);
+
+    // Trouver les recommandations d'un utilisateur à un autre
+    @Query("SELECT gr FROM GameRecommendation gr " +
+            "WHERE (gr.sender = :sender AND gr.receiver = :receiver) " +
+            "   OR (gr.sender = :receiver AND gr.receiver = :sender)")
+    List<GameRecommendation> findBySenderAndReceiver(@Param("sender") User sender,
+                                                     @Param("receiver") User receiver);
+
+    @Query("SELECT gr.game.id, COUNT(gr) FROM GameRecommendation gr " +
+            "GROUP BY gr.game.id ORDER BY COUNT(gr) DESC")
+    List<Object[]> findMostRecommendedGames(Pageable pageable);
 
     // Compter le nombre de recommandations reçues par un utilisateur
     Long countByReceiver(User receiver);
@@ -41,16 +51,9 @@ public interface GameRecommendationRepository extends JpaRepository<GameRecommen
     // Compter le nombre de recommandations envoyées par un utilisateur
     Long countBySender(User sender);
 
-    // Trouver les recommandations d'un utilisateur à un autre
-    List<GameRecommendation> findBySenderAndReceiver(User sender, User receiver);
+    Long countByGame(Game game);
 
-    // Trouver les recommandations pour un utilisateur qui n'ont pas encore été consultées
-    @Query(value =
-            "SELECT gr.* FROM gamerecommendation gr " +
-                    "LEFT JOIN gamerating grt ON grt.user_id = gr.receiver_id AND grt.game_id = gr.game_id " +
-                    "LEFT JOIN gameprogress gp ON gp.user_id = gr.receiver_id AND gp.game_id = gr.game_id " +
-                    "WHERE gr.receiver_id = :receiverId " +
-                    "AND grt.id IS NULL AND gp.id IS NULL",
-            nativeQuery = true)
-    List<GameRecommendation> findPendingRecommendations(@Param("receiverId") Integer receiverId);
+    @Query("SELECT gr FROM GameRecommendation gr WHERE LOWER(gr.message) LIKE LOWER(CONCAT('%', :searchQuery, '%'))")
+    Page<GameRecommendation> findByMessageContainingIgnoreCase(@Param("searchQuery") String searchQuery, Pageable pageable);
+
 }

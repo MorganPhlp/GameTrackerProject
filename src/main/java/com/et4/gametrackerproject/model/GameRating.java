@@ -29,4 +29,5 @@ public class GameRating extends AbstractEntity{
 
     @Column(name = "rating", nullable = false)
     private Integer rating;
+
 }
