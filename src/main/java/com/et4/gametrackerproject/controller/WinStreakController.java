@@ -3,7 +3,6 @@ package com.et4.gametrackerproject.controller;
 import com.et4.gametrackerproject.controller.api.WinStreakApi;
 import com.et4.gametrackerproject.dto.WinStreakDto;
 import com.et4.gametrackerproject.services.WinStreakService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Getter
 @RestController
 public class WinStreakController implements WinStreakApi {
 

@@ -19,20 +19,10 @@ public interface TagService {
     TagDto getTagById(Integer tagId);
     TagDto getTagByName(String name);
     Page<TagDto> getAllTags(Pageable pageable);
-    Page<TagDto> getTagsByPopularity(Pageable pageable);
 
     // Gestion des relations
-    Page<TagDto> getRelatedTags(Integer tagId, Pageable pageable);
-    Set<TagDto> getTagsForGame(Integer gameId);
-    Set<TagDto> getCommonTagsForGames(List<Integer> gameIds);
+    List<TagDto> getTagsForGame(Integer gameId);
 
     // Recherche
     Page<TagDto> searchTags(String query, Pageable pageable);
-
-    //Modération
-    Page<TagDto> findDuplicateTags(Pageable pageable);
-
-    //Batch operations
-    void batchCreateTags(Set<TagDto> tags);
-    int batchDeleteUnusedTags();
 }
