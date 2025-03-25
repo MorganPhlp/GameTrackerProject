@@ -50,7 +50,7 @@ public interface NotificationRepository extends JpaRepository<Notification,Integ
     @Modifying
     @Transactional
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.user = :user AND n.isRead = false")
-    int markAllNotificationsAsRead(@Param("user") User user);
+    void markAllNotificationsAsRead(@Param("user") User user);
 
     // Marquer toutes les notifications d'un certain type comme lues
     @Modifying
