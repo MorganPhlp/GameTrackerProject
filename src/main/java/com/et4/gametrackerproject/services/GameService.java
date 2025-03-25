@@ -3,12 +3,14 @@ package com.et4.gametrackerproject.services;
 import com.et4.gametrackerproject.dto.GameDto;
 import com.et4.gametrackerproject.enums.DifficultyLevel;
 import com.et4.gametrackerproject.enums.GameCategory;
+import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public interface GameService {
@@ -22,7 +24,6 @@ public interface GameService {
     // Récupération
     Page<GameDto> getAllGames(Pageable pageable);
     Page<GameDto> searchGames(String query, Pageable pageable);
-    List<GameDto> getGamesByIds(List<Integer> ids);
 
     //Filtrage
     Page<GameDto> filterByCategory(GameCategory category, Pageable pageable);
@@ -30,34 +31,34 @@ public interface GameService {
     Page<GameDto> filterByAgeRange(Integer minAge, Integer maxAge, Pageable pageable);
     Page<GameDto> filterByTags(Set<String> tags, Pageable pageable);
 
-    //Gestion des métadonnées
-    GameDto updateGameStatistics(Integer gameId);
-    void updateAverageRating(Integer gameId);
+    // Recherche d'un jeu par son URL
+    Optional<Game> getGameByUrl(String url);
 
-    // Relations
-    GameDto addTagToGame(Integer gameId, Tag tag);
-    GameDto removeTagFromGame(Integer gameId, Tag tag);
-    Page<GameDto> getSimilarGames(Integer gameId, Pageable pageable);
+    // Recherche des jeux par nom exact
+    List<Game> getGamesByName(String name);
 
-    // Statistiques
-    Map<GameCategory, Long> getGameDistributionByCategory();
-    Map<DifficultyLevel, Long> getGameDistributionByDifficulty();
-    Map<String, Long> getPlayActivityTrends(Integer gameId);
-    Map<String, Object> getGamePerformanceReport(Integer gameId);
+    // Recherche des jeux actifs avec pagination
+    Page<Game> getGamesByIsActive(Boolean isActive, Pageable pageable);
 
-    // Administration
-    void batchUpdateGamesStatus(List<Integer> gameIds, boolean isActive);
-    void migrateGameData(Integer sourceGameId, Integer targetGameId);
-    Page<GameDto> getRecentlyUpdatedGames(Pageable pageable);
+    // Recherche des jeux par catégorie et niveau de difficulté
+    List<Game> getGamesByCategoryAndDifficulty(GameCategory category, DifficultyLevel difficultyLevel);
 
-    //Validation
-    boolean checkNameAvailability(String name);
-    boolean validateAgeRequirements(Integer gameId, Integer userAge);
+    // Recherche des jeux ayant une note supérieure ou égale à minRating
+    List<Game> getHighlyRatedGames(Double minRating);
 
-    //Recommandations
-    List<GameDto> getTrendingGames(int limit);
+    // Recherche des jeux les plus populaires (triés par playCount décroissant)
+    List<Game> getMostPopularGames(Pageable pageable);
 
-    //Gestion des assets
-    GameDto updateGameThumbnail(Integer gameId, String thumbnailUrl);
-    GameDto updateGameDescription(Integer gameId, String description);
+    // Recherche des jeux accessibles pour un âge donné (minAge <= age)
+    List<Game> getGamesByMinAgeLessThanEqual(Integer age);
+
+    // Recherche combinée avec plusieurs filtres
+    Page<Game> getGamesWithFilters(String name, GameCategory category, DifficultyLevel difficulty,
+                                   Double minRating, Integer minAge, Pageable pageable);
+
+    // Recherche des jeux les plus récents
+    List<Game> getNewestGames(Pageable pageable);
+
+    // Recherche des jeux populaires par catégorie
+    List<Game> getMostPopularGamesByCategory(GameCategory category, Pageable pageable);
 }

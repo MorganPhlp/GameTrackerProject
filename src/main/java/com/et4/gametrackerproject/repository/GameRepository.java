@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface GameRepository extends JpaRepository<Game,Integer> {
 
@@ -21,34 +22,38 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 
     List<Game> findByName(String name);
 
-    List<Game> findByNameContainingIgnoreCase(String namePattern);
+    @Query("SELECT g FROM Game g WHERE LOWER(g.name) LIKE LOWER(CONCAT('%', :query, '%'))")
+    Page<Game> findByNameContainingIgnoreCase(@Param("query") String query, Pageable pageable);
 
-    List<Game> findByCategory(GameCategory category);
+    Page<Game> findByCategory(GameCategory category,Pageable pageable);
 
-    List<Game> findByDifficultyLevel(DifficultyLevel difficultyLevel);
+    Page<Game> findByDifficultyLevel(DifficultyLevel difficultyLevel,Pageable pageable);
+
+    // Recherche des jeux avec des tags spécifiques
+    @Query("SELECT DISTINCT g FROM Game g " +
+            "JOIN g.tags t " +
+            "WHERE t.tag.name IN :tagNames")
+    Page<Game> findGamesByTags(@Param("tagNames") Set<String> tagNames);
+
+    // Nouvelle méthode : recherche par tranche d'âge
+    @Query("SELECT g FROM Game g WHERE g.minAge BETWEEN :minAge AND :maxAge")
+    Page<Game> findByMinAgeBetween(@Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, Pageable pageable);
+
 
     Page<Game> findByIsActive(Boolean isActive, Pageable pageable);
 
-    // Recherches combinées
-    List<Game> findByCategoryAndDifficultyLevel(GameCategory category, DifficultyLevel difficultyLevel);
-
-    List<Game> findByNameContainingIgnoreCaseAndCategoryAndIsActive(
-            String namePattern, GameCategory category, Boolean isActive);
-
-    // Recherches basées sur les notations
-    List<Game> findByAverageRatingGreaterThanEqual(Double minRating);
+    @Query("SELECT g FROM Game g WHERE g.category = :category AND g.difficultyLevel = :difficultyLevel")
+    List<Game> findByCategoryAndDifficultyLevel(@Param("category") GameCategory category,
+                                                @Param("difficultyLevel") DifficultyLevel difficultyLevel);
 
     @Query("SELECT g FROM Game g WHERE g.averageRating >= :minRating")
     List<Game> findHighlyRatedGames(@Param("minRating") Double minRating);
-
-    // Recherches basées sur la popularité
-    List<Game> findByPlayCountGreaterThan(Integer minPlayCount);
 
     @Query("SELECT g FROM Game g ORDER BY g.playCount DESC")
     List<Game> findMostPopularGames(Pageable pageable);
 
     // Recherche par restriction d'âge
-    List<Game> findByMinAgeLessThanEqual(Integer age);
+    List<Game> findByMinAgeLessThan(Integer age);
 
     // Combinaisons de critères complexes
     @Query("SELECT g FROM Game g WHERE " +
@@ -66,42 +71,14 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
             @Param("minAge") Integer minAge,
             Pageable pageable);
 
-    // Mises à jour et statistiques
-    @Modifying
-    @Query("UPDATE Game g SET g.playCount = g.playCount + 1 WHERE g.id = :gameId")
-    void incrementPlayCount(@Param("gameId") Integer gameId);
-
-    @Modifying
-    @Query("UPDATE Game g SET g.averageRating = :newRating WHERE g.id = :gameId")
-    void updateAverageRating(@Param("gameId") Integer gameId, @Param("newRating") Double newRating);
-
-    @Query("SELECT SUM(g.playCount) FROM Game g")
-    Integer getTotalPlayCount();
 
     // Recherches des jeux les plus récents
     @Query("SELECT g FROM Game g ORDER BY g.creationDate DESC")
     List<Game> findNewestGames(Pageable pageable);
-
-    // Recherche des jeux avec des tags spécifiques
-    @Query("SELECT DISTINCT g FROM Game g " +
-            "JOIN g.tags t " +
-            "WHERE t.tag.name IN :tagNames")
-    List<Game> findGamesByTags(@Param("tagNames") List<String> tagNames);
-
     // Recherche des jeux populaires par catégorie
     @Query("SELECT g FROM Game g " +
             "WHERE g.category = :category " +
             "ORDER BY g.playCount DESC")
     List<Game> findMostPopularGamesByCategory(@Param("category") GameCategory category, Pageable pageable);
 
-    // Trouver les jeux les plus actifs récemment (basé sur les progressions)
-    @Query(value =
-            "SELECT g.*, COUNT(DISTINCT gp.user_id) as active_users " +
-                    "FROM game g " +
-                    "JOIN gameprogress gp ON g.id = gp.game_id " +
-                    "WHERE gp.last_played >= :since " +
-                    "GROUP BY g.id " +
-                    "ORDER BY active_users DESC",
-            nativeQuery = true)
-    List<Object[]> findMostActiveGames(@Param("since") Instant since, Pageable pageable);
 }

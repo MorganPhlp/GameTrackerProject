@@ -2,6 +2,8 @@ package com.et4.gametrackerproject.services;
 
 import com.et4.gametrackerproject.dto.GameTagDto;
 import com.et4.gametrackerproject.dto.TagDto;
+import com.et4.gametrackerproject.model.Game;
+import com.et4.gametrackerproject.model.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,19 +13,19 @@ import java.util.Set;
 
 public interface GameTagService {
 
-    //Opérations de base
-    GameTagDto addTagToGame(Integer gameId, Integer tagId);
-    void removeTagFromGame(Integer gameId, Integer tagId);
+    Set<GameTagDto> addMultipleTagsToGame(Game game, Set<Tag> tags);
+
+    int removeMultipleTagsFromGame(Game game, Set<Tag> tags);
+
+    void removeTagFromGame(Game game, Tag tag);
+
     GameTagDto updateTagAssociation(Integer associationId, Integer newTagId);
 
-    //Récupération
-    Page<GameTagDto> getTagsForGame(Integer gameId, Pageable pageable);
-    Page<GameTagDto> getGamesForTag(Integer tagId, Pageable pageable);
-    GameTagDto getAssociationById(Integer associationId);
-    boolean hasTag(Integer gameId, Integer tagId);
+    Page<GameTagDto> getTagsForGame(Game game, Pageable pageable);
 
-    //Gestion batch
-    Set<GameTagDto> addMultipleTagsToGame(Integer gameId, Set<Integer> tagIds);
-    int removeMultipleTagsFromGame(Integer gameId, Set<Integer> tagIds);
+    Page<GameTagDto> getGamesForTag(Tag tag, Pageable pageable);
+
+    GameTagDto addTagToGame(Game game, Tag tag);
+
 
 }
