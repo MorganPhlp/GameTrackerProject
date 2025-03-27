@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 import java.util.Map;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
@@ -61,4 +63,7 @@ public interface GameRatingApi {
 
     @GetMapping(value = APP_ROOT + "/rating/top/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
     Map<Integer, Long> getTopRatedGames(@PathVariable int limit);
+
+    @GetMapping(value = APP_ROOT + "/rating/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    GameRatingDto getRatingByDate(@PathVariable Instant date);
 }

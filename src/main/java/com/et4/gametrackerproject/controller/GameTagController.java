@@ -21,20 +21,9 @@ public class GameTagController implements GameTagApi {
         this.gameTagService = gameTagService;
     }
 
-
-    @Override
-    public GameTagDto addTagToGame(Integer gameId, Integer tagId) {
-        return null;
-    }
-
     @Override
     public GameTagDto addTagToGame(Game game, Tag tag) {
         return gameTagService.addTagToGame(game,tag);
-    }
-
-    @Override
-    public void removeTagFromGame(Integer gameId, Integer tagId) {
-
     }
 
     @Override
@@ -44,36 +33,26 @@ public class GameTagController implements GameTagApi {
 
     @Override
     public GameTagDto updateTagAssociation(Integer associationId, Integer newTagId) {
-        return null;
+        return gameTagService.updateTagAssociation(associationId,newTagId);
     }
 
     @Override
-    public Page<GameTagDto> getTagsForGame(Integer gameId, Pageable pageable) {
-        return null;
+    public Page<GameTagDto> getTagsForGame(Game game, Pageable pageable) {
+        return gameTagService.getTagsForGame(game,pageable);
     }
 
     @Override
-    public Page<GameTagDto> getGamesForTag(Integer tagId, Pageable pageable) {
-        return null;
+    public Page<GameTagDto> getGamesForTag(Tag tag, Pageable pageable) {
+        return gameTagService.getGamesForTag(tag,pageable);
     }
 
     @Override
-    public GameTagDto getAssociationById(Integer associationId) {
-        return null;
+    public Set<GameTagDto> addMultipleTagsToGame(Game game, Set<Tag> tags) {
+        return gameTagService.addMultipleTagsToGame(game,tags);
     }
 
     @Override
-    public boolean hasTag(Integer gameId, Integer tagId) {
-        return false;
-    }
-
-    @Override
-    public Set<GameTagDto> addMultipleTagsToGame(Integer gameId, Set<Integer> tagIds) {
-        return Set.of();
-    }
-
-    @Override
-    public int removeMultipleTagsFromGame(Integer gameId, Set<Integer> tagIds) {
-        return 0;
+    public int removeMultipleTagsFromGame(Game game, Set<Tag> tags) {
+        return gameTagService.removeMultipleTagsFromGame(game,tags);
     }
 }

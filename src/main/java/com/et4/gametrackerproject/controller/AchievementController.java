@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 public class AchievementController implements AchievementApi {
@@ -62,5 +60,15 @@ public class AchievementController implements AchievementApi {
     @Override
     public List<AchievementDto> getSecretAchievements() {
         return achievementService.getSecretAchievements();
+    }
+
+    @Override
+    public List<AchievementDto> getAchievementsByDescriptionContaining(String keyword) {
+        return achievementService.getAchievementsByDescriptionContaining(keyword);
+    }
+
+    @Override
+    public List<AchievementDto> countNumberAchievementsByType() {
+        return achievementService.countNumberAchievementsByType();
     }
 }

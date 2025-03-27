@@ -1,13 +1,12 @@
 package com.et4.gametrackerproject.controller.api;
 
 import com.et4.gametrackerproject.dto.AvatarDto;
-import com.et4.gametrackerproject.dto.UserDto;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
+
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 
 public interface AvatarApi {
@@ -36,4 +35,14 @@ public interface AvatarApi {
     //Avatars par défaut
     @GetMapping(value = APP_ROOT + "/avatars/default/all", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AvatarDto> getAllDefaultAvatars();
+
+    //Administration
+    @GetMapping(value = APP_ROOT + "/avatars/unused", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AvatarDto> getUnusedAvatars();
+
+    @GetMapping(value = APP_ROOT + "/avatars/userCount/{idAvatar}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long getUserCountByAvatarId(@PathVariable Integer idAvatar);
+
+    @GetMapping(value = APP_ROOT + "/avatars/mostPopular", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AvatarDto> getMostPopularAvatars();
 }

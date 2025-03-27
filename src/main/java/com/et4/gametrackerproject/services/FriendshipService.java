@@ -20,7 +20,6 @@ public interface FriendshipService {
     List<FriendshipDto> getAllFriendshipsForUser(Integer userId);
 
 
-    List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status);
 
     FriendshipDto getFriendshipBetweenUsers(Integer user1Id, Integer user2Id);
 
@@ -49,4 +48,6 @@ public interface FriendshipService {
     void removeAllFriendshipsForUser(Integer userId);
 
     List<UserDto> suggestFriends(Integer userId);
+    List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status);
+
 }

@@ -1,6 +1,5 @@
 package com.et4.gametrackerproject.controller;
 
-import com.et4.gametrackerproject.controller.api.GameApi;
 import com.et4.gametrackerproject.controller.api.GameProgressApi;
 import com.et4.gametrackerproject.dto.GameProgressDto;
 import com.et4.gametrackerproject.enums.GameStatus;
@@ -85,5 +84,60 @@ public class GameProgressController implements GameProgressApi {
     @Override
     public List<GameProgressDto> getAllUserProgress(Integer userId) {
         return gameProgressService.getAllUserProgress(userId);
+    }
+
+    @Override
+    public List<GameProgressDto> getGamesByStatus(Integer userId, GameStatus status) {
+        return gameProgressService.getGamesByStatus(userId, status);
+    }
+
+    @Override
+    public List<GameProgressDto> getProgressForGame(Integer gameId) {
+        return gameProgressService.getProgressForGame(gameId);
+    }
+
+    @Override
+    public List<GameProgressDto> getProgressByUserOrderByBestScoreDesc(Integer userId) {
+        return gameProgressService.getProgressByUserOrderByBestScoreDesc(userId);
+    }
+
+    @Override
+    public List<GameProgressDto> getProgressByUserOrderByTimePlayedDesc(Integer userId) {
+        return gameProgressService.getProgressByUserOrderByTimePlayedDesc(userId);
+    }
+
+    @Override
+    public List<GameProgressDto> getRecentlyPlayedGames(Integer userId, int hours) {
+        return gameProgressService.getRecentlyPlayedGames(userId, hours);
+    }
+
+    @Override
+    public Map<GameStatus, Long> countGamesByStatusForUser(Integer userId) {
+        return gameProgressService.countGamesByStatusForUser(userId);
+    }
+
+    @Override
+    public Integer getTotalPlaytimeForUser(Integer userId) {
+        return gameProgressService.getTotalPlaytimeForUser(userId);
+    }
+
+    @Override
+    public Map<Integer, Integer> getUsersByGameOrderedByPlaytime(Integer gameId) {
+        return gameProgressService.getUsersByGameOrderedByPlaytime(gameId);
+    }
+
+    @Override
+    public Map<Integer, Long> getMostPopularGames() {
+        return gameProgressService.getMostPopularGames();
+    }
+
+    @Override
+    public Map<Integer, Integer> getTopScoringUsersForGame(Integer gameId) {
+        return gameProgressService.getTopScoringUsersForGame(gameId);
+    }
+
+    @Override
+    public List<Map<String, Object>> getUsersWithLongestStreaks() {
+        return gameProgressService.getUsersWithLongestStreaks();
     }
 }

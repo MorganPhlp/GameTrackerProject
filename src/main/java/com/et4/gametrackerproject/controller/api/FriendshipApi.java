@@ -3,6 +3,7 @@ package com.et4.gametrackerproject.controller.api;
 import com.et4.gametrackerproject.dto.FriendshipDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.FriendshipStatus;
+import com.et4.gametrackerproject.model.User;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -84,4 +85,11 @@ public interface FriendshipApi {
 
     @DeleteMapping(value = APP_ROOT + "/friendships/admin/delete/{userId}")
     void removeAllFriendshipsForUser(@PathVariable Integer userId);
+
+    @GetMapping(value = APP_ROOT + "/friendships/suggest/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<UserDto> suggestFriends(Integer userId);
+
+    @GetMapping(value = APP_ROOT + "/friendships/status/{user}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status);
+
 }

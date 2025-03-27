@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class GameRecommendationController implements GameRecommendationApi {
 
@@ -77,5 +79,20 @@ public class GameRecommendationController implements GameRecommendationApi {
     @Override
     public void removeAllRecommendationsForGame(Integer gameId) {
         gameRecommendationService.removeAllRecommendationsForGame(gameId);
+    }
+
+    @Override
+    public Map<Integer, Long> getMostRecommendedGames(Pageable pageable) {
+        return gameRecommendationService.getMostRecommendedGames(pageable);
+    }
+
+    @Override
+    public Long countRecommendationsReceivedByUser(Integer receiverId) {
+        return gameRecommendationService.countRecommendationsReceivedByUser(receiverId);
+    }
+
+    @Override
+    public Long countRecommendationsSentByUser(Integer senderId) {
+        return gameRecommendationService.countRecommendationsSentByUser(senderId);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class GameLeaderboardController implements GameLeaderboardApi {
@@ -48,5 +49,40 @@ public class GameLeaderboardController implements GameLeaderboardApi {
     @Override
     public void resetLeaderboard(Integer gameId, LeaderboardPeriod period) {
         gameLeaderboardService.resetLeaderboard(gameId, period);
+    }
+
+    @Override
+    public Page<GameLeaderboardDto> getLeaderboardByPeriod(LeaderboardPeriod period, Pageable pageable) {
+        return gameLeaderboardService.getLeaderboardByPeriod(period, pageable);
+    }
+
+    @Override
+    public Optional<GameLeaderboardDto> getLeaderBoardByGameUserPeriod(Integer gameId, Integer userId, LeaderboardPeriod period) {
+        return gameLeaderboardService.getLeaderBoardByGameUserPeriod(gameId, userId, period);
+    }
+
+    @Override
+    public List<GameLeaderboardDto> getLeaderboardByGamePeriodScore(Integer gameId, LeaderboardPeriod period) {
+        return gameLeaderboardService.getLeaderboardByGamePeriodScore(gameId, period);
+    }
+
+    @Override
+    public Page<GameLeaderboardDto> getLeaderboardPageByRank(Integer gameId, LeaderboardPeriod period, Pageable pageable) {
+        return gameLeaderboardService.getLeaderboardPageByRank(gameId, period, pageable);
+    }
+
+    @Override
+    public List<GameLeaderboardDto> getTopRankedPlayersByGamePeriod(Integer gameId, LeaderboardPeriod period, int limit) {
+        return gameLeaderboardService.getTopRankedPlayersByGamePeriod(gameId, period, limit);
+    }
+
+    @Override
+    public List<GameLeaderboardDto> getLeaderboardEntriesForUserAndGame(Integer userId, Integer gameId) {
+        return gameLeaderboardService.getLeaderboardEntriesForUserAndGame(userId, gameId);
+    }
+
+    @Override
+    public List<GameLeaderboardDto> getLeaderboardEntriesByDate(Instant date) {
+        return gameLeaderboardService.getLeaderboardEntriesByDate(date);
     }
 }

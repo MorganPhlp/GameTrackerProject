@@ -2,6 +2,7 @@ package com.et4.gametrackerproject.controller.api;
 
 
 import com.et4.gametrackerproject.dto.GameCommentLikeDto;
+import com.et4.gametrackerproject.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -52,4 +53,11 @@ public interface GameCommentLikeApi {
 
     @GetMapping(value = APP_ROOT + "/game-comment-likes/admin/all", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentLikeDto> getAllLikes(Pageable pageable);
+
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/comment/{commentId}/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<UserDto> getUsersWhoLikedComment(@PathVariable Integer commentId);
+
+    @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countLikesByUser(@PathVariable Integer userId);
+
 }

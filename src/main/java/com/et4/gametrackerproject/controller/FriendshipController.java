@@ -4,6 +4,7 @@ import com.et4.gametrackerproject.controller.api.FriendshipApi;
 import com.et4.gametrackerproject.dto.FriendshipDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.FriendshipStatus;
+import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.services.FriendshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -118,5 +119,15 @@ public class FriendshipController implements FriendshipApi {
     @Override
     public void removeAllFriendshipsForUser(Integer userId) {
         friendshipService.removeAllFriendshipsForUser(userId);
+    }
+
+    @Override
+    public List<UserDto> suggestFriends(Integer userId) {
+        return friendshipService.suggestFriends(userId);
+    }
+
+    @Override
+    public List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status) {
+        return friendshipService.getFriendshipsForUserByStatus(user, status);
     }
 }

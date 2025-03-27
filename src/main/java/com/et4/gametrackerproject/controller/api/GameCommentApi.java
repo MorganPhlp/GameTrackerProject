@@ -5,7 +5,6 @@ import com.et4.gametrackerproject.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,8 +61,28 @@ public interface GameCommentApi {
     @GetMapping(value = APP_ROOT + "/comments/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentDto> getReportedComments(Pageable pageable);
 
-    //Statistiques
-
     @GetMapping(value = APP_ROOT + "/comments/stats/top/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
     Map<Integer, Long> getTopCommentedGames(@PathVariable int limit);
+
+    @GetMapping(value = APP_ROOT + "/comments/game/{gameId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameCommentDto> getCommentsForGame(@PathVariable Integer gameId);
+
+    @GetMapping(value = APP_ROOT + "/comments/game/{gameId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countCommentsForGame(@PathVariable Integer gameId);
+
+    @GetMapping(value = APP_ROOT + "/comments/user/{userId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countCommentsByUser(@PathVariable Integer userId);
+
+    @GetMapping(value = APP_ROOT + "/comments/replies/{commentId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countRepliesForComment(@PathVariable Integer commentId);
+
+    @GetMapping(value = APP_ROOT + "/comments/game/{gameId}/recent", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameCommentDto> getRecentCommentsForGame(@PathVariable Integer gameId);
+
+    @GetMapping(value = APP_ROOT + "/comments/game/{gameId}/liked/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Long> getMostLikedCommentsForGame(@PathVariable Integer gameId, @PathVariable int limit);
+
+    @GetMapping(value = APP_ROOT + "/comments/game/{gameId}/discussed/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Long> getMostDiscussedCommentsForGame(@PathVariable Integer gameId, @PathVariable int limit);
+
 }

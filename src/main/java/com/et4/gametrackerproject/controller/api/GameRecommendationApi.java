@@ -52,4 +52,16 @@ public interface GameRecommendationApi {
 
     @DeleteMapping(value = APP_ROOT + "/recommendation/remove/game/{gameId}")
     void removeAllRecommendationsForGame(@PathVariable Integer gameId);
+
+    @GetMapping(value = APP_ROOT + "/recommendation/mostRecommended", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Long> getMostRecommendedGames(Pageable pageable);
+
+    @GetMapping(value = APP_ROOT + "/recommendation/received/{receiverId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countRecommendationsReceivedByUser(@PathVariable Integer receiverId);
+
+    @GetMapping(value = APP_ROOT + "/recommendation/sent/{senderId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countRecommendationsSentByUser(@PathVariable Integer senderId);
+
+
+
 }

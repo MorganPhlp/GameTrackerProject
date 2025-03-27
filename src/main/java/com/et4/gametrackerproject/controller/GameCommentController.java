@@ -93,4 +93,39 @@ public class GameCommentController implements GameCommentApi {
     public Map<Integer, Long> getTopCommentedGames(int limit) {
         return gameCommentService.getTopCommentedGames(limit);
     }
+
+    @Override
+    public List<GameCommentDto> getCommentsForGame(Integer gameId) {
+        return gameCommentService.getCommentsForGame(gameId);
+    }
+
+    @Override
+    public Long countCommentsForGame(Integer gameId) {
+        return gameCommentService.countCommentsForGame(gameId);
+    }
+
+    @Override
+    public Long countCommentsByUser(Integer userId) {
+        return gameCommentService.countCommentsByUser(userId);
+    }
+
+    @Override
+    public Long countRepliesForComment(Integer commentId) {
+        return gameCommentService.countRepliesForComment(commentId);
+    }
+
+    @Override
+    public List<GameCommentDto> getRecentCommentsForGame(Integer gameId) {
+        return gameCommentService.getRecentCommentsForGame(gameId);
+    }
+
+    @Override
+    public Map<Integer, Long> getMostLikedCommentsForGame(Integer gameId, int limit) {
+        return gameCommentService.getMostLikedCommentsForGame(gameId, limit);
+    }
+
+    @Override
+    public Map<Integer, Long> getMostDiscussedCommentsForGame(Integer gameId, int limit) {
+        return gameCommentService.getMostDiscussedCommentsForGame(gameId, limit);
+    }
 }

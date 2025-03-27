@@ -7,8 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 
@@ -31,8 +29,6 @@ public interface AchievementApi {
     @GetMapping(value = APP_ROOT + "/achievements/active", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AchievementDto> getActiveAchievements();
 
-    //Gestion des achievements
-
     @PostMapping(value = APP_ROOT + "/achievements/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     AchievementDto createAchievement(@RequestBody AchievementDto achievementDto);
 
@@ -41,4 +37,11 @@ public interface AchievementApi {
 
     @GetMapping(value = APP_ROOT + "/achievements/secrets", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AchievementDto> getSecretAchievements();
+
+    @GetMapping(value = APP_ROOT + "/achievements/description/{keyword}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AchievementDto> getAchievementsByDescriptionContaining(@PathVariable String keyword);
+
+    @GetMapping(value = APP_ROOT + "/achievements/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AchievementDto> countNumberAchievementsByType();
+
 }

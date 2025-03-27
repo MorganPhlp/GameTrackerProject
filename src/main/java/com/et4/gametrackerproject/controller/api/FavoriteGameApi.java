@@ -4,11 +4,11 @@ import com.et4.gametrackerproject.dto.FavoriteGameDto;
 import com.et4.gametrackerproject.dto.GameDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 
@@ -51,5 +51,26 @@ public interface FavoriteGameApi {
 
     @GetMapping(value = APP_ROOT + "/favorites/count/category", produces = MediaType.APPLICATION_JSON_VALUE)
     Map<Integer, Long> getFavoriteCountByGameCategory();
+
+    //Vérifier si un jeu est favori pour un utilisateur spécifique
+    @GetMapping(value = APP_ROOT + "/favorites/find/{userId}/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Optional<FavoriteGameDto> findFavoriteByUserAndGame(@PathVariable Integer userId, @PathVariable Integer gameId);
+
+    //Récupérer les jeux favoris ajoutés récemment par un utilisateur
+    @GetMapping(value = APP_ROOT + "/favorites/recent/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<FavoriteGameDto> getRecentlyAddedFavoritesForUser(@PathVariable Integer userId);
+
+    //Trouver les favoris communs entre deux utilisateurs
+    @GetMapping(value = APP_ROOT + "/favorites/common/{userId1}/{userId2}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameDto> getCommonFavoriteGames(@PathVariable Integer userId1, @PathVariable Integer userId2);
+
+    //Compter le nombre de jeux favoris pour un utilisateur
+    @GetMapping(value = APP_ROOT + "/favorites/count/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countFavoritesByUser(@PathVariable Integer userId);
+
+    //Supprimer un jeu favori pour un utilisateur spécifique
+    @DeleteMapping(value = APP_ROOT + "/favorites/delete/{userId}/{gameId}")
+    void deleteFavoriteByUserAndGame(@PathVariable Integer userId, @PathVariable Integer gameId);
+
 
 }

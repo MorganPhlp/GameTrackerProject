@@ -56,5 +56,20 @@ public class AvatarController implements AvatarApi {
         return avatarService.getAllDefaultAvatars();
     }
 
+    @Override
+    public List<AvatarDto> getUnusedAvatars() {
+        return avatarService.getUnusedAvatars();
+    }
+
+    @Override
+    public Long getUserCountByAvatarId(Integer avatarId) {
+        return avatarService.getUserCountByAvatarId(avatarId);
+    }
+
+    @Override
+    public List<AvatarDto> getMostPopularAvatars() {
+        return avatarService.getMostPopularAvatars();
+    }
+
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 
@@ -34,4 +35,27 @@ public interface GameLeaderboardApi {
 
     @PutMapping(value = APP_ROOT + "/leaderboard/reset/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
     void resetLeaderboard(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameLeaderboardDto> getLeaderboardByPeriod(@PathVariable LeaderboardPeriod period, Pageable pageable);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/user/{userId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Optional<GameLeaderboardDto> getLeaderBoardByGameUserPeriod(@PathVariable Integer gameId, @PathVariable Integer userId, @PathVariable LeaderboardPeriod period);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getLeaderboardByGamePeriodScore(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameLeaderboardDto> getLeaderboardPageByRank(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period, Pageable pageable);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}/limit/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getTopRankedPlayersByGamePeriod(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period, @PathVariable int limit);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/user/{userId}/game/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getLeaderboardEntriesForUserAndGame(@PathVariable Integer userId, @PathVariable Integer gameId);
+
+    @GetMapping(value = APP_ROOT + "/leaderboard/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getLeaderboardEntriesByDate(@PathVariable Instant date);
+
+
 }

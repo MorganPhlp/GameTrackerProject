@@ -2,12 +2,14 @@ package com.et4.gametrackerproject.controller;
 
 import com.et4.gametrackerproject.controller.api.GameCommentLikeApi;
 import com.et4.gametrackerproject.dto.GameCommentLikeDto;
+import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.services.GameCommentLikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,5 +67,15 @@ public class GameCommentLikeController implements GameCommentLikeApi {
     @Override
     public Page<GameCommentLikeDto> getAllLikes(Pageable pageable) {
         return gameCommentLikeService.getAllLikes(pageable);
+    }
+
+    @Override
+    public List<UserDto> getUsersWhoLikedComment(Integer commentId) {
+        return gameCommentLikeService.getUsersWhoLikedComment(commentId);
+    }
+
+    @Override
+    public Long countLikesByUser(Integer userId) {
+        return gameCommentLikeService.countLikesByUser(userId);
     }
 }
