@@ -149,7 +149,7 @@ public class GameServiceImpl implements GameService {
             throw new IllegalArgumentException("La liste de tags ne peut être vide");
         }
         // On suppose ici que le repository dispose d'une méthode pour filtrer par tags via le nom des tags.
-        Page<Game> games = gameRepository.findGamesByTags(tags);
+        Page<Game> games = gameRepository.findGamesByTags(tags, pageable);
         log.info("Filtrage des jeux par tags {} sur la page {}", tags, pageable.getPageNumber());
         return games.map(GameDto::fromEntity);
     }

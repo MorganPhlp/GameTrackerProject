@@ -33,7 +33,7 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
     @Query("SELECT DISTINCT g FROM Game g " +
             "JOIN g.tags t " +
             "WHERE t.tag.name IN :tagNames")
-    Page<Game> findGamesByTags(@Param("tagNames") Set<String> tagNames);
+    Page<Game> findGamesByTags(@Param("tagNames") Set<String> tagNames, Pageable pageable);
 
     // Nouvelle méthode : recherche par tranche d'âge
     @Query("SELECT g FROM Game g WHERE g.minAge BETWEEN :minAge AND :maxAge")
