@@ -21,7 +21,7 @@ public interface GameCommentLikeApi {
     //Opérations de base
 
     @PostMapping(value = APP_ROOT + "/game-comment-likes/toggle/{userId}/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameCommentLikeDto toggleLike(@PathVariable Integer userId,@PathVariable Integer commentId);
+    GameCommentLikeDto addCommentLike(@PathVariable Integer userId,@PathVariable Integer commentId);
 
     @DeleteMapping(value = APP_ROOT + "/game-comment-likes/remove/{likeId}")
     void removeLike(@PathVariable Integer likeId);
@@ -36,11 +36,6 @@ public interface GameCommentLikeApi {
 
     @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentLikeDto> getLikesByUser(@PathVariable Integer userId, Pageable pageable);
-
-    @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}/comment/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasUserLikedComment(@PathVariable Integer userId,@PathVariable Integer commentId);
-
-    //Statistiques
 
     @GetMapping(value = APP_ROOT + "/game-comment-likes/count/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     Long getLikeCountForComment(@PathVariable Integer commentId);
@@ -57,9 +52,4 @@ public interface GameCommentLikeApi {
 
     @GetMapping(value = APP_ROOT + "/game-comment-likes/admin/all", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameCommentLikeDto> getAllLikes(Pageable pageable);
-
-    //Relations
-
-    @GetMapping(value = APP_ROOT + "/game-comment-likes/user/{userId}/liked-comments", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<Integer> getLikedCommentIdsForUser(@PathVariable Integer userId);
 }

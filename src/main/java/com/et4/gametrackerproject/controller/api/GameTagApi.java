@@ -2,6 +2,8 @@ package com.et4.gametrackerproject.controller.api;
 
 
 import com.et4.gametrackerproject.dto.GameTagDto;
+import com.et4.gametrackerproject.model.Game;
+import com.et4.gametrackerproject.model.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +19,12 @@ public interface GameTagApi {
     @PostMapping(value = APP_ROOT + "/tag/{tagId}/game/{gameId}/add")
     GameTagDto addTagToGame(@PathVariable Integer gameId,@PathVariable Integer tagId);
 
+    GameTagDto addTagToGame(Game game, Tag tag);
+
     @DeleteMapping(value = APP_ROOT + "/tag/{tagId}/game/{gameId}/remove")
     void removeTagFromGame(@PathVariable Integer gameId,@PathVariable Integer tagId);
+
+    void removeTagFromGame(Game game, Tag tag);
 
     @PostMapping(value = APP_ROOT + "/tag/{associationId}/update")
     GameTagDto updateTagAssociation(@PathVariable Integer associationId,@RequestBody Integer newTagId);

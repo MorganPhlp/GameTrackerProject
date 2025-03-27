@@ -55,39 +55,6 @@ public interface GameProgressApi {
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
     List<GameProgressDto> getAllUserProgress(@PathVariable("userId") Integer userId);
 
-    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<GameProgressDto> getCompletedGames(@PathVariable("userId") Integer userId);
 
-    //Statistiques
-    @GetMapping(value = APP_ROOT + "/progress/stats", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<String, Number> getGameStatistics(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
 
-    @GetMapping(value = APP_ROOT + "/progress/playtime", produces = MediaType.APPLICATION_JSON_VALUE)
-    Integer getTotalPlayTimeForGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/progress/winloss", produces = MediaType.APPLICATION_JSON_VALUE)
-    Double getWinLossRatio(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/bestscores", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Integer> getBestScoresForUser(@PathVariable("userId") Integer userId);
-
-    //Synchronisation des données
-    @PutMapping(value = APP_ROOT + "/progress/{progressId}/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameProgressDto saveProgressData(@PathVariable("progressId") Integer progressId, @RequestBody String progressData);
-
-    @GetMapping(value = APP_ROOT + "/progress/{progressId}/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    String loadProgressData(@PathVariable("progressId") Integer progressId);
-
-    @PostMapping(value = APP_ROOT + "/progress/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean validateProgressData(@RequestBody String progressData);
-
-    //Gestion des états
-    @PutMapping(value = APP_ROOT + "/progress/{progressId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameProgressDto transitionStatus(@PathVariable("progressId") Integer progressId, @RequestParam("newStatus") GameStatus newStatus);
-
-    @GetMapping(value = APP_ROOT + "/progress/completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasCompletedGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/progress/started", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasStartedGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
 }
