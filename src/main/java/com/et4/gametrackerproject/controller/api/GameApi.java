@@ -36,29 +36,29 @@ public interface GameApi {
     @GetMapping(value = APP_ROOT + "/game/all", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameDto> getAllGames(Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/game/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameDto> searchGames(@RequestBody String query, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/game/search/{query}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameDto> searchGames(@PathVariable String query, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/game/category", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameDto> filterByCategory(@RequestBody GameCategory category, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/game/{category}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameDto> filterByCategory( @PathVariable GameCategory category, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/game/difficulty", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameDto> filterByDifficulty(@RequestBody DifficultyLevel difficulty, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/game/{difficulty}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameDto> filterByDifficulty( @PathVariable DifficultyLevel difficulty, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/game/age", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameDto> filterByAgeRange(@RequestBody Integer minAge,@RequestBody Integer maxAge, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/game/{minAge}-{maxAge} ans", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameDto> filterByAgeRange( @PathVariable Integer minAge,@PathVariable Integer maxAge, Pageable pageable);
 
     @GetMapping(value = APP_ROOT + "/game/tags", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameDto> filterByTags(@RequestBody Set<String> tags, Pageable pageable);
 
 
     // Recherche d'un jeu par son URL
-    @GetMapping(value = APP_ROOT + "/game/url", produces = MediaType.APPLICATION_JSON_VALUE)
-    Optional<Game> getGameByUrl(String url);
+    @GetMapping(value = APP_ROOT + "/game/url/{url}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Optional<Game> getGameByUrl(@PathVariable String url);
 
     // Recherche des jeux par nom exact
-    @GetMapping(value = APP_ROOT + "/game/name", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Game> getGamesByName(String name);
+    @GetMapping(value = APP_ROOT + "/game/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Game> getGamesByName(@PathVariable String name);
 
     // Recherche des jeux actifs avec pagination
     @GetMapping(value = APP_ROOT + "/game/active", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,8 +77,8 @@ public interface GameApi {
     List<Game> getMostPopularGames(Pageable pageable);
 
     // Recherche des jeux accessibles pour un âge donné (minAge <= age)
-    @GetMapping(value = APP_ROOT + "/game/age", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Game> getGamesByMinAgeLessThanEqual(Integer age);
+    @GetMapping(value = APP_ROOT + "/game/<={age} ans", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Game> getGamesByMinAgeLessThanEqual(@PathVariable Integer age);
 
     // Recherche combinée avec plusieurs filtres
     @GetMapping(value = APP_ROOT + "/game/filters", produces = MediaType.APPLICATION_JSON_VALUE)

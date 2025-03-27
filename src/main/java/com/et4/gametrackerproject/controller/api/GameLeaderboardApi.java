@@ -1,7 +1,6 @@
 package com.et4.gametrackerproject.controller.api;
 
 import com.et4.gametrackerproject.dto.GameLeaderboardDto;
-import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.LeaderboardPeriod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
@@ -45,7 +43,7 @@ public interface GameLeaderboardApi {
     @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<GameLeaderboardDto> getLeaderboardByGamePeriodScore(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}/page", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameLeaderboardDto> getLeaderboardPageByRank(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period, Pageable pageable);
 
     @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}/limit/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
