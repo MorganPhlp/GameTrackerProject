@@ -20,7 +20,7 @@ public interface AvatarApi {
     List<AvatarDto> getAllAvatars();
 
     @PostMapping(value = APP_ROOT + "/avatars/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    AvatarDto uploadAvatar(@RequestBody AvatarDto avatarDto);
+    AvatarDto uploadAvatar(MultipartFile multipartFile);
 
     @PutMapping(value = APP_ROOT + "/avatars/update/{idAvatar}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     AvatarDto updateAvatar(@PathVariable("idAvatar") Integer id,@RequestBody AvatarDto avatarDto);
@@ -28,29 +28,12 @@ public interface AvatarApi {
     @DeleteMapping(value = APP_ROOT + "/avatars/delete/{idAvatar}")
     void deleteAvatar(@PathVariable("idAvatar") Integer id);
 
-    //Gestion des utilisateurs
-
-    @GetMapping(value = APP_ROOT + "/avatars/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    AvatarDto getUserAvatar(@PathVariable Integer userId);
-
-    @PutMapping(value = APP_ROOT + "/avatars/user/{userId}/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    AvatarDto updateUserAvatar(@PathVariable Integer userId,@RequestBody Integer avatarId);
-
     //Méthodes de vérification
 
     @GetMapping(value = APP_ROOT + "/avatars/exists/{idAvatar}", produces = MediaType.APPLICATION_JSON_VALUE)
     boolean avatarExists(@PathVariable("idAvatar") Integer id);
 
     //Avatars par défaut
-
-    @GetMapping(value = APP_ROOT + "/avatars/default", produces = MediaType.APPLICATION_JSON_VALUE)
-    AvatarDto getDefaultAvatar();
-
     @GetMapping(value = APP_ROOT + "/avatars/default/all", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AvatarDto> getAllDefaultAvatars();
-
-    //Administration
-
-    @GetMapping(value = APP_ROOT + "/avatars/admin/{avatarId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<UserDto> getCurrentUsersUsingAvatar(@PathVariable Integer avatarId);
 }

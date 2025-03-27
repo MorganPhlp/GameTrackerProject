@@ -14,7 +14,6 @@ import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 public interface WinStreakApi {
 
     // Opérations de base
-
     @PostMapping(value = APP_ROOT + "/streaks/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     WinStreakDto createOrUpdateStreak(@RequestBody WinStreakDto streakDto);
 

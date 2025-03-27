@@ -52,13 +52,4 @@ public interface FavoriteGameApi {
     @GetMapping(value = APP_ROOT + "/favorites/count/category", produces = MediaType.APPLICATION_JSON_VALUE)
     Map<Integer, Long> getFavoriteCountByGameCategory();
 
-    // Vérifications
-
-    @GetMapping(value = APP_ROOT + "/favorites/exists/{userId}/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean existsFavoriteRelationship(@PathVariable Integer userId,@PathVariable Integer gameId);
-
-    //Administration
-
-    @DeleteMapping(value = APP_ROOT + "/favorites/admin/remove/all/{gameId}")
-    void removeAllFavoritesForGame(@PathVariable Integer gameId);
 }
