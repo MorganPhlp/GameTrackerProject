@@ -69,40 +69,4 @@ public interface MessageApi {
 
     @PutMapping(value = APP_ROOT + "/message/{messageId}/encrypt", produces = MediaType.APPLICATION_JSON_VALUE)
     void encryptMessageContent(@PathVariable Integer messageId);
-
-    //Batch operations
-
-    @DeleteMapping(value = APP_ROOT + "/message/batch/delete")
-    void batchDeleteMessages(@RequestBody List<Integer> messageIds);
-
-    @PutMapping(value = APP_ROOT + "/message/archive/{monthsThreshold}")
-    void archiveOldMessages(@PathVariable int monthsThreshold);
-
-    @PutMapping(value = APP_ROOT + "/message/export/{userId}")
-    void exportUserMessages(@PathVariable Integer userId,@RequestBody String outputPath);
-
-    //Synchronisation
-
-    @PostMapping(value = APP_ROOT + "/message/notify/{messageId}")
-    void notifyNewMessage(@PathVariable Integer messageId);
-
-    @PutMapping(value = APP_ROOT + "/message/push/{userId}")
-    void pushUnreadNotifications(@PathVariable Integer userId);
-
-    //Gestion des relations
-
-    @PutMapping(value = APP_ROOT + "/message/block/{blockerId}/{blockedId}")
-    void blockMessagesFromUser(@PathVariable Integer blockerId,@PathVariable Integer blockedId);
-
-    @PutMapping(value = APP_ROOT + "/message/unblock/{userId}/{unblockedId}")
-    void unblockUser(@PathVariable Integer userId,@PathVariable Integer unblockedId);
-
-    @GetMapping(value = APP_ROOT + "/message/allowed/{senderId}/{receiverId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean isCommunicationAllowed(@PathVariable Integer senderId,@PathVariable Integer receiverId);
-
-    //Personnalisation
-
-    @PutMapping(value = APP_ROOT + "/message/mute/{userId}/{conversationPartnerId}/{muted}")
-    void setConversationMute(@PathVariable Integer userId,@PathVariable Integer conversationPartnerId,@PathVariable boolean muted);
-
 }

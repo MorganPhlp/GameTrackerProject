@@ -25,19 +25,10 @@ public interface NotificationService {
     // Gestion des états
     NotificationDto markAsRead(Integer notificationId);
     void markAllAsRead(Integer userId);
-    NotificationDto toggleNotificationPin(Integer notificationId);
 
     // Historique
     Page<NotificationDto> getNotificationHistory(Integer userId, Instant startDate, Instant endDate, Pageable pageable);
-    Page<NotificationDto> searchNotifications(Integer userId, String searchTerm, Pageable pageable);
 
     //Statistiques
     Integer getUnreadCount(Integer userId);
-
-    //Expiration
-    void cleanExpiredNotifications(int daysThreshold);
-
-    //Batch operations
-    void batchDeleteNotifications(List<Integer> notificationIds);
-    void batchMarkAsRead(List<Integer> notificationIds);
 }

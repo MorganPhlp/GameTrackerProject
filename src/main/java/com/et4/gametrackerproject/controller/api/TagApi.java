@@ -35,35 +35,13 @@ public interface TagApi {
     @GetMapping(value = APP_ROOT + "/tags/all", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<TagDto> getAllTags(Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/tags/popular", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<TagDto> getTagsByPopularity(Pageable pageable);
-
     // Gestion des relations
 
-    @GetMapping(value = APP_ROOT + "/tags/related/{tagId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<TagDto> getRelatedTags(@PathVariable Integer tagId, Pageable pageable);
-
     @GetMapping(value = APP_ROOT + "/tags/game/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<TagDto> getTagsForGame(@PathVariable Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/tags/common", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<TagDto> getCommonTagsForGames(@RequestBody List<Integer> gameIds);
+    List<TagDto> getTagsForGame(@PathVariable Integer gameId);
 
     // Recherche
 
     @GetMapping(value = APP_ROOT + "/tags/search/{query}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<TagDto> searchTags(@PathVariable String query, Pageable pageable);
-
-    //Modération
-
-    @GetMapping(value = APP_ROOT + "/tags/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<TagDto> findDuplicateTags(Pageable pageable);
-
-    //Batch operations
-
-    @PostMapping(value = APP_ROOT + "/tags/batch", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    void batchCreateTags(@RequestBody Set<TagDto> tags);
-
-    @DeleteMapping(value = APP_ROOT + "/tags/batch/delete")
-    int batchDeleteUnusedTags();
 }

@@ -20,6 +20,10 @@ public interface UserSanctionRepository extends JpaRepository<UserSanction,Integ
 
     Page<UserSanction> findByUser(User user, Pageable pageable);
 
+    Page<UserSanction> findByUserId(Integer userId, Pageable pageable);
+
+    Page<UserSanction> findByUserIdOrderByStartDateDesc(Integer userId, Pageable pageable);
+
     List<UserSanction> findByAdmin(User admin);
 
     Page<UserSanction> findByAdmin(User admin, Pageable pageable);

@@ -30,23 +30,11 @@ public interface ReportService {
     //Modération
     Page<ReportDto> getUnresolvedReports(Pageable pageable);
     ReportDto assignReportToAdmin(Integer reportId, Integer adminId);
-    void mergeDuplicateReports(List<Integer> reportIds);
 
     // Vérifications
     boolean hasPreviousReportsAgainstUser(Integer reporterId, Integer reportedUserId);
     boolean isContentAlreadyReported(Integer contentId, ReportType type);
 
-    //Intégration
-    void applyReportSanctions(Integer reportId);
-    void notifyParties(Integer reportId);
-    void hideReportedContent(Integer reportId);
-
     // Historique
     Page<ReportDto> getReportHistory(Integer contentId, ReportType type, Pageable pageable);
-    List<ReportDto> getReportResolutionHistory(Integer reportId);
-    Page<ReportDto> getAdminActivity(Integer adminId, Pageable pageable);
-
-    // Administration
-    void exportReports(String outputPath, ReportStatus status);
-    Page<ReportDto> searchReports(String searchQuery, Pageable pageable);
 }

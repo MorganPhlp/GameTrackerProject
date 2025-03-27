@@ -18,7 +18,6 @@ public interface UserService {
     // Gestion du cycle de vie
     UserDto createUser(UserDto userDto);
     UserDto updateUser(Integer userId, UserDto userDto);
-    void deactivateUser(Integer userId);
     void deleteUser(Integer userId);
 
     // Récupération
@@ -28,8 +27,6 @@ public interface UserService {
     Page<UserDto> getAllUsers(Pageable pageable);
 
     // Authentification et sécurité
-    UserDto registerUser(UserDto userDto);
-    UserDto loginUser(String identifier, String password);
     void resetPassword(Integer userId, String newPassword);
     void requestPasswordReset(String email);
 
@@ -41,14 +38,10 @@ public interface UserService {
     // Gestion des relations
     Page<UserDto> searchUsers(String query, Pageable pageable);
     Page<UserDto> getFriendsList(Integer userId, Pageable pageable);
-    Page<UserDto> getMutualFriends(Integer user1Id, Integer user2Id, Pageable pageable);
-    Page<UserDto> getBlockedUsers(Integer userId, Pageable pageable);
 
     // Statistiques et progression
     UserDto updatePlayStats(Integer userId, Integer gameTime, Integer gamesPlayed);
     UserDto addPoints(Integer userId, Integer points);
-    Map<String, Object> getUserDashboard(Integer userId);
-    Page<UserDto> getLeaderboard(Pageable pageable);
 
     // Administration
     Page<UserDto> getUsersByStatus(boolean isActive, Pageable pageable);
@@ -56,7 +49,6 @@ public interface UserService {
     // Gestion des sessions
     UserDto updateOnlineStatus(Integer userId, OnlineStatus status);
     UserDto recordLogin(Integer userId);
-    void expireOldSessions(int daysThreshold);
 
     // Validation
     boolean isUsernameAvailable(String username);

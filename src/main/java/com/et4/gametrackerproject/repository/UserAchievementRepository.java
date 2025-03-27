@@ -63,4 +63,6 @@ public interface UserAchievementRepository extends JpaRepository<UserAchievement
             "WHERE ua.user = :user " +
             "ORDER BY ua.unlockedAt ASC")
     List<UserAchievement> findAchievementProgressionTimeline(@Param("user") User user);
+
+    UserAchievement user(User user);
 }

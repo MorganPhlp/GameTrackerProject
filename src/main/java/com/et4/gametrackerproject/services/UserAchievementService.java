@@ -20,7 +20,6 @@ public interface UserAchievementService {
     // Récupération
     UserAchievementDto getUserAchievementById(Integer userAchievementId);
     Page<UserAchievementDto> getAchievementsByUser(Integer userId, Pageable pageable);
-    Page<UserAchievementDto> getAchievementsByType(String achievementType, Pageable pageable);
     Set<UserAchievementDto> getRecentUnlocks(Integer userId, int days);
 
     // Vérifications
@@ -28,27 +27,7 @@ public interface UserAchievementService {
     boolean hasAllPrerequisites(Integer userId, Integer achievementId);
     Map<AchievementDto, Boolean> getAchievementProgress(Integer userId);
 
-    // Gestion des dépendances
-    void unlockDependentAchievements(Integer userId, Integer baseAchievementId);
-    void checkAndUnlockChainAchievements(Integer userId, Integer achievementChainId);
-    void validateAchievementDependencies(Integer userAchievementId);
-
     // Statistiques
     Integer getTotalAchievementPoints(Integer userId);
-    Map<String, Long> getAchievementDistribution(Integer userId);
-    Map<UserDto, Integer> getTopAchievementCollectors(int limit);
     Double getGlobalUnlockRate(Integer achievementId);
-
-    // Administration
-    UserAchievementDto grantAchievement(Integer userId, Integer achievementId);
-    void bulkGrantAchievement(Integer achievementId, List<Integer> userIds);
-
-    // Personnalisation
-    Page<UserAchievementDto> getRarestAchievements(Pageable pageable);
-    Set<UserAchievementDto> getSecretAchievements(Integer userId);
-    Map<AchievementDto, Instant> getAchievementUnlockTimes(Integer userId);
-
-    // Social
-    Page<UserAchievementDto> getFriendAchievements(Integer userId, Integer friendId, Pageable pageable);
-    Map<UserDto, Integer> getSocialLeaderboard(Integer userId);
 }

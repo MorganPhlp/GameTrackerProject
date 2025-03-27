@@ -1,7 +1,17 @@
 package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.TagDto;
+import com.et4.gametrackerproject.exception.EntityNotFoundException;
+import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.exception.InvalidEntityException;
+import com.et4.gametrackerproject.model.Game;
+import com.et4.gametrackerproject.repository.GameRepository;
+import com.et4.gametrackerproject.repository.GameTagRepository;
+import com.et4.gametrackerproject.repository.TagRepository;
 import com.et4.gametrackerproject.services.TagService;
+import com.et4.gametrackerproject.validator.TagValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,75 +19,137 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class TagServiceImpl implements TagService {
+
+    private final TagRepository tagRepository;
+    private final GameRepository gameRepository;
+
+    @Autowired
+    public TagServiceImpl(TagRepository tagRepository, GameRepository gameRepository) {
+        this.tagRepository = tagRepository;
+        this.gameRepository = gameRepository;
+    }
+
     @Override
     public TagDto createTag(TagDto tagDto) {
-        return null;
+        List<String> errors = TagValidator.validate(tagDto);
+        if (!errors.isEmpty()) {
+            log.error("Tag is not valid {}", tagDto);
+            throw new InvalidEntityException("Le tag n'est pas valide", ErrorCodes.TAG_NOT_VALID ,errors);
+        }
+
+        log.info("Create new tag {}", tagDto);
+
+        return TagDto.fromEntity(
+                tagRepository.save(
+                        TagDto.toEntity(tagDto)
+                )
+        );
     }
 
     @Override
     public TagDto updateTag(Integer tagId, TagDto tagDto) {
-        return null;
+        if(tagId == null) {
+            log.error("Tag ID is null");
+            throw new InvalidEntityException("ID de tag non valide");
+        }
+
+        List<String> errors = TagValidator.validate(tagDto);
+        if (!errors.isEmpty()) {
+            log.error("Tag is not valid {}", tagDto);
+            throw new InvalidEntityException("Le tag n'est pas valide", ErrorCodes.TAG_NOT_VALID ,errors);
+        }
+
+        log.info("Update tag {}", tagDto);
+
+        return TagDto.fromEntity(
+                tagRepository.save(
+                        TagDto.toEntity(tagDto)
+                )
+        );
     }
 
     @Override
     public void deleteTag(Integer tagId) {
+        if(tagId == null) {
+            log.error("Tag ID is null");
+            throw new InvalidEntityException("ID de tag non valide");
+        }
+        if(!tagRepository.existsById(tagId)) {
+            log.error("Tag with ID {} not found", tagId);
+            throw new EntityNotFoundException("Tag avec ID " + tagId + " n'existe pas", ErrorCodes.TAG_NOT_FOUND);
+        }
 
+        log.info("Delete tag with ID {}", tagId);
+
+        tagRepository.deleteById(tagId);
     }
 
     @Override
     public TagDto getTagById(Integer tagId) {
-        return null;
+        if(tagId == null) {
+            log.error("Tag ID is null");
+            throw new InvalidEntityException("ID de tag non valide", ErrorCodes.TAG_NOT_VALID);
+        }
+
+        log.info("Get tag with ID {}", tagId);
+
+        return tagRepository.findById(tagId)
+                .map(TagDto::fromEntity)
+                .orElseThrow(() -> new EntityNotFoundException("Tag avec ID " + tagId + " n'existe pas", ErrorCodes.TAG_NOT_FOUND));
     }
 
     @Override
     public TagDto getTagByName(String name) {
-        return null;
+        if(name == null) {
+            log.error("Tag name is null");
+            throw new InvalidEntityException("Nom de tag non valide", ErrorCodes.TAG_NOT_VALID);
+        }
+
+        log.info("Get tag with name {}", name);
+
+        return tagRepository.findByName(name)
+                .map(TagDto::fromEntity)
+                .orElseThrow(() -> new EntityNotFoundException("Tag avec nom " + name + " n'existe pas", ErrorCodes.TAG_NOT_FOUND));
     }
 
     @Override
     public Page<TagDto> getAllTags(Pageable pageable) {
-        return null;
+        log.info("Get all tags");
+        return tagRepository.findAll(pageable)
+                .map(TagDto::fromEntity);
     }
 
     @Override
-    public Page<TagDto> getTagsByPopularity(Pageable pageable) {
-        return null;
-    }
+    public List<TagDto> getTagsForGame(Integer gameId) {
+        if(gameId == null) {
+            log.error("Game ID is null");
+            throw new InvalidEntityException("ID de jeu non valide", ErrorCodes.GAME_NOT_VALID);
+        }
 
-    @Override
-    public Page<TagDto> getRelatedTags(Integer tagId, Pageable pageable) {
-        return null;
-    }
+        log.info("Get tags for game with ID {}", gameId);
 
-    @Override
-    public Set<TagDto> getTagsForGame(Integer gameId) {
-        return Set.of();
-    }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu avec ID " + gameId + " n'existe pas", ErrorCodes.GAME_NOT_FOUND));
 
-    @Override
-    public Set<TagDto> getCommonTagsForGames(List<Integer> gameIds) {
-        return Set.of();
+        return tagRepository.findTagsByGame(game)
+                .stream()
+                .map(TagDto::fromEntity)
+                .toList();
     }
 
     @Override
     public Page<TagDto> searchTags(String query, Pageable pageable) {
-        return null;
-    }
+        if(query == null) {
+            log.error("Query is null");
+            throw new InvalidEntityException("Requête non valide", ErrorCodes.TAG_NOT_VALID);
+        }
 
-    @Override
-    public Page<TagDto> findDuplicateTags(Pageable pageable) {
-        return null;
-    }
+        log.info("Search tags with query {}", query);
 
-    @Override
-    public void batchCreateTags(Set<TagDto> tags) {
-
-    }
-
-    @Override
-    public int batchDeleteUnusedTags() {
-        return 0;
+        return tagRepository.findByNameContainingIgnoreCase(query, pageable)
+                .map(TagDto::fromEntity);
     }
 }

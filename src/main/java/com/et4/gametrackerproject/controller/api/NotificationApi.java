@@ -47,32 +47,13 @@ public interface NotificationApi {
     @PutMapping(value = APP_ROOT + "/notification/user/{userId}/markAllAsRead")
     void markAllAsRead(@PathVariable Integer userId);
 
-    @PutMapping(value = APP_ROOT + "/notification/{notificationId}/togglePin", produces = MediaType.APPLICATION_JSON_VALUE)
-    NotificationDto toggleNotificationPin(@PathVariable Integer notificationId);
-
     // Historique
 
     @GetMapping(value = APP_ROOT + "/notification/user/{userId}/history", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<NotificationDto> getNotificationHistory(@PathVariable Integer userId,@RequestBody Instant startDate,@RequestBody Instant endDate, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/notification/user/{userId}/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<NotificationDto> searchNotifications(@PathVariable Integer userId,@RequestBody String searchTerm, Pageable pageable);
-
     //Statistiques
 
     @GetMapping(value = APP_ROOT + "/notification/user/{userId}/unreadCount", produces = MediaType.APPLICATION_JSON_VALUE)
     Integer getUnreadCount(@PathVariable Integer userId);
-
-    //Expiration
-
-    @DeleteMapping(value = APP_ROOT + "/notification/cleanExpired/{daysThreshold}")
-    void cleanExpiredNotifications(@PathVariable int daysThreshold);
-
-    //Batch operations
-
-    @DeleteMapping(value = APP_ROOT + "/notification/batchDelete")
-    void batchDeleteNotifications(@RequestBody List<Integer> notificationIds);
-
-    @PutMapping(value = APP_ROOT + "/notification/batchMarkAsRead")
-    void batchMarkAsRead(@RequestBody List<Integer> notificationIds);
 }

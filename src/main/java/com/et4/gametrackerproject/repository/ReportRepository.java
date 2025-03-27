@@ -54,14 +54,18 @@ public interface ReportRepository extends JpaRepository<Report,Integer> {
     // Trouver les rapports sur un contenu spécifique
     List<Report> findByTypeAndContentId(ReportType type, Integer contentId);
 
+    Page<Report> findByTypeAndContentId(ReportType type, Integer contentId, Pageable pageable);
+
     Optional<Report> findByReporterAndReportedAndTypeAndContentId(
             User reporter,
             User reported,
             ReportType type,
             Integer contentId);
 
-    // Vérifier si un utilisateur a déjà signalé un contenu
-    boolean existsByReporterAndTypeAndContentId(User reporter, ReportType type, Integer contentId);
+    // Vérifier si un utilisateur a déjà été signalé par ce rapporteur
+    boolean existsByReporterAndReported(User reporter, User reported);
+
+    boolean existsByContentIdAndType(Integer contentId, ReportType type);
 
     // Trouver les rapports non résolus
     @Query("SELECT r FROM Report r WHERE r.status = 'PENDING' OR r.status = 'INVESTIGATING'")

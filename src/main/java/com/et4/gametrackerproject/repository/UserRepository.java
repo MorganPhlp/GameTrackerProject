@@ -13,19 +13,21 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
 
     // Requêtes de base pour l'authentification et la gestion des utilisateurs
+    Optional<User> findById(int id);
+
     Optional<User> findByEmail(String email);
 
     Optional<User> findByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    Page<User> findByIsActive(boolean isActive, Pageable pageable);
 
     boolean existsByUsername(String username);
 
@@ -56,17 +58,22 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.privacySetting = :privacySetting WHERE u.id = :userId")
-    int updateUserPrivacySetting(@Param("userId") Integer userId, @Param("privacySetting") PrivacySetting privacySetting);
+    void updateUserPrivacySetting(@Param("userId") Integer userId, @Param("privacySetting") PrivacySetting privacySetting);
 
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.themePreference = :theme WHERE u.id = :userId")
-    int updateUserTheme(@Param("userId") Integer userId, @Param("theme") ScreenTheme theme);
+    void updateUserTheme(@Param("userId") Integer userId, @Param("theme") ScreenTheme theme);
 
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.password = :newPassword WHERE u.id = :userId")
-    int updateUserPassword(@Param("userId") Integer userId, @Param("newPassword") String newPassword);
+    void updateUserPassword(@Param("userId") Integer userId, @Param("newPassword") String newPassword);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.avatar.id = :avatarId WHERE u.id = :userId")
+    void updateUserAvatar(@Param("userId") Integer userId, @Param("avatarId") Integer avatarId);
 
     @Modifying
     @Transactional
