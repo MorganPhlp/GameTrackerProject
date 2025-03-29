@@ -7,8 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 
@@ -31,41 +29,19 @@ public interface AchievementApi {
     @GetMapping(value = APP_ROOT + "/achievements/active", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AchievementDto> getActiveAchievements();
 
-    @GetMapping(value = APP_ROOT + "/achievements/visible/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<AchievementDto> getVisibleAchievementsForUser(@PathVariable Integer userId);
-
-    //Gestion des achievements
-
     @PostMapping(value = APP_ROOT + "/achievements/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     AchievementDto createAchievement(@RequestBody AchievementDto achievementDto);
 
     @PutMapping(value = APP_ROOT + "/achievements/update/{idAchievement}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     AchievementDto updateAchievement(@PathVariable("idAchievement") Integer id,@RequestBody AchievementDto achievementDto);
 
-    //Progression utilisateur
-
-    @GetMapping(value = APP_ROOT + "/achievements/unlocked/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<AchievementDto> getUnlockedAchievementsForUser(@PathVariable Integer userId);
-
-    @GetMapping(value = APP_ROOT + "/achievements/progress/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<AchievementDto, Boolean> getUserAchievementProgress(@PathVariable Integer userId);
-
-    @GetMapping(value = APP_ROOT + "/achievements/unlocked/{userId}/{achievementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasUserUnlockedAchievement(@PathVariable Integer userId,@PathVariable Integer achievementId);
-
-    @PostMapping(value = APP_ROOT + "/achievements/unlock/{userId}/{achievementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    AchievementDto unlockAchievementForUser(@PathVariable Integer userId,@PathVariable Integer achievementId);
-
-    @GetMapping(value = APP_ROOT + "/achievements/points/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    int calculateUserAchievementPoints(@PathVariable Integer userId);
-
-    //Évaluation des conditions
-
-    @GetMapping(value = APP_ROOT + "/achievements/check/{userId}/{contextType}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void checkUserProgress(@PathVariable Integer userId,@PathVariable String contextType,@RequestBody Map<String, Object> contextData);
-
-    //Achievement secrets
-
     @GetMapping(value = APP_ROOT + "/achievements/secrets", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AchievementDto> getSecretAchievements();
+
+    @GetMapping(value = APP_ROOT + "/achievements/description/{keyword}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AchievementDto> getAchievementsByDescriptionContaining(@PathVariable String keyword);
+
+    @GetMapping(value = APP_ROOT + "/achievements/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AchievementDto> countNumberAchievementsByType();
+
 }

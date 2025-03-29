@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 import java.util.Map;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
@@ -33,27 +35,13 @@ public interface GameRatingApi {
     @GetMapping(value = APP_ROOT + "/rating/game/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameRatingDto> getRatingsForGame(@PathVariable Integer gameId, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/rating/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameRatingDto> getRatingsByUser(@PathVariable Integer userId, Pageable pageable);
-
     //Statistiques
 
     @GetMapping(value = APP_ROOT + "/rating/game/{gameId}/average", produces = MediaType.APPLICATION_JSON_VALUE)
     Double calculateAverageRatingForGame(@PathVariable Integer gameId);
 
-    @GetMapping(value = APP_ROOT + "/rating/game/{gameId}/distribution", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Long> getRatingDistributionForGame(@PathVariable Integer gameId);
-
     @GetMapping(value = APP_ROOT + "/rating/game/{gameId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
     Long countRatingsForGame(@PathVariable Integer gameId);
-
-    //Vérifications
-
-    @GetMapping(value = APP_ROOT + "/rating/user/{userId}/game/{gameId}/exists", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasUserRatedGame(@PathVariable Integer userId,@PathVariable Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/rating/valid/{rating}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean isValidRatingValue(@PathVariable Integer rating);
 
     //Modération
 
@@ -76,13 +64,6 @@ public interface GameRatingApi {
     @GetMapping(value = APP_ROOT + "/rating/top/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
     Map<Integer, Long> getTopRatedGames(@PathVariable int limit);
 
-    //Intégration
-
-    @PutMapping(value = APP_ROOT + "/rating/game/{gameId}/update")
-    void updateGameAverageRating(@PathVariable Integer gameId);
-
-    //Sécurité/Validation
-
-    @GetMapping(value = APP_ROOT + "/rating/{ratingId}/owner/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean isRatingOwner(@PathVariable Integer ratingId,@PathVariable Integer userId);
+    @GetMapping(value = APP_ROOT + "/rating/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    GameRatingDto getRatingByDate(@PathVariable Instant date);
 }

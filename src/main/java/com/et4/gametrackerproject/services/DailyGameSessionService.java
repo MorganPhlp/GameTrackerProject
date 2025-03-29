@@ -16,7 +16,6 @@ public interface DailyGameSessionService {
     DailyGameSessionDto updateSession(Integer id, DailyGameSessionDto sessionDto);
     void deleteSession(Integer id);
 
-    List<DailyGameSessionDto> getSessionByDate(Instant date);
 
 
     DailyGameSessionDto getSessionByUserAndDate(User user, Instant date);
@@ -25,7 +24,9 @@ public interface DailyGameSessionService {
 
     List<DailyGameSessionDto> getSessionsForUserBetweenDates(Integer userId, Instant start, Instant end);
 
-    //Statistiques de jeu
+
+    List<DailyGameSessionDto> getSessionByDate(Instant date);
+
 
     Map<UserDto, Long> getMostActiveUsers();
 

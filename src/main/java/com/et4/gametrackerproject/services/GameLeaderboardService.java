@@ -21,6 +21,8 @@ public interface GameLeaderboardService {
     //Récupération des classements
     Page<GameLeaderboardDto> getLeaderboardForGame(Integer gameId, LeaderboardPeriod period, Pageable pageable);
 
+    void resetLeaderboard(Integer gameId, LeaderboardPeriod period);
+
 
     Page<GameLeaderboardDto> getLeaderboardByPeriod(LeaderboardPeriod period, Pageable pageable);
 
@@ -33,7 +35,6 @@ public interface GameLeaderboardService {
 
     List<GameLeaderboardDto> getTopRankedPlayersByGamePeriod(Integer gameId, LeaderboardPeriod period, int limit);
 
-    void resetLeaderboard(Integer gameId, LeaderboardPeriod period);
 
     List<GameLeaderboardDto> getLeaderboardEntriesForUserAndGame(Integer userId, Integer gameId);
 

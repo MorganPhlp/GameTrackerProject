@@ -1,7 +1,6 @@
 package com.et4.gametrackerproject.controller.api;
 
 import com.et4.gametrackerproject.dto.GameLeaderboardDto;
-import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.LeaderboardPeriod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 
@@ -32,83 +31,29 @@ public interface GameLeaderboardApi {
     @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameLeaderboardDto> getLeaderboardForGame(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/full/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameLeaderboardDto> getFullLeaderboard(@PathVariable LeaderboardPeriod period, Pageable pageable);
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/historical/{gameId}/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameLeaderboardDto> getHistoricalLeaderboard(@PathVariable Integer gameId,@PathVariable Instant date, Pageable pageable);
-
-    //Positions des joueurs
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/user/{userId}/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Integer getUserRank(@PathVariable Integer userId,@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/user/{userId}/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<LeaderboardPeriod, Integer> getUserRanksAcrossPeriods(@PathVariable Integer userId,@PathVariable Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/surrounding/{userId}/{gameId}/{period}/{range}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<GameLeaderboardDto> getSurroundingEntries(@PathVariable Integer userId,@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period,@PathVariable int range);
-
-    // Statistiques
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/top/{gameId}/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Integer> getTopScoresForGame(@PathVariable Integer gameId,@PathVariable int limit);
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/distribution/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<String, Long> getScoreDistribution(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/performance/{userId}/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<LeaderboardPeriod, Integer> getPerformanceTrend(@PathVariable Integer userId,@PathVariable Integer gameId);
-
-    // Gestion des classements
-
-    @PutMapping(value = APP_ROOT + "/leaderboard/recalculate/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void recalculateLeaderboard(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
-
     @PutMapping(value = APP_ROOT + "/leaderboard/reset/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
     void resetLeaderboard(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
 
-    @PutMapping(value = APP_ROOT + "/leaderboard/freeze/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void freezeLeaderboard(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
+    @GetMapping(value = APP_ROOT + "/leaderboard/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameLeaderboardDto> getLeaderboardByPeriod(@PathVariable LeaderboardPeriod period, Pageable pageable);
 
-    @PutMapping(value = APP_ROOT + "/leaderboard/archive/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void archiveLeaderboard(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/user/{userId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Optional<GameLeaderboardDto> getLeaderBoardByGameUserPeriod(@PathVariable Integer gameId, @PathVariable Integer userId, @PathVariable LeaderboardPeriod period);
 
-    //Vérifications
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getLeaderboardByGamePeriodScore(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/eligible/{gameId}/{score}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean isScoreEligible(@PathVariable Integer gameId,@PathVariable Integer score);
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}/page", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<GameLeaderboardDto> getLeaderboardPageByRank(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/submitted/{userId}/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasUserSubmittedScore(@PathVariable Integer userId,@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
+    @GetMapping(value = APP_ROOT + "/leaderboard/game/{gameId}/period/{period}/limit/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getTopRankedPlayersByGamePeriod(@PathVariable Integer gameId, @PathVariable LeaderboardPeriod period, @PathVariable int limit);
 
-    //Administration
+    @GetMapping(value = APP_ROOT + "/leaderboard/user/{userId}/game/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getLeaderboardEntriesForUserAndGame(@PathVariable Integer userId, @PathVariable Integer gameId);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<GameLeaderboardDto> searchLeaderboardEntries(@RequestBody String query, Pageable pageable);
+    @GetMapping(value = APP_ROOT + "/leaderboard/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameLeaderboardDto> getLeaderboardEntriesByDate(@PathVariable Instant date);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/participation/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Long> getLeaderboardParticipationStats(@PathVariable Integer gameId);
 
-    @GetMapping(value = APP_ROOT + "/leaderboard/top/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<UserDto, Integer> getTopPerformersGlobal(@PathVariable int limit);
-
-    //Intégration
-
-    @PutMapping(value = APP_ROOT + "/leaderboard/notify/{gameId}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void notifyRankChanges(@PathVariable Integer gameId,@PathVariable LeaderboardPeriod period);
-
-    @PutMapping(value = APP_ROOT + "/leaderboard/updateAchievements/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void updateAchievementsFromLeaderboard(@PathVariable Integer gameId);
-
-    //Gestion du temps
-
-    @PutMapping(value = APP_ROOT + "/leaderboard/schedule", produces = MediaType.APPLICATION_JSON_VALUE)
-    void schedulePeriodicLeaderboardRotation();
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/periodEnd/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Instant getCurrentPeriodEnd(@PathVariable LeaderboardPeriod period);
-
-    @GetMapping(value = APP_ROOT + "/leaderboard/nextPeriod/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Instant getNextPeriodStart(@PathVariable LeaderboardPeriod period);
 }

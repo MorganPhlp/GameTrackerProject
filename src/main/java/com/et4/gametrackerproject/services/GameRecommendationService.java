@@ -25,11 +25,14 @@ public interface GameRecommendationService {
 
     Page<GameRecommendationDto> getRecommendationsBetweenUsers(Integer user1Id, Integer user2Id, Pageable pageable);
 
-    Map<Integer, Long> getMostRecommendedGames(Pageable pageable);
 
     Long countRecommendationsForGame(Integer gameId);
+
+
     // Modération
     Page<GameRecommendationDto> getAllRecommendations(Pageable pageable);
+
+    Map<Integer, Long> getMostRecommendedGames(Pageable pageable);
 
     Long countRecommendationsReceivedByUser(Integer receiverId);
 

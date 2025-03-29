@@ -37,35 +37,8 @@ public interface GameRecommendationApi {
     @GetMapping(value = APP_ROOT + "/recommendation/users/{user1Id}/{user2Id}", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameRecommendationDto> getRecommendationsBetweenUsers(@PathVariable Integer user1Id,@PathVariable Integer user2Id, Pageable pageable);
 
-    //Interactions
-
-    @PutMapping(value = APP_ROOT + "/recommendation/{recommendationId}/view", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameRecommendationDto markAsViewed(@PathVariable Integer recommendationId);
-
-    @PutMapping(value = APP_ROOT + "/recommendation/{recommendationId}/accept", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameRecommendationDto acceptRecommendation(@PathVariable Integer recommendationId);
-
-    //Statistiques
-
-    @GetMapping(value = APP_ROOT + "/recommendation/mostRecommended/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Long> getMostRecommendedGames(@PathVariable int limit);
-
-    @GetMapping(value = APP_ROOT + "/recommendation/topRecommenders/{limit}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Long> getTopRecommenders(@PathVariable int limit);
-
     @GetMapping(value = APP_ROOT + "/recommendation/game/{gameId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
     Long countRecommendationsForGame(@PathVariable Integer gameId);
-
-    //Vérifications
-
-    @GetMapping(value = APP_ROOT + "/recommendation/canRecommend/{senderId}/{receiverId}/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean canRecommendGame(@PathVariable Integer senderId,@PathVariable Integer receiverId,@PathVariable Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/recommendation/hasRecommended/{senderId}/{receiverId}/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasRecommendedGameToUser(@PathVariable Integer senderId,@PathVariable Integer receiverId,@PathVariable Integer gameId);
-
-    @GetMapping(value = APP_ROOT + "/recommendation/isActive/{recommendationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean isRecommendationActive(@PathVariable Integer recommendationId);
 
     // Modération
 
@@ -75,22 +48,20 @@ public interface GameRecommendationApi {
     @GetMapping(value = APP_ROOT + "/recommendation/search", produces = MediaType.APPLICATION_JSON_VALUE)
     Page<GameRecommendationDto> searchRecommendations(@RequestBody String searchQuery, Pageable pageable);
 
-    //Intégration
-
-    @PutMapping(value = APP_ROOT + "/recommendation/{recommendationId}/notify")
-    void notifyReceiver(@PathVariable Integer recommendationId);
-
-    @PutMapping(value = APP_ROOT + "/recommendation/sync/{user1Id}/{user2Id}")
-    void syncWithFriendshipService(@PathVariable Integer user1Id,@PathVariable Integer user2Id);
-
-    //Gestion des relations
-
-    @DeleteMapping(value = APP_ROOT + "/recommendation/remove/{user1Id}/{user2Id}")
-    void removeAllRecommendationsBetweenUsers(@PathVariable Integer user1Id,@PathVariable Integer user2Id);
+    void removeAllRecommendationsBetweenUsers(Integer user1Id, Integer user2Id, Pageable pageable);
 
     @DeleteMapping(value = APP_ROOT + "/recommendation/remove/game/{gameId}")
     void removeAllRecommendationsForGame(@PathVariable Integer gameId);
 
-    @PutMapping(value = APP_ROOT + "/recommendation/refresh")
-    void refreshRecommendationStatuses();
+    @GetMapping(value = APP_ROOT + "/recommendation/mostRecommended", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Long> getMostRecommendedGames(Pageable pageable);
+
+    @GetMapping(value = APP_ROOT + "/recommendation/received/{receiverId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countRecommendationsReceivedByUser(@PathVariable Integer receiverId);
+
+    @GetMapping(value = APP_ROOT + "/recommendation/sent/{senderId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    Long countRecommendationsSentByUser(@PathVariable Integer senderId);
+
+
+
 }

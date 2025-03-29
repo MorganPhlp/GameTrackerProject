@@ -55,39 +55,50 @@ public interface GameProgressApi {
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
     List<GameProgressDto> getAllUserProgress(@PathVariable("userId") Integer userId);
 
-    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<GameProgressDto> getCompletedGames(@PathVariable("userId") Integer userId);
+    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameProgressDto> getGamesByStatus(@PathVariable Integer userId, GameStatus status);
 
-    //Statistiques
-    @GetMapping(value = APP_ROOT + "/progress/stats", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<String, Number> getGameStatistics(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
+    // Récupère toutes les progressions pour un jeu spécifique.
+    @GetMapping(value = APP_ROOT + "/progress/game/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameProgressDto> getProgressForGame(@PathVariable Integer gameId);
 
-    @GetMapping(value = APP_ROOT + "/progress/playtime", produces = MediaType.APPLICATION_JSON_VALUE)
-    Integer getTotalPlayTimeForGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
+    // Récupère les progressions d'un utilisateur triées par meilleur score décroissant.
+    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/best-score", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameProgressDto> getProgressByUserOrderByBestScoreDesc(@PathVariable Integer userId);
 
-    @GetMapping(value = APP_ROOT + "/progress/winloss", produces = MediaType.APPLICATION_JSON_VALUE)
-    Double getWinLossRatio(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
+    // Récupère les progressions d'un utilisateur triées par temps joué décroissant.
+    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/time-played", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameProgressDto> getProgressByUserOrderByTimePlayedDesc(@PathVariable Integer userId);
 
-    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/bestscores", produces = MediaType.APPLICATION_JSON_VALUE)
-    Map<Integer, Integer> getBestScoresForUser(@PathVariable("userId") Integer userId);
+    // Récupère les progressions jouées récemment par un utilisateur depuis un instant donné.
+    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/recent", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<GameProgressDto> getRecentlyPlayedGames(@PathVariable Integer userId, int hours);
 
-    //Synchronisation des données
-    @PutMapping(value = APP_ROOT + "/progress/{progressId}/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameProgressDto saveProgressData(@PathVariable("progressId") Integer progressId, @RequestBody String progressData);
+    // Compte le nombre de jeux par statut pour un utilisateur et retourne une Map (statut -> nombre).
+    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/count-by-status", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<GameStatus, Long> countGamesByStatusForUser(@PathVariable Integer userId);
 
-    @GetMapping(value = APP_ROOT + "/progress/{progressId}/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    String loadProgressData(@PathVariable("progressId") Integer progressId);
+    // Récupère le temps total de jeu d'un utilisateur.
+    @GetMapping(value = APP_ROOT + "/progress/user/{userId}/total-playtime", produces = MediaType.APPLICATION_JSON_VALUE)
+    Integer getTotalPlaytimeForUser(@PathVariable Integer userId);
 
-    @PostMapping(value = APP_ROOT + "/progress/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean validateProgressData(@RequestBody String progressData);
+    // Récupère les utilisateurs ayant joué à un jeu spécifique, triés par temps de jeu décroissant.
+    @GetMapping(value = APP_ROOT + "/progress/game/{gameId}/users-by-playtime", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Integer> getUsersByGameOrderedByPlaytime(@PathVariable Integer gameId);
 
-    //Gestion des états
-    @PutMapping(value = APP_ROOT + "/progress/{progressId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    GameProgressDto transitionStatus(@PathVariable("progressId") Integer progressId, @RequestParam("newStatus") GameStatus newStatus);
+    // Récupère les jeux les plus populaires basés sur le nombre d'utilisateurs ayant joué.
+    @GetMapping(value = APP_ROOT + "/progress/most-popular-games", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Long> getMostPopularGames();
 
-    @GetMapping(value = APP_ROOT + "/progress/completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasCompletedGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
+    // Récupère les utilisateurs avec le meilleur score pour un jeu, triés par score décroissant.
+    @GetMapping(value = APP_ROOT + "/progress/game/{gameId}/top-scoring-users", produces = MediaType.APPLICATION_JSON_VALUE)
+    Map<Integer, Integer> getTopScoringUsersForGame(@PathVariable Integer gameId);
 
-    @GetMapping(value = APP_ROOT + "/progress/started", produces = MediaType.APPLICATION_JSON_VALUE)
-    boolean hasStartedGame(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
+    // Récupère les utilisateurs avec les plus longs streaks (renvoie une liste d'objets contenant l'utilisateur, le streak et le nom du jeu).
+    @GetMapping(value = APP_ROOT + "/progress/longest-streaks", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Map<String, Object>> getUsersWithLongestStreaks();
+
+
+
+
 }

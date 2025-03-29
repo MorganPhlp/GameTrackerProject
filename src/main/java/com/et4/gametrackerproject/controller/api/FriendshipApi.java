@@ -3,6 +3,7 @@ package com.et4.gametrackerproject.controller.api;
 import com.et4.gametrackerproject.dto.FriendshipDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.FriendshipStatus;
+import com.et4.gametrackerproject.model.User;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
 public interface FriendshipApi {
 
     //Opérations de base
-
     @PostMapping(value = APP_ROOT + "/friendships/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     FriendshipDto createFriendship(@RequestBody FriendshipDto friendshipDto);
 
@@ -33,13 +33,8 @@ public interface FriendshipApi {
     @GetMapping(value = APP_ROOT + "/friendships/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<FriendshipDto> getAllFriendshipsForUser(@PathVariable Integer userId);
 
-    @GetMapping(value = APP_ROOT + "/friendships/user/{userId}/status/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<FriendshipDto> getFriendshipsByStatus(@PathVariable Integer userId,@PathVariable FriendshipStatus status);
-
     @GetMapping(value = APP_ROOT + "/friendships/user/{user1Id}/user/{user2Id}", produces = MediaType.APPLICATION_JSON_VALUE)
     FriendshipDto getFriendshipBetweenUsers(@PathVariable Integer user1Id,@PathVariable Integer user2Id);
-
-    //Gestion des demandes
 
     @PostMapping(value = APP_ROOT + "/friendships/send/{senderId}/to/{receiverId}", produces = MediaType.APPLICATION_JSON_VALUE)
     FriendshipDto sendFriendRequest(@PathVariable Integer senderId,@PathVariable Integer receiverId);
@@ -91,16 +86,10 @@ public interface FriendshipApi {
     @DeleteMapping(value = APP_ROOT + "/friendships/admin/delete/{userId}")
     void removeAllFriendshipsForUser(@PathVariable Integer userId);
 
-    //Gestion des conflits
+    @GetMapping(value = APP_ROOT + "/friendships/suggest/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<UserDto> suggestFriends(Integer userId);
 
-    @PutMapping(value = APP_ROOT + "/friendships/admin/resolve/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void resolveDuplicateFriendships(@PathVariable Integer userId);
+    @GetMapping(value = APP_ROOT + "/friendships/status/{user}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status);
 
-    @PutMapping(value = APP_ROOT + "/friendships/admin/merge/{user1Id}/user/{user2Id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    void mergeDuplicateFriendships(@PathVariable Integer user1Id,@PathVariable Integer user2Id);
-
-    //Notifications
-
-    @PostMapping(value = APP_ROOT + "/friendships/notify/{friendshipId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    void notifyFriendshipUpdate(@PathVariable Integer friendshipId);
 }
