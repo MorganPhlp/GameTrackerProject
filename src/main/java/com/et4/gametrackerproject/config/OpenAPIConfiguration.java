@@ -16,6 +16,7 @@ public class OpenAPIConfiguration {
         return new OpenAPI()
                 .info(new Info()
                         .title("Game Tracker API")
+                        .version("1.0.0")
                         .description("API documentation for Game Tracker project"));
     }
 
@@ -23,10 +24,8 @@ public class OpenAPIConfiguration {
     public GroupedOpenApi restApiV1() {
         return GroupedOpenApi.builder()
                 .group("REST API v1")
-                // On scanne l'ensemble du package contenant les contrôleurs
-                .packagesToScan("com.et4.gametrackerproject.controller")
-                // On limite l'affichage aux endpoints dont l'URL commence par APP_ROOT
-                .pathsToMatch(APP_ROOT + "/**")
+                .packagesToScan("com.et4.gametrackerproject.controller.api", "com.et4.gametrackerproject.controller")
+                .pathsToMatch("/**")
                 .build();
     }
 }
