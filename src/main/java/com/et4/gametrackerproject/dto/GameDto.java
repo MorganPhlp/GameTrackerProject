@@ -4,8 +4,7 @@ import com.et4.gametrackerproject.enums.DifficultyLevel;
 import com.et4.gametrackerproject.enums.GameCategory;
 import com.et4.gametrackerproject.model.Game;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -14,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class GameDto {
     private Integer id;
 
