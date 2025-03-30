@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -136,7 +135,7 @@ class AvatarServiceImplTest {
 
         @Test
         @DisplayName("Devrait télécharger un avatar avec succès")
-        void shouldUploadAvatarSuccessfully() throws IOException {
+        void shouldUploadAvatarSuccessfully() {
             // Arrange
             MockMultipartFile file = new MockMultipartFile(
                     "avatar", "avatar.jpg", "image/jpeg", "test image content".getBytes()
