@@ -22,7 +22,7 @@ public class GameProgressController implements GameProgressApi {
 
 
     @Override
-    public GameProgressDto createOrUpdateProgress(GameProgressDto progressDto) {
+    public GameProgressDto createProgress(GameProgressDto progressDto) {
         return gameProgressService.createOrUpdateProgress(progressDto);
     }
 

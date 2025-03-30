@@ -73,7 +73,10 @@
 
 
 
-        <!-- SpringDoc OpenAPI AU LIEU DE SWAGGER-->
+        <!-- SpringDoc OpenAPI AU LIEU DE SWAGGER
+        Utiliser le lien suivant pour accéder à la documentation de l'API :
+        http://localhost:8081/swagger-ui/index.html
+        -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
