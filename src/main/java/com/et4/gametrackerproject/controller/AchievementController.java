@@ -7,8 +7,9 @@ import com.et4.gametrackerproject.enums.AchievementType;
 import com.et4.gametrackerproject.services.AchievementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
+
+
 
 @RestController
 public class AchievementController implements AchievementApi {
@@ -21,7 +22,13 @@ public class AchievementController implements AchievementApi {
     }
 
 
-    @Override
+    //@Override
+    //@GetMapping(value = "/api/achievements/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    //@Operation(summary = "Renvoie la liste des achievements", description = "Renvoie la liste des achievements")
+    //@ApiResponses(value = {
+            //@ApiResponse(responseCode = "200", description = "La liste des achievements a été trouvée"),
+           // @ApiResponse(responseCode = "404", description = "Aucun achievement n'a été trouvé dans la BDD")
+    //})
     public List<AchievementDto> getAllAchievements() {
         return achievementService.getAllAchievements();
     }

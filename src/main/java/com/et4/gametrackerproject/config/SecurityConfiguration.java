@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -34,7 +36,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Autoriser l'accès aux endpoints d'authentification et à la documentation OpenAPI
-                        .requestMatchers("/authenticate",
+                        .requestMatchers(
+                                APP_ROOT + "/**",
+                                "/authenticate",
                                 "/v2/api-docs",
                                 "/swagger-resources",
                                 "/swagger-resources/**",

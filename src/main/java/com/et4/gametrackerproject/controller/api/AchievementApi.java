@@ -18,10 +18,10 @@ import static com.et4.gametrackerproject.utils.Constants.APP_ROOT;
  * AchievementApi est une interface qui définit les opérations liées aux achievements.
  * Elle utilise Spring Web pour gérer les requêtes HTTP et Swagger pour la documentation de l'API.
  */
-@Tag(name = "Achievements API", description = "Operations related to achievements")
+@Tag(name = "Achievements", description = "Operations related to achievements")
 public interface AchievementApi {
 
-    @GetMapping(value = APP_ROOT + "/achievements/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping( value = APP_ROOT+"/achievements/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Renvoie la liste des achievements", description = "Renvoie la liste des achievements")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "La liste des achievements a été trouvée"),
