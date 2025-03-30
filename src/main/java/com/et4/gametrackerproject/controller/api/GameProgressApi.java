@@ -93,56 +93,126 @@ public interface GameProgressApi {
     GameProgressDto incrementStreak(@PathVariable("progressId") Integer progressId);
 
     @PutMapping(value = APP_ROOT + "/progress/{progressId}/streak/reset", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Réinitialiser le streak", description = "Réinitialiser le streak")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Streak réinitialisé"),
+            @ApiResponse(responseCode = "404", description = "Progression de jeu non trouvée")
+    })
     GameProgressDto resetStreak(@PathVariable("progressId") Integer progressId);
 
     // Récupération des données
     @GetMapping(value = APP_ROOT + "/progress/current", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer la progression actuelle d'un utilisateur pour un jeu", description = "Récupérer la progression actuelle d'un utilisateur pour un jeu")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Progression actuelle trouvée"),
+            @ApiResponse(responseCode = "404", description = "Progression actuelle non trouvée")
+    })
     GameProgressDto getCurrentProgress(@RequestParam("userId") Integer userId, @RequestParam("gameId") Integer gameId);
 
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer toutes les progressions d'un utilisateur", description = "Récupérer toutes les progressions d'un utilisateur")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Progressions d'utilisateur trouvées"),
+            @ApiResponse(responseCode = "404", description = "Aucune progression trouvée pour cet utilisateur")
+    })
     List<GameProgressDto> getAllUserProgress(@PathVariable("userId") Integer userId);
 
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les progressions d'un utilisateur par statut", description = "Récupérer les progressions d'un utilisateur par statut")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Progressions d'utilisateur trouvées"),
+            @ApiResponse(responseCode = "404", description = "Aucune progression trouvée pour cet utilisateur")
+    })
     List<GameProgressDto> getGamesByStatus(@PathVariable Integer userId, GameStatus status);
 
     // Récupère toutes les progressions pour un jeu spécifique.
     @GetMapping(value = APP_ROOT + "/progress/game/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer toutes les progressions pour un jeu", description = "Récupérer toutes les progressions pour un jeu")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Progressions de jeu trouvées"),
+            @ApiResponse(responseCode = "404", description = "Aucune progression trouvée pour ce jeu")
+    })
     List<GameProgressDto> getProgressForGame(@PathVariable Integer gameId);
 
     // Récupère les progressions d'un utilisateur triées par meilleur score décroissant.
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/best-score", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les progressions d'un utilisateur triées par meilleur score", description = "Récupérer les progressions d'un utilisateur triées par meilleur score")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Progressions d'utilisateur triées par meilleur score trouvées"),
+            @ApiResponse(responseCode = "404", description = "Aucune progression trouvée pour cet utilisateur")
+    })
     List<GameProgressDto> getProgressByUserOrderByBestScoreDesc(@PathVariable Integer userId);
 
     // Récupère les progressions d'un utilisateur triées par temps joué décroissant.
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/time-played", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les progressions d'un utilisateur triées par temps joué", description = "Récupérer les progressions d'un utilisateur triées par temps joué")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Progressions d'utilisateur triées par temps joué trouvées"),
+            @ApiResponse(responseCode = "404", description = "Aucune progression trouvée pour cet utilisateur")
+    })
     List<GameProgressDto> getProgressByUserOrderByTimePlayedDesc(@PathVariable Integer userId);
 
     // Récupère les progressions jouées récemment par un utilisateur depuis un instant donné.
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/recent", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les jeux récemment joués par un utilisateur", description = "Récupérer les jeux récemment joués par un utilisateur")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Jeux récemment joués trouvés"),
+            @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé pour cet utilisateur")
+    })
     List<GameProgressDto> getRecentlyPlayedGames(@PathVariable Integer userId, int hours);
 
     // Compte le nombre de jeux par statut pour un utilisateur et retourne une Map (statut -> nombre).
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/count-by-status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Compter le nombre de jeux par statut pour un utilisateur", description = "Compter le nombre de jeux par statut pour un utilisateur")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Nombre de jeux par statut trouvé"),
+            @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé pour cet utilisateur")
+    })
     Map<GameStatus, Long> countGamesByStatusForUser(@PathVariable Integer userId);
 
     // Récupère le temps total de jeu d'un utilisateur.
     @GetMapping(value = APP_ROOT + "/progress/user/{userId}/total-playtime", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer le temps total de jeu d'un utilisateur", description = "Récupérer le temps total de jeu d'un utilisateur")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Temps total de jeu trouvé"),
+            @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé pour cet utilisateur")
+    })
     Integer getTotalPlaytimeForUser(@PathVariable Integer userId);
 
     // Récupère les utilisateurs ayant joué à un jeu spécifique, triés par temps de jeu décroissant.
     @GetMapping(value = APP_ROOT + "/progress/game/{gameId}/users-by-playtime", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les utilisateurs ayant joué à un jeu spécifique", description = "Récupérer les utilisateurs ayant joué à un jeu spécifique")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Utilisateurs trouvés"),
+            @ApiResponse(responseCode = "404", description = "Aucun utilisateur trouvé pour ce jeu")
+    })
     Map<Integer, Integer> getUsersByGameOrderedByPlaytime(@PathVariable Integer gameId);
 
     // Récupère les jeux les plus populaires basés sur le nombre d'utilisateurs ayant joué.
     @GetMapping(value = APP_ROOT + "/progress/most-popular-games", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les jeux les plus populaires", description = "Récupérer les jeux les plus populaires")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Jeux populaires trouvés"),
+            @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé")
+    })
     Map<Integer, Long> getMostPopularGames();
 
     // Récupère les utilisateurs avec le meilleur score pour un jeu, triés par score décroissant.
     @GetMapping(value = APP_ROOT + "/progress/game/{gameId}/top-scoring-users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les utilisateurs avec le meilleur score pour un jeu", description = "Récupérer les utilisateurs avec le meilleur score pour un jeu")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Utilisateurs avec le meilleur score trouvés"),
+            @ApiResponse(responseCode = "404", description = "Aucun utilisateur trouvé pour ce jeu")
+    })
     Map<Integer, Integer> getTopScoringUsersForGame(@PathVariable Integer gameId);
 
     // Récupère les utilisateurs avec les plus longs streaks (renvoie une liste d'objets contenant l'utilisateur, le streak et le nom du jeu).
     @GetMapping(value = APP_ROOT + "/progress/longest-streaks", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer les utilisateurs avec les plus longs streaks", description = "Récupérer les utilisateurs avec les plus longs streaks")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Utilisateurs avec les plus longs streaks trouvés"),
+            @ApiResponse(responseCode = "404", description = "Aucun utilisateur trouvé")
+    })
     List<Map<String, Object>> getUsersWithLongestStreaks();
 
 
