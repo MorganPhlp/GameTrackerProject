@@ -79,4 +79,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
                     "ORDER BY mutual_count DESC",
             nativeQuery = true)
     List<Object[]> suggestFriends(@Param("userId") Integer userId);
+
+    @Query("SELECT f FROM Friendship f WHERE f.user1.id = :userId OR f.user2.id = :userId")
+    List<Friendship> findAllByUserId(@Param("userId") Integer id);
 }

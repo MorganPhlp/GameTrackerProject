@@ -56,9 +56,9 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .orElseThrow(() -> new EntityNotFoundException("Aucune relation d'amitié trouvée avec l'ID " + friendshipId));
         // Update the status and persist the changes
         friendship.setStatus(newStatus);
-        friendship = friendshipRepository.save(friendship);
+        Friendship updatedFriendship = friendshipRepository.save(friendship);
         log.info("Mise à jour du statut de la relation d'amitié {} vers {}", friendshipId, newStatus);
-        return FriendshipDto.fromEntity(friendship);
+        return FriendshipDto.fromEntity(updatedFriendship);
     }
 
     @Override
