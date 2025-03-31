@@ -13,7 +13,10 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {
+        "favoriteGames", "comments", "leaderboardEntries", "progressions",
+        "ratings", "recommendations", "tags", "winStreaks"
+})
 @Entity
 @Table(name = "game")
 public class Game extends AbstractEntity{
