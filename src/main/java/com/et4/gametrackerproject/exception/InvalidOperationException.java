@@ -1,5 +1,8 @@
 package com.et4.gametrackerproject.exception;
 
+import lombok.Getter;
+
+@Getter
 public class InvalidOperationException extends RuntimeException {
 
     private ErrorCodes errorCode;
