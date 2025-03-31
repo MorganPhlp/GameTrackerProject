@@ -6,7 +6,6 @@ import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.GameTag;
 import com.et4.gametrackerproject.model.Tag;
-import com.et4.gametrackerproject.repository.GameRepository;
 import com.et4.gametrackerproject.repository.GameTagRepository;
 import com.et4.gametrackerproject.repository.TagRepository;
 import com.et4.gametrackerproject.services.GameTagService;
@@ -29,7 +28,6 @@ public class GameTagServiceImpl implements GameTagService {
     private final TagRepository tagRepository;
 
     public GameTagServiceImpl(GameTagRepository gameTagRepository,
-                              GameRepository gameRepository,
                               TagRepository tagRepository) {
         this.gameTagRepository = gameTagRepository;
         this.tagRepository = tagRepository;
@@ -96,7 +94,7 @@ public class GameTagServiceImpl implements GameTagService {
         Optional<GameTag> association = gameTagRepository.findByGameAndTag(gameId, tagId);
         if (association.isPresent()) {
             gameTagRepository.delete(association.get());
-            log.info("Association entre le jeu {} et le tag {} supprimée", gameId, tagId);
+            log.info("Association entre le jeu {} et le tag {} supprimée ", gameId, tagId);
         } else {
             log.warn("Aucune association trouvée pour le jeu {} et le tag {}", gameId, tagId);
         }
@@ -165,9 +163,7 @@ public class GameTagServiceImpl implements GameTagService {
             throw new IllegalArgumentException("La pagination ne peut être null");
         }
         Set<GameTagDto> popularTags = new HashSet<>();
-        gameTagRepository.findMostPopularTags(pageable).forEach(tag -> {
-            popularTags.add(GameTagDto.fromEntity((GameTag) tag[0]));
-        });
+        gameTagRepository.findMostPopularTags(pageable).forEach(tag -> popularTags.add(GameTagDto.fromEntity((GameTag) tag[0])));
         log.info("Récupération des tags les plus populaires - page {}", pageable.getPageNumber());
         return popularTags;
     }

@@ -52,11 +52,6 @@ public class DailyGameSessionServiceImpl implements DailyGameSessionService {
             log.error("Les données de mise à jour de la session sont null");
             throw new IllegalArgumentException("Les données de mise à jour ne peuvent être null");
         }
-        DailyGameSession existingSession = dailyGameSessionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Aucune session trouvée avec l'ID " + id,
-                        ErrorCodes.DAILY_GAME_SESSION_NOT_FOUND
-                ));
 
         // Mise à jour des champs de la session existante à partir du DTO
         // Ici, on choisit de remplacer les valeurs existantes par celles fournies dans le DTO.
@@ -267,7 +262,7 @@ public class DailyGameSessionServiceImpl implements DailyGameSessionService {
         }
 
         log.info("Temps de jeu total pour l'utilisateur {} entre {} et {}: {}",
-                user.getId(), startDate, endDate, totalPlaytime);
+                userId, startDate, endDate, totalPlaytime);
         return totalPlaytime;
     }
 
