@@ -100,6 +100,9 @@ public class StrategyPhotoContext {
                 case "avatar":
                     strategy = beanFactory.getBean(beanName, SaveAvatarPhoto.class);
                     break;
+                case "game":
+                    strategy = beanFactory.getBean(beanName, SaveGamePhoto.class);
+                    break;
                 default:
                     log.error("Contexte inconnu: {}", context);
                     throw new InvalidOperationException(

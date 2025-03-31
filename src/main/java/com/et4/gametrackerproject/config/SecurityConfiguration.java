@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
+                                "/gametracker/v1/users/create",
                                 "/v3/api-docs/**").permitAll()
 
                         .anyRequest().authenticated()

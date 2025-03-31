@@ -27,6 +27,9 @@ public class Game extends AbstractEntity{
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private GameCategory category;
