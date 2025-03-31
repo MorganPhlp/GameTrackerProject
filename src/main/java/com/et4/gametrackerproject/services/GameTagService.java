@@ -13,19 +13,19 @@ import java.util.Set;
 
 public interface GameTagService {
 
-    Set<GameTagDto> addMultipleTagsToGame(Game game, Set<Tag> tags);
+    Set<GameTagDto> addMultipleTagsToGame(Integer gameId, Set<Tag> tags);
 
-    int removeMultipleTagsFromGame(Game game, Set<Tag> tags);
+    int removeMultipleTagsFromGame(Integer gameId, Set<Tag> tags);
 
-    void removeTagFromGame(Game game, Tag tag);
+    void removeTagFromGame(Integer gameId, Integer tagId);
 
     GameTagDto updateTagAssociation(Integer associationId, Integer newTagId);
 
-    Page<GameTagDto> getTagsForGame(Game game, Pageable pageable);
+    Page<GameTagDto> getTagsForGame(Integer gameId, Pageable pageable);
 
-    Page<GameTagDto> getGamesForTag(Tag tag, Pageable pageable);
+    Page<GameTagDto> getGamesForTag(Integer tagId, Pageable pageable);
 
-    GameTagDto addTagToGame(Game game, Tag tag);
+    GameTagDto addTagToGame(Integer gameId, Integer tagId);
 
 
 }

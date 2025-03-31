@@ -127,7 +127,7 @@ public class FriendshipController implements FriendshipApi {
     }
 
     @Override
-    public List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status) {
-        return friendshipService.getFriendshipsForUserByStatus(user, status);
+    public List<FriendshipDto> getFriendshipsForUserByStatus(Integer userId, FriendshipStatus status) {
+        return friendshipService.getFriendshipsForUserByStatus(userId, status);
     }
 }

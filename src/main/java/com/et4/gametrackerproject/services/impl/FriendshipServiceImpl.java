@@ -117,8 +117,8 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
-    public List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status) {
-        if (user.getId() == null) {
+    public List<FriendshipDto> getFriendshipsForUserByStatus(Integer userId, FriendshipStatus status) {
+        if (userId == null) {
             log.error("L'ID utilisateur est null");
             throw new IllegalArgumentException("L'ID utilisateur ne peut être null");
         }
@@ -127,7 +127,7 @@ public class FriendshipServiceImpl implements FriendshipService {
             throw new IllegalArgumentException("Le statut de la relation d'amitié ne peut être null");
         }
         // Retrieve all friendships for the user (as user1 or user2) with the given status
-        List<Friendship> friendships = friendshipRepository.findAllByUserAndStatus(user, status);
+        List<Friendship> friendships = friendshipRepository.findAllByUserAndStatus(userId, status);
         return friendships.stream()
                 .map(FriendshipDto::fromEntity)
                 .collect(Collectors.toList());

@@ -27,4 +27,6 @@ public interface AchievementService {
     List<AchievementDto> getAchievementsByDescriptionContaining(String keyword);
 
     List<AchievementDto> countNumberAchievementsByType();
+
+    void deleteAchievement(Integer id);
 }

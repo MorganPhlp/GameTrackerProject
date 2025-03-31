@@ -15,9 +15,11 @@ import java.util.Optional;
 public interface GameTagRepository extends JpaRepository<GameTag,Integer> {
 
     // Pagination des tags pour un jeu
-    Page<GameTag> findByGame(Game game, Pageable pageable);
+    @Query("SELECT gt FROM GameTag gt WHERE gt.game.id = :gameId")
+    Page<GameTag> findByGame(Integer gameId, Pageable pageable);
 
     // Pagination des jeux pour un tag
+    @Query("SELECT gt FROM GameTag gt WHERE gt.tag.id = :tagId")
     Page<GameTag> findByTag(Tag tag, Pageable pageable);
 
     // Recherches de base
@@ -25,14 +27,14 @@ public interface GameTagRepository extends JpaRepository<GameTag,Integer> {
 
     List<GameTag> findByTag(Tag tag);
 
-    Optional<GameTag> findByGameAndTag(Game game, Tag tag);
+    @Query("SELECT gt FROM GameTag gt WHERE gt.tag.id = :tagId")
+    Optional<GameTag> findByGameAndTag(Integer game, Integer tagId);
 
     // Compter le nombre de tags pour un jeu
     Long countByGame(Game game);
 
     // Compter le nombre de jeux pour un tag
     Long countByTag(Tag tag);
-
 
     // Trouver les jeux avec un ensemble de tags spécifiques
     @Query("SELECT gt.game FROM GameTag gt WHERE gt.tag IN :tags GROUP BY gt.game HAVING COUNT(DISTINCT gt.tag) = :tagCount")

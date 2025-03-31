@@ -7,6 +7,7 @@ import com.et4.gametrackerproject.model.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -26,45 +27,45 @@ public interface GameTagApi {
     })
     GameTagDto updateTagAssociation(@PathVariable Integer associationId,@RequestBody Integer newTagId);
 
-    @PostMapping(value = APP_ROOT + "/game/{game}/tag/{tag}")
+    @PostMapping(value = APP_ROOT + "/game/{gameId}/tag/{tagId}")
     @Operation(summary = "Ajouter une étiquette à un jeu", description = "Ajouter une étiquette à un jeu")
     @ApiResponse(responseCode = "200", description = "Étiquette ajoutée au jeu")
-    GameTagDto addTagToGame(@PathVariable Game game, @PathVariable Tag tag);
+    GameTagDto addTagToGame(@PathVariable Integer gameId, @PathVariable Integer tagId);
 
-    @DeleteMapping(value = APP_ROOT + "/game/{game}/tag/{tag}")
+    @DeleteMapping(value = APP_ROOT + "/game/{gameId}/tag/{tagId}")
     @Operation(summary = "Supprimer une étiquette d'un jeu", description = "Supprimer une étiquette d'un jeu")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Étiquette supprimée du jeu"),
             @ApiResponse(responseCode = "404", description = "Étiquette ou jeu non trouvé")
     })
-    void removeTagFromGame(@PathVariable Game game, @PathVariable Tag tag);
+    void removeTagFromGame(@PathVariable Integer gameId, @PathVariable Integer tagId);
 
-    @GetMapping(value = APP_ROOT + "/game/{game}/tags")
+    @GetMapping(value = APP_ROOT + "/game/{gameId}/tags")
     @Operation(summary = "Récupérer les étiquettes d'un jeu", description = "Récupérer les étiquettes d'un jeu")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Étiquettes trouvées"),
             @ApiResponse(responseCode = "404", description = "Aucune étiquette trouvée pour ce jeu")
     })
-    Page<GameTagDto> getTagsForGame(@PathVariable Game game, Pageable pageable);
+    Page<GameTagDto> getTagsForGame(@PathVariable Integer gameId, Pageable pageable);
 
-    @GetMapping(value = APP_ROOT + "/tag/{tag}/games")
+    @GetMapping(value = APP_ROOT + "/tag/{tagId}/games")
     @Operation(summary = "Récupérer les jeux associés à une étiquette", description = "Récupérer les jeux associés à une étiquette")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Jeux trouvés"),
             @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé pour cette étiquette")
     })
-    Page<GameTagDto> getGamesForTag(@PathVariable Tag tag, Pageable pageable);
+    Page<GameTagDto> getGamesForTag(@PathVariable Integer tagId, Pageable pageable);
 
-    @PostMapping(value = APP_ROOT + "/game/{game}/tags")
+    @PostMapping(value = APP_ROOT + "/game/{gameId}/tags")
     @Operation(summary = "Ajouter plusieurs étiquettes à un jeu", description = "Ajouter plusieurs étiquettes à un jeu")
     @ApiResponse(responseCode = "200", description = "Étiquettes ajoutées au jeu")
-    Set<GameTagDto> addMultipleTagsToGame(@PathVariable Game game, Set<Tag> tags);
+    Set<GameTagDto> addMultipleTagsToGame(@PathVariable Integer gameId, Set<Tag> tags);
 
-    @DeleteMapping(value = APP_ROOT + "/game/{game}/tags")
+    @DeleteMapping(value = APP_ROOT + "/game/{gameId}/tags")
     @Operation(summary = "Supprimer plusieurs étiquettes d'un jeu", description = "Supprimer plusieurs étiquettes d'un jeu")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Étiquettes supprimées du jeu"),
             @ApiResponse(responseCode = "404", description = "Étiquettes ou jeu non trouvé")
     })
-    int removeMultipleTagsFromGame(@PathVariable Game game, Set<Tag> tags);
+    int removeMultipleTagsFromGame(@PathVariable Integer gameId, Set<Tag> tags);
 }

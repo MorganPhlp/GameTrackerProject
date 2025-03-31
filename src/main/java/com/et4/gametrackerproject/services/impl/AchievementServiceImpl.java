@@ -1,20 +1,17 @@
 package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.AchievementDto;
-import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.AchievementRarity;
 import com.et4.gametrackerproject.enums.AchievementType;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.model.Achievement;
-import com.et4.gametrackerproject.model.Avatar;
 import com.et4.gametrackerproject.repository.AchievementRepository;
 import com.et4.gametrackerproject.services.AchievementService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -28,6 +25,62 @@ public class AchievementServiceImpl implements AchievementService {
 
     public AchievementServiceImpl(AchievementRepository achievementRepository) {
         this.achievementRepository = achievementRepository;
+    }
+
+    @Override
+    public AchievementDto createAchievement(AchievementDto achievementDto) {
+        if (achievementDto == null) {
+            log.error("L'achievement à créer est null");
+            throw new IllegalArgumentException("L'achievement ne peut pas être null");
+        }
+
+        Achievement achievement = AchievementDto.toEntity(achievementDto);
+        achievement = achievementRepository.save(achievement);
+
+        return AchievementDto.fromEntity(achievement);
+    }
+
+    @Override
+    public AchievementDto updateAchievement(Integer id, AchievementDto achievementDto) {
+        if (id == null) {
+            log.error("L'ID de l'achievement à mettre à jour est null");
+            throw new IllegalArgumentException("L'ID de l'achievement ne peut pas être null");
+        }
+
+        if (achievementDto == null) {
+            log.error("Les nouvelles données de l'achievement sont null");
+            throw new IllegalArgumentException("Les données de mise à jour ne peuvent pas être null");
+        }
+
+        Optional<Achievement> existingAchievement = achievementRepository.findById(id);
+        if (existingAchievement.isEmpty()) {
+            log.error("Aucun achievement trouvé avec l'ID : " + id);
+            throw new EntityNotFoundException("Aucun achievement trouvé avec l'ID " + id,
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        Achievement updatedAchievement = AchievementDto.toEntity(achievementDto);
+        updatedAchievement.setId(id); // S'assurer que l'ID reste le même
+        updatedAchievement = achievementRepository.save(updatedAchievement);
+
+        return AchievementDto.fromEntity(updatedAchievement);
+    }
+
+    @Override
+    public void deleteAchievement(Integer id) {
+        if (id == null) {
+            log.error("L'ID de l'achievement à supprimer est null");
+            throw new IllegalArgumentException("L'ID de l'achievement ne peut pas être null");
+        }
+
+        Optional<Achievement> achievement = achievementRepository.findById(id);
+        if (achievement.isEmpty()) {
+            log.error("Aucun achievement trouvé avec l'ID : " + id);
+            throw new EntityNotFoundException("Aucun achievement trouvé avec l'ID " + id,
+                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        }
+
+        achievementRepository.deleteById(id);
     }
 
     @Override
@@ -60,7 +113,7 @@ public class AchievementServiceImpl implements AchievementService {
         AchievementDto dto = AchievementDto.fromEntity(achievement.get());
 
         return Optional.of(dto).orElseThrow(() ->
-        new EntityNotFoundException("Aucun artcle avec l'ID "+ id + "Trouvée",
+        new EntityNotFoundException("Aucun article avec l'ID "+ id + "Trouvée",
                 ErrorCodes.ACHIEVEMENT_NOT_FOUND)
                 );
     }
@@ -120,44 +173,7 @@ public class AchievementServiceImpl implements AchievementService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public AchievementDto createAchievement(AchievementDto achievementDto) {
-        if (achievementDto == null) {
-            log.error("L'achievement à créer est null");
-            throw new IllegalArgumentException("L'achievement ne peut pas être null");
-        }
 
-        Achievement achievement = AchievementDto.toEntity(achievementDto);
-        achievement = achievementRepository.save(achievement);
-
-        return AchievementDto.fromEntity(achievement);
-    }
-
-    @Override
-    public AchievementDto updateAchievement(Integer id, AchievementDto achievementDto) {
-        if (id == null) {
-            log.error("L'ID de l'achievement à mettre à jour est null");
-            throw new IllegalArgumentException("L'ID de l'achievement ne peut pas être null");
-        }
-
-        if (achievementDto == null) {
-            log.error("Les nouvelles données de l'achievement sont null");
-            throw new IllegalArgumentException("Les données de mise à jour ne peuvent pas être null");
-        }
-
-        Optional<Achievement> existingAchievement = achievementRepository.findById(id);
-        if (existingAchievement.isEmpty()) {
-            log.error("Aucun achievement trouvé avec l'ID : " + id);
-            throw new EntityNotFoundException("Aucun achievement trouvé avec l'ID " + id,
-                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
-        }
-
-        Achievement updatedAchievement = AchievementDto.toEntity(achievementDto);
-        updatedAchievement.setId(id); // S'assurer que l'ID reste le même
-        updatedAchievement = achievementRepository.save(updatedAchievement);
-
-        return AchievementDto.fromEntity(updatedAchievement);
-    }
 
     @Override
     public List<AchievementDto> getSecretAchievements() {
@@ -179,7 +195,7 @@ public class AchievementServiceImpl implements AchievementService {
         List<Achievement> achievements = achievementRepository.findByDescriptionContaining(keyword);
 
         if (achievements.isEmpty()) {
-            log.warn("Aucun achievement secret trouvé");
+            log.warn("Aucun achievement par description trouvé");
             throw new EntityNotFoundException("Aucun achievement actif trouvé",
                     ErrorCodes.ACHIEVEMENT_NOT_FOUND);
         }
@@ -207,6 +223,8 @@ public class AchievementServiceImpl implements AchievementService {
                 })
                 .collect(Collectors.toList());
     }
+
+
 
 }
 
