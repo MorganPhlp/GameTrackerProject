@@ -4,16 +4,10 @@ import com.et4.gametrackerproject.dto.ChangerMdpUserDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.OnlineStatus;
 import com.et4.gametrackerproject.enums.PrivacySetting;
-import com.et4.gametrackerproject.enums.ProfilRank;
 import com.et4.gametrackerproject.enums.ScreenTheme;
-import com.et4.gametrackerproject.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface UserService {
 
