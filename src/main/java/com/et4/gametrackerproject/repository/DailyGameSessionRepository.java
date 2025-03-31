@@ -1,8 +1,6 @@
 package com.et4.gametrackerproject.repository;
 
-import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.model.DailyGameSession;
-import com.et4.gametrackerproject.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

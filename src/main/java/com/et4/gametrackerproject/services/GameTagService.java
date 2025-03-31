@@ -1,14 +1,10 @@
 package com.et4.gametrackerproject.services;
 
 import com.et4.gametrackerproject.dto.GameTagDto;
-import com.et4.gametrackerproject.dto.TagDto;
-import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface GameTagService {
@@ -27,5 +23,9 @@ public interface GameTagService {
 
     GameTagDto addTagToGame(Integer gameId, Integer tagId);
 
+    Long countTagsByGame(Integer gameId);
 
+    Long countGamesByTag(Integer tagId);
+
+    Set<GameTagDto> getMostPopularTags(Pageable pageable);
 }

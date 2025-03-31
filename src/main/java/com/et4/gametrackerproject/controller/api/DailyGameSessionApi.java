@@ -2,7 +2,6 @@ package com.et4.gametrackerproject.controller.api;
 
 import com.et4.gametrackerproject.dto.DailyGameSessionDto;
 import com.et4.gametrackerproject.dto.UserDto;
-import com.et4.gametrackerproject.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

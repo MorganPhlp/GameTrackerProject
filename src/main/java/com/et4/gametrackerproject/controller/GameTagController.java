@@ -2,7 +2,6 @@ package com.et4.gametrackerproject.controller;
 
 import com.et4.gametrackerproject.controller.api.GameTagApi;
 import com.et4.gametrackerproject.dto.GameTagDto;
-import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.Tag;
 import com.et4.gametrackerproject.services.GameTagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +53,20 @@ public class GameTagController implements GameTagApi {
     @Override
     public int removeMultipleTagsFromGame(Integer gameId, Set<Tag> tags) {
         return gameTagService.removeMultipleTagsFromGame(gameId,tags);
+    }
+
+    @Override
+    public Long countTagsByGame(Integer gameId) {
+        return gameTagService.countTagsByGame(gameId);
+    }
+
+    @Override
+    public Long countGamesByTag(Integer tagId) {
+        return gameTagService.countGamesByTag(tagId);
+    }
+
+    @Override
+    public Set<GameTagDto> getMostPopularTags(Pageable pageable) {
+        return gameTagService.getMostPopularTags(pageable);
     }
 }

@@ -2,7 +2,6 @@ package com.et4.gametrackerproject.services;
 
 import com.et4.gametrackerproject.dto.DailyGameSessionDto;
 import com.et4.gametrackerproject.dto.UserDto;
-import com.et4.gametrackerproject.model.User;
 
 import java.time.Instant;
 import java.util.List;

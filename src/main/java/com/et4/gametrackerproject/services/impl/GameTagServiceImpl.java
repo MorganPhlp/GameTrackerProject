@@ -142,4 +142,34 @@ public class GameTagServiceImpl implements GameTagService {
         log.info("Récupération des associations pour le tag {} - page {}", tagId, pageable.getPageNumber());
         return page;
     }
+
+    @Override
+    public Long countTagsByGame(Integer gameId) {
+        if (gameId == null) {
+            throw new IllegalArgumentException("L'ID du jeu ne peut être null");
+        }
+        return gameTagRepository.countTagsByGame(gameId);
+    }
+
+    @Override
+    public Long countGamesByTag(Integer tagId) {
+        if (tagId == null) {
+            throw new IllegalArgumentException("L'ID du tag ne peut être null");
+        }
+        return gameTagRepository.countGamesByTag(tagId);
+    }
+
+    @Override
+    public Set<GameTagDto> getMostPopularTags(Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("La pagination ne peut être null");
+        }
+        Set<GameTagDto> popularTags = new HashSet<>();
+        gameTagRepository.findMostPopularTags(pageable).forEach(tag -> {
+            popularTags.add(GameTagDto.fromEntity((GameTag) tag[0]));
+        });
+        log.info("Récupération des tags les plus populaires - page {}", pageable.getPageNumber());
+        return popularTags;
+    }
+
 }

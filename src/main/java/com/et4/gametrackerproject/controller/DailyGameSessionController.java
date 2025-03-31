@@ -3,7 +3,6 @@ package com.et4.gametrackerproject.controller;
 import com.et4.gametrackerproject.controller.api.DailyGameSessionApi;
 import com.et4.gametrackerproject.dto.DailyGameSessionDto;
 import com.et4.gametrackerproject.dto.UserDto;
-import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.services.DailyGameSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;

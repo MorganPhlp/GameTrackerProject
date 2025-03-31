@@ -2,12 +2,10 @@ package com.et4.gametrackerproject.controller.api;
 
 
 import com.et4.gametrackerproject.dto.GameTagDto;
-import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -68,4 +66,28 @@ public interface GameTagApi {
             @ApiResponse(responseCode = "404", description = "Étiquettes ou jeu non trouvé")
     })
     int removeMultipleTagsFromGame(@PathVariable Integer gameId, Set<Tag> tags);
+
+    @GetMapping(value = APP_ROOT + "/game/{gameId}/tags/count")
+    @Operation(summary = "Compter le nombre d'étiquettes pour un jeu", description = "Compter le nombre d'étiquettes pour un jeu")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Nombre d'étiquettes trouvé"),
+            @ApiResponse(responseCode = "404", description = "Aucune étiquette trouvée pour ce jeu")
+    })
+    Long countTagsByGame(@PathVariable Integer gameId);
+
+    @GetMapping(value = APP_ROOT + "/tag/{tagId}/games/count")
+    @Operation(summary = "Compter le nombre de jeux pour une étiquette", description = "Compter le nombre de jeux pour une étiquette")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Nombre de jeux trouvé"),
+            @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé pour cette étiquette")
+    })
+    Long countGamesByTag(Integer tagId);
+
+    @GetMapping(value = APP_ROOT + "/tags/popular")
+    @Operation(summary = "Récupérer les étiquettes les plus populaires", description = "Récupérer les étiquettes les plus populaires")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Étiquettes trouvées"),
+            @ApiResponse(responseCode = "404", description = "Aucune étiquette trouvée")
+    })
+    Set<GameTagDto> getMostPopularTags(Pageable pageable);
 }
