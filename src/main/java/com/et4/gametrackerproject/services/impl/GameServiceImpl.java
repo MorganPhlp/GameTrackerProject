@@ -54,6 +54,7 @@ public class GameServiceImpl implements GameService {
         // Mettre à jour les propriétés souhaitées (exemple simple, adapter selon vos besoins)
         existingGame.setName(gameDto.getName());
         existingGame.setUrl(gameDto.getUrl());
+        existingGame.setImageUrl(gameDto.getImageUrl());
         existingGame.setDescription(gameDto.getDescription());
         existingGame.setCategory(gameDto.getCategory());
         existingGame.setAverageRating(gameDto.getAverageRating());
@@ -163,6 +164,18 @@ public class GameServiceImpl implements GameService {
         Optional<Game> gameOpt = gameRepository.findByUrl(url);
         log.info("Recherche de jeu par URL : {}", url);
         return gameOpt;
+    }
+
+    @Override
+    public String getImageUrlById(Integer id) {
+        if(id == null) {
+            throw new IllegalArgumentException("L'ID ne peut être null");
+        }
+
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Jeu non trouvé avec l'ID " + id, ErrorCodes.GAME_NOT_FOUND));
+
+        return gameRepository.findImageUrlById(game.getId());
     }
 
     // Recherche des jeux par nom exact
