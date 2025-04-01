@@ -6,7 +6,6 @@ import com.et4.gametrackerproject.enums.FriendshipStatus;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidOperationException;
-import com.et4.gametrackerproject.model.FavoriteGame;
 import com.et4.gametrackerproject.model.Friendship;
 import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.repository.FriendshipRepository;

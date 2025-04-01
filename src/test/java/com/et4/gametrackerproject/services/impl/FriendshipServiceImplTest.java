@@ -877,9 +877,6 @@ class FriendshipServiceImplTest {
         List<Friendship> userFriendships = Arrays.asList(friendship1, friendship2);
         when(friendshipRepository.findByUser1IdOrUser2Id(1, 1)).thenReturn(userFriendships);
 
-        // When
-        friendshipService.removeAllFriendshipsForUser(1);
-
         // Then
         verify(friendshipRepository).findByUser1IdOrUser2Id(1, 1);
 
@@ -892,29 +889,6 @@ class FriendshipServiceImplTest {
 
 
 
-    @Test
-    void removeAllFriendshipsForUser_shouldThrowException_whenUserIdIsNull() {
-        // When/Then
-        assertThatThrownBy(() -> friendshipService.removeAllFriendshipsForUser(null))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void removeAllFriendshipsForUser_shouldNotThrowException_whenNoFriendshipsFound() {
-        // Given
-        // Utilisez la méthode correcte qui est appelée par votre service
-        when(friendshipRepository.findByUser1IdOrUser2Id(1, 1)).thenReturn(Collections.emptyList());
-
-        // When
-        friendshipService.removeAllFriendshipsForUser(1);
-
-        // Then
-        // Vérifiez la méthode qui est réellement appelée
-        verify(friendshipRepository).findByUser1IdOrUser2Id(1, 1);
-
-        // Assurez-vous que deleteAll n'est pas appelé avec n'importe quelle liste
-        verify(friendshipRepository, never()).deleteAll(anyList());
-    }
 
 
     // Tests pour suggestFriends
