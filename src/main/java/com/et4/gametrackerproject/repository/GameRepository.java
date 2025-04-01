@@ -88,4 +88,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
             "JOIN FavoriteGame f ON g.id = f.game.id " +
             "WHERE f.id = :favoriteId")
     Optional<Game> findByFavoriteId(Integer favoriteId);
+
+    // Recherche des jeux par ID de GameComment
+    @Query("SELECT g FROM Game g " +
+            "JOIN GameComment gc ON g.id = gc.game.id " +
+            "WHERE gc.id = :commentId")
+    Optional<Game> findByGameCommentId(Integer commentId);
 }

@@ -41,4 +41,8 @@ public interface GameCommentLikeRepository extends JpaRepository<GameCommentLike
     // Récupérer les commentaires les plus aimés
     @Query("SELECT gcl.comment, COUNT(gcl) as likeCount FROM GameCommentLike gcl GROUP BY gcl.comment ORDER BY likeCount DESC")
     List<Object[]> findMostLikedComments();
+
+    // Récupérer les commentaires aimés par selon le gameComment id
+    @Query("SELECT gcl FROM GameCommentLike gcl WHERE gcl.comment.id = :commentId")
+    Optional<GameCommentLike> findByGameCommentId(Integer commentId);
 }
