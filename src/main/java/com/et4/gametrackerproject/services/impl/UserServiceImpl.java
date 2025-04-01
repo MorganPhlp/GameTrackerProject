@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -82,6 +83,8 @@ public class UserServiceImpl implements UserService {
             userDto.setPassword(hashedPassword);
         }
 
+        UserValidator.validate(userDto);
+
         log.info("Update User {}", userDto);
 
         return UserDto.fromEntity(userRepository.save(UserDto.toEntity(userDto)));
@@ -138,15 +141,16 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByEmail(String email) {
         if(email == null) {
             log.error("Email is null");
-            throw new EntityNotFoundException("Email is null", ErrorCodes.USER_NOT_FOUND);
+            throw new UsernameNotFoundException("Email is null");
         }
 
         log.info("Get User with email {}", email);
 
         return userRepository.findByEmail(email)
                 .map(UserDto::fromEntity)
-                .orElseThrow(() -> new EntityNotFoundException("User with email " + email + " not found", ErrorCodes.USER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
     }
+
 
     @Override
     public Page<UserDto> getAllUsers(Pageable pageable) {
@@ -494,6 +498,8 @@ public class UserServiceImpl implements UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(dto.getPassword());//hashage du mot de passe
         user.setPassword(hashedPassword);//modification du mot de passe
+
+        UserValidator.validate(UserDto.fromEntity(user));
 
         return UserDto.fromEntity(userRepository.save(user));
     }
