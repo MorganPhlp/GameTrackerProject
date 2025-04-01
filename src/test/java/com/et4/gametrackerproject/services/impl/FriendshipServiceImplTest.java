@@ -201,7 +201,7 @@ class FriendshipServiceImplTest {
         doNothing().when(friendshipRepository).delete(any(Friendship.class));
 
         // When
-        friendshipService.deleteFriendship(1);
+        friendshipService.deleteFriendshipById(1);
 
         // Then
         verify(friendshipRepository).delete(friendship1);
@@ -210,7 +210,7 @@ class FriendshipServiceImplTest {
     @Test
     void deleteFriendship_shouldThrowException_whenIdIsNull() {
         // When/Then
-        assertThatThrownBy(() -> friendshipService.deleteFriendship(null))
+        assertThatThrownBy(() -> friendshipService.deleteFriendshipById(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("ne peut être null");
     }
@@ -221,7 +221,7 @@ class FriendshipServiceImplTest {
         when(friendshipRepository.findById(999)).thenReturn(Optional.empty());
 
         // When/Then
-        assertThatThrownBy(() -> friendshipService.deleteFriendship(999))
+        assertThatThrownBy(() -> friendshipService.deleteFriendshipById(999))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Aucune relation d'amitié trouvée");
     }

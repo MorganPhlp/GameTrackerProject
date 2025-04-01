@@ -32,7 +32,7 @@ public class FriendshipController implements FriendshipApi {
 
     @Override
     public void deleteFriendship(Integer friendshipId) {
-        friendshipService.deleteFriendship(friendshipId);
+        friendshipService.deleteFriendshipById(friendshipId);
     }
 
     @Override
@@ -113,11 +113,6 @@ public class FriendshipController implements FriendshipApi {
     @Override
     public List<FriendshipDto> searchFriendshipsByUser(String username) {
         return friendshipService.searchFriendshipsByUser(username);
-    }
-
-    @Override
-    public void removeAllFriendshipsForUser(Integer userId) {
-        friendshipService.removeAllFriendshipsForUser(userId);
     }
 
     @Override

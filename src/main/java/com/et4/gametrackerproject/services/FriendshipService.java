@@ -11,7 +11,7 @@ public interface FriendshipService {
     //Opérations de base
     FriendshipDto createFriendship(FriendshipDto friendshipDto);
     FriendshipDto updateFriendshipStatus(Integer friendshipId, FriendshipStatus newStatus);
-    void deleteFriendship(Integer friendshipId);
+    void deleteFriendshipById(Integer friendshipId);
 
     //Récupération
     FriendshipDto getFriendshipById(Integer friendshipId);
@@ -43,7 +43,6 @@ public interface FriendshipService {
     //Administration
     List<FriendshipDto> getAllFriendships();
     List<FriendshipDto> searchFriendshipsByUser(String username);
-    void removeAllFriendshipsForUser(Integer userId);
 
     List<UserDto> suggestFriends(Integer userId);
     List<FriendshipDto> getFriendshipsForUserByStatus(Integer userId, FriendshipStatus status);

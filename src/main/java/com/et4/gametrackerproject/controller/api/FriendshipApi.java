@@ -177,14 +177,6 @@ public interface FriendshipApi {
     })
     List<FriendshipDto> searchFriendshipsByUser(@PathVariable String username);
 
-    @DeleteMapping(value = APP_ROOT + "/friendships/admin/delete/{userId}")
-    @Operation(summary = "Supprimer toutes les amitiés d'un utilisateur", description = "Supprimer toutes les amitiés d'un utilisateur")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Toutes les amitiés ont été supprimées"),
-            @ApiResponse(responseCode = "404", description = "Aucune amitié n'a été trouvée pour cet utilisateur")
-    })
-    void removeAllFriendshipsForUser(@PathVariable Integer userId);
-
     @GetMapping(value = APP_ROOT + "/friendships/suggest/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Suggérer des amis à un utilisateur", description = "Suggérer des amis à un utilisateur en fonction de ses amis actuels")
     @ApiResponses(value = {
