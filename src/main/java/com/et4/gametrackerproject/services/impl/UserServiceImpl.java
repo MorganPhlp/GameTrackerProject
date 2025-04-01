@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -34,12 +35,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
     private final FriendshipRepository friendshipRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository) {
+    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.avatarRepository = avatarRepository;
         this.friendshipRepository = friendshipRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,8 +53,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidEntityException("User is not valid", ErrorCodes.USER_NOT_VALID,errors);
         }
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String hashedPassword = encoder.encode(userDto.getPassword());
+        String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(hashedPassword);
 
         log.info("Create User {}", userDto);
@@ -78,8 +80,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND));
 
         if(!userDto.getPassword().equals(user.getPassword())) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            String hashedPassword = encoder.encode(userDto.getPassword());
+            String hashedPassword = passwordEncoder.encode(userDto.getPassword());
             userDto.setPassword(hashedPassword);
         }
 
@@ -176,8 +177,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Reset password for User with id {}", userId);
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String hashedPassword = encoder.encode(newPassword);
+        String hashedPassword = passwordEncoder.encode(newPassword);
 
         userRepository.updateUserPassword(userId, hashedPassword);
     }
@@ -495,8 +495,8 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("Aucun user trouvé avec l'ID "+dto.getId(), ErrorCodes.USER_NOT_FOUND);
         }
         User user = userOptional.get();//recupération de l'utilisateur
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String hashedPassword = encoder.encode(dto.getPassword());//hashage du mot de passe
+
+        String hashedPassword = passwordEncoder.encode(dto.getPassword());//hashage du mot de passe
         user.setPassword(hashedPassword);//modification du mot de passe
 
         UserValidator.validate(UserDto.fromEntity(user));
