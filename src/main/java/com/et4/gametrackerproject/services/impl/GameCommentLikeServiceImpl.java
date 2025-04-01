@@ -8,7 +8,6 @@ import com.et4.gametrackerproject.exception.InvalidOperationException;
 import com.et4.gametrackerproject.model.GameComment;
 import com.et4.gametrackerproject.model.GameCommentLike;
 import com.et4.gametrackerproject.model.User;
-import com.et4.gametrackerproject.model.UserSanction;
 import com.et4.gametrackerproject.repository.GameCommentLikeRepository;
 import com.et4.gametrackerproject.repository.GameCommentRepository;
 import com.et4.gametrackerproject.repository.UserRepository;
