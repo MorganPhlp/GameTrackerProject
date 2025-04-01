@@ -126,4 +126,8 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
             "JOIN GameTag gt ON g.id = gt.game.id " +
             "WHERE gt.id = :tagId")
     Optional<GameComment> findByGameId(Integer id);
+
+    //trouver le jeu par GameTagId
+    @Query("SELECT g FROM Game g JOIN g.tags gt WHERE gt.id = :gameTagId")
+    Optional<Game> findByGameTagId(@Param("gameTagId") Integer gameTagId);
 }

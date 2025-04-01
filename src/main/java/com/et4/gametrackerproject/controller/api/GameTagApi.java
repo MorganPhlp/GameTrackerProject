@@ -30,14 +30,6 @@ public interface GameTagApi {
     @ApiResponse(responseCode = "200", description = "Étiquette ajoutée au jeu")
     GameTagDto addTagToGame(@PathVariable Integer gameId, @PathVariable Integer tagId);
 
-    @DeleteMapping(value = APP_ROOT + "/game/{gameId}/tag/{tagId}")
-    @Operation(summary = "Supprimer une étiquette d'un jeu", description = "Supprimer une étiquette d'un jeu")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Étiquette supprimée du jeu"),
-            @ApiResponse(responseCode = "404", description = "Étiquette ou jeu non trouvé")
-    })
-    void removeTagFromGame(@PathVariable Integer gameId, @PathVariable Integer tagId);
-
     @GetMapping(value = APP_ROOT + "/game/{gameId}/tags")
     @Operation(summary = "Récupérer les étiquettes d'un jeu", description = "Récupérer les étiquettes d'un jeu")
     @ApiResponses({
@@ -59,13 +51,13 @@ public interface GameTagApi {
     @ApiResponse(responseCode = "200", description = "Étiquettes ajoutées au jeu")
     Set<GameTagDto> addMultipleTagsToGame(@PathVariable Integer gameId, Set<Tag> tags);
 
-    @DeleteMapping(value = APP_ROOT + "/game/{gameId}/tags")
-    @Operation(summary = "Supprimer plusieurs étiquettes d'un jeu", description = "Supprimer plusieurs étiquettes d'un jeu")
+    @DeleteMapping(value = APP_ROOT + "/gameTag/{gameTagId}")
+    @Operation(summary = "Suppression d'une etiquette de jeu par id")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Étiquettes supprimées du jeu"),
-            @ApiResponse(responseCode = "404", description = "Étiquettes ou jeu non trouvé")
+            @ApiResponse(responseCode = "200", description = "Jeu effacé"),
+            @ApiResponse(responseCode = "404", description = "Aucun jeu trouvé pour cette étiquette")
     })
-    int removeMultipleTagsFromGame(@PathVariable Integer gameId, Set<Tag> tags);
+    void deleteGameTagById(@PathVariable Integer gameTagId);
 
     @GetMapping(value = APP_ROOT + "/game/{gameId}/tags/count")
     @Operation(summary = "Compter le nombre d'étiquettes pour un jeu", description = "Compter le nombre d'étiquettes pour un jeu")

@@ -11,9 +11,7 @@ public interface GameTagService {
 
     Set<GameTagDto> addMultipleTagsToGame(Integer gameId, Set<Tag> tags);
 
-    int removeMultipleTagsFromGame(Integer gameId, Set<Tag> tags);
-
-    void removeTagFromGame(Integer gameId, Integer tagId);
+    void deleteGameTagById(Integer gameTagId);
 
     GameTagDto updateTagAssociation(Integer associationId, Integer newTagId);
 

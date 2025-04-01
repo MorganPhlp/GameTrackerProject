@@ -151,15 +151,6 @@ public class GameServiceImpl implements GameService {
                     ErrorCodes.GAME_ALREADY_USED);
         }
 
-
-
-
-
-
-
-
-
-
         gameRepository.delete(existingGame);
     }
 

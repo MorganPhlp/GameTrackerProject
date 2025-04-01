@@ -26,11 +26,6 @@ public class GameTagController implements GameTagApi {
     }
 
     @Override
-    public void removeTagFromGame(Integer gameId, Integer tagId) {
-        gameTagService.removeTagFromGame(gameId,tagId);
-    }
-
-    @Override
     public GameTagDto updateTagAssociation(Integer associationId, Integer newTagId) {
         return gameTagService.updateTagAssociation(associationId,newTagId);
     }
@@ -51,8 +46,8 @@ public class GameTagController implements GameTagApi {
     }
 
     @Override
-    public int removeMultipleTagsFromGame(Integer gameId, Set<Tag> tags) {
-        return gameTagService.removeMultipleTagsFromGame(gameId,tags);
+    public void deleteGameTagById(Integer gameTagId) {
+        gameTagService.deleteGameTagById(gameTagId);
     }
 
     @Override
