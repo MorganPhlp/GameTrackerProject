@@ -35,7 +35,7 @@ public interface GameApi {
     })
     GameDto updateGame(@PathVariable("gameId") Integer id,@RequestBody GameDto gameDto);
 
-    @DeleteMapping(value = APP_ROOT + "/game/{gameId}")
+    @DeleteMapping(value = APP_ROOT + "/game/delete/{gameId}")
     @Operation(summary = "Supprimer un jeu",description = "Supprimer un jeu")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Jeu supprimé"),
