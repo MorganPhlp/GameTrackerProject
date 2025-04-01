@@ -34,7 +34,7 @@ public class GameCommentServiceImpl implements GameCommentService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
 
-    public GameCommentServiceImpl(GameCommentRepository gameCommentRepository, GameCommentLikeServiceImpl gameCommentLikeServiceImpl, GameCommentLikeRepository gameCommentLikeRepository, GameRepository gameRepository, UserRepository userRepository) {
+    public GameCommentServiceImpl(GameCommentRepository gameCommentRepository, GameCommentLikeRepository gameCommentLikeRepository, GameRepository gameRepository, UserRepository userRepository) {
         this.gameCommentRepository = gameCommentRepository;
         this.gameCommentLikeRepository = gameCommentLikeRepository;
         this.gameRepository = gameRepository;
