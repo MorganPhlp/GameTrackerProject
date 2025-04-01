@@ -286,19 +286,19 @@ class FavoriteGameServiceImplTest {
     }
 
     @Test
-    void removeFromFavorites_shouldDeleteFavorite() {
+    void deleteById_shouldDeleteFavorite() {
         // Act
-        favoriteGameService.removeFromFavorites(1);
+        favoriteGameService.deleteById(1);
 
         // Assert
         verify(favoriteGameRepository).deleteById(1);
     }
 
     @Test
-    void removeFromFavorites_withNullId_shouldThrowException() {
+    void deleteById_withNullId_shouldThrowException() {
         // Act & Assert
         assertThrows(IllegalArgumentException.class,
-                () -> favoriteGameService.removeFromFavorites(null));
+                () -> favoriteGameService.deleteById(null));
 
         verify(favoriteGameRepository, never()).deleteById(anyInt());
     }

@@ -12,7 +12,7 @@ public interface FavoriteGameService {
 
     //Opérations de base
     FavoriteGameDto addToFavorites(FavoriteGameDto favoriteDto);
-    void removeFromFavorites(Integer favoriteId);
+    void deleteById(Integer favoriteId);
 
     //Récupération
     List<GameDto> getFavoriteGamesForUser(Integer userId);

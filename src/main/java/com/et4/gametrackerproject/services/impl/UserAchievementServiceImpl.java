@@ -2,7 +2,6 @@ package com.et4.gametrackerproject.services.impl;
 
 import com.et4.gametrackerproject.dto.AchievementDto;
 import com.et4.gametrackerproject.dto.UserAchievementDto;
-import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidEntityException;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -237,4 +237,5 @@ public class UserAchievementServiceImpl implements UserAchievementService {
 
         return userAchievementRepository.calculateGlobalUnlockRate(achievement);
     }
+
 }

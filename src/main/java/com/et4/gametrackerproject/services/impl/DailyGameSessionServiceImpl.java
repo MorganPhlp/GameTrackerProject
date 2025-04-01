@@ -4,9 +4,11 @@ import com.et4.gametrackerproject.dto.DailyGameSessionDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.exception.InvalidOperationException;
 import com.et4.gametrackerproject.model.DailyGameSession;
 import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.repository.DailyGameSessionRepository;
+import com.et4.gametrackerproject.repository.UserRepository;
 import com.et4.gametrackerproject.services.DailyGameSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +24,11 @@ import java.util.stream.Collectors;
 public class DailyGameSessionServiceImpl implements DailyGameSessionService {
     private static final Logger log = LoggerFactory.getLogger(DailyGameSessionServiceImpl.class);
     private final DailyGameSessionRepository dailyGameSessionRepository;
+    private final UserRepository userRepository;
 
-    public DailyGameSessionServiceImpl(DailyGameSessionRepository dailyGameSessionRepository) {
+    public DailyGameSessionServiceImpl(DailyGameSessionRepository dailyGameSessionRepository, UserRepository userRepository) {
         this.dailyGameSessionRepository = dailyGameSessionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -72,8 +76,15 @@ public class DailyGameSessionServiceImpl implements DailyGameSessionService {
                         "Aucune session trouvée avec l'ID " + id,
                         ErrorCodes.DAILY_GAME_SESSION_NOT_FOUND
                 ));
+
+        // Vérification si la session est utilisée par un utilisateur
+        Optional<User> users = userRepository.findByDailyGameSessionId(id);
+        if (users.isPresent()) {
+            throw new InvalidOperationException("L'avatar est déjà utilisé par un utilisateur",
+                    ErrorCodes.DAILY_GAME_SESSION_ALREADY_IN_USE);
+        }
+
         dailyGameSessionRepository.delete(session);
-        log.info("Session supprimée avec succès pour l'ID : " + id);
     }
 
 

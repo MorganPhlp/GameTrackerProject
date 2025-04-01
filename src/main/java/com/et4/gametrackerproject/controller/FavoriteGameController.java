@@ -30,7 +30,7 @@ public class FavoriteGameController implements FavoriteGameApi {
 
     @Override
     public void removeFromFavorites(Integer favoriteId) {
-        favoriteGameService.removeFromFavorites(favoriteId);
+        favoriteGameService.deleteById(favoriteId);
     }
 
     @Override

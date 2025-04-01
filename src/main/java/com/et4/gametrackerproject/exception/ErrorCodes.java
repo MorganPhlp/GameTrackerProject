@@ -7,10 +7,13 @@ public enum ErrorCodes {
 
     ACHIEVEMENT_NOT_FOUND(1000),
     ACHIEVEMENT_NOT_VALID(1001),
+    ACHIEVEMENT_ALREADY_IN_USE(1002),
     AVATAR_NOT_FOUND(2000),
     AVATAR_NOT_VALID(2001),
+    AVATAR_ALREADY_IN_USE(2002),
     DAILY_GAME_SESSION_NOT_FOUND(3000),
     DAILY_GAME_SESSION_NOT_VALID(3001),
+    DAILY_GAME_SESSION_ALREADY_IN_USE(3002),
     FAVORITE_GAME_NOT_FOUND(4000),
     FAVORITE_GAME_NOT_VALID(4001),
     FRIENDSHIP_NOT_FOUND(5000),
@@ -60,7 +63,7 @@ public enum ErrorCodes {
 
     private final int code;
 
-    private ErrorCodes(int code) {
+    ErrorCodes(int code) {
         this.code = code;
     }
 

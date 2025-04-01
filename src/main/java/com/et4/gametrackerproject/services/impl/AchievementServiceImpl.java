@@ -5,8 +5,13 @@ import com.et4.gametrackerproject.enums.AchievementRarity;
 import com.et4.gametrackerproject.enums.AchievementType;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
+import com.et4.gametrackerproject.exception.InvalidOperationException;
 import com.et4.gametrackerproject.model.Achievement;
+import com.et4.gametrackerproject.model.User;
+import com.et4.gametrackerproject.model.UserAchievement;
 import com.et4.gametrackerproject.repository.AchievementRepository;
+import com.et4.gametrackerproject.repository.UserAchievementRepository;
+import com.et4.gametrackerproject.repository.UserRepository;
 import com.et4.gametrackerproject.services.AchievementService;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +27,11 @@ import org.slf4j.LoggerFactory;
 public class AchievementServiceImpl implements AchievementService {
 
     private final AchievementRepository achievementRepository;
+    private final UserAchievementRepository userAchievementRepository;
 
-    public AchievementServiceImpl(AchievementRepository achievementRepository) {
+    public AchievementServiceImpl(AchievementRepository achievementRepository, UserRepository userRepository, UserAchievementRepository userAchievementRepository) {
         this.achievementRepository = achievementRepository;
+        this.userAchievementRepository = userAchievementRepository;
     }
 
     @Override
@@ -73,11 +80,11 @@ public class AchievementServiceImpl implements AchievementService {
             throw new IllegalArgumentException("L'ID de l'achievement ne peut pas être null");
         }
 
-        Optional<Achievement> achievement = achievementRepository.findById(id);
-        if (achievement.isEmpty()) {
-            log.error("Aucun achievement trouvé avec l'ID : " + id);
-            throw new EntityNotFoundException("Aucun achievement trouvé avec l'ID " + id,
-                    ErrorCodes.ACHIEVEMENT_NOT_FOUND);
+        // Vérification de l'existence de l'achievement
+        Optional<UserAchievement> userAchievements = userAchievementRepository.findAllByAchievementId(id);
+        if (userAchievements.isPresent()) {
+            throw new InvalidOperationException("Achievement déjà utilisé",
+                    ErrorCodes.ACHIEVEMENT_ALREADY_IN_USE);
         }
 
         achievementRepository.deleteById(id);

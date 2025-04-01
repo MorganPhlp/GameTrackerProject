@@ -108,7 +108,7 @@ public class FavoriteGameServiceImpl implements FavoriteGameService {
     }
 
     @Override
-    public void removeFromFavorites(Integer favoriteId) {
+    public void deleteById(Integer favoriteId) {
         if (favoriteId == null) {
             throw new IllegalArgumentException("L'ID du favori ne peut être null");
         }
