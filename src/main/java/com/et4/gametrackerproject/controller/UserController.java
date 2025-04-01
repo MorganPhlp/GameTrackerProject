@@ -9,6 +9,8 @@ import com.et4.gametrackerproject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,6 +18,9 @@ public class UserController implements UserApi {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -25,6 +30,12 @@ public class UserController implements UserApi {
     public UserDto createUser(UserDto userDto) {
         return userService.createUser(userDto);
     }
+
+    public ResponseEntity<?> testPasswordEncoding(String rawPassword, String encodedPassword) {
+        boolean matches = passwordEncoder.matches(rawPassword, encodedPassword);
+        return ResponseEntity.ok("Password match: " + matches);
+    }
+
 
     @Override
     public UserDto updateUser(Integer userId, UserDto userDto) {

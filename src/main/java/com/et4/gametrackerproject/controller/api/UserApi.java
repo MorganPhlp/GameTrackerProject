@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -40,6 +41,10 @@ public interface UserApi {
             @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
     })
     void deleteUser(@PathVariable Integer userId);
+
+    @GetMapping("/test-password")
+    public ResponseEntity<?> testPasswordEncoding(@RequestParam String rawPassword, @RequestParam String encodedPassword);
+
 
     // Récupération
 
