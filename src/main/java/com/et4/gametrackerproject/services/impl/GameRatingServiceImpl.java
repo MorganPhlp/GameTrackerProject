@@ -6,7 +6,6 @@ import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidOperationException;
 import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.GameRating;
-import com.et4.gametrackerproject.model.GameRecommendation;
 import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.repository.GameRatingRepository;
 import com.et4.gametrackerproject.repository.GameRepository;
@@ -33,7 +32,7 @@ public class GameRatingServiceImpl implements GameRatingService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
 
-    public GameRatingServiceImpl(GameRatingRepository gameRatingRepository, UserService userService, GameService gameService, UserRepository userRepository, GameRepository gameRepository) {
+    public GameRatingServiceImpl(GameRatingRepository gameRatingRepository,UserRepository userRepository, GameRepository gameRepository) {
         this.gameRatingRepository = gameRatingRepository;
         this.userRepository = userRepository;
         this.gameRepository = gameRepository;

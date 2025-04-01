@@ -159,7 +159,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u JOIN GameRating gr ON u.id = gr.user.id WHERE gr.id = :ratingId")
     Optional<User> findByGameRatingId(Integer ratingId);
 
-    //trouver des utilisateurs par id de game recommendation
-    @Query("SELECT u FROM User u JOIN GameRecommendation gr ON u.id = gr.user.id WHERE gr.id = :recommendationId")
+    //trouver des utilisateurs par GameRecommendationId
+    @Query("SELECT u FROM User u JOIN GameRecommendation gr ON u.id = gr.sender.id OR u.id = gr.receiver.id WHERE gr.id = :recommendationId")
     Optional<User> findByGameRecommendationId(Integer recommendationId);
 }

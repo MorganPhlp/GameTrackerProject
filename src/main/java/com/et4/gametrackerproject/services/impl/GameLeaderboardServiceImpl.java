@@ -7,7 +7,6 @@ import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidOperationException;
 import com.et4.gametrackerproject.model.Game;
 import com.et4.gametrackerproject.model.GameLeaderboard;
-import com.et4.gametrackerproject.model.GameRecommendation;
 import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.repository.GameLeaderboardRepository;
 import com.et4.gametrackerproject.repository.GameRepository;
