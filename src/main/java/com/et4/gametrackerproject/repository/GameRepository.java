@@ -83,4 +83,9 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
             "ORDER BY g.playCount DESC")
     List<Game> findMostPopularGamesByCategory(@Param("category") GameCategory category, Pageable pageable);
 
+    // Recherche des jeux par ID favoris
+    @Query("SELECT g FROM Game g " +
+            "JOIN FavoriteGame f ON g.id = f.game.id " +
+            "WHERE f.id = :favoriteId")
+    Optional<Game> findByFavoriteId(Integer favoriteId);
 }

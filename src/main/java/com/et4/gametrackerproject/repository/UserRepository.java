@@ -131,4 +131,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u JOIN DailyGameSession gs ON u.id = gs.user.id WHERE gs.id = :sessionId")
     Optional<User> findByDailyGameSessionId(Integer id);
 
+    //trouver des utilisateurs par id de favoris
+    @Query("SELECT u FROM User u JOIN FavoriteGame f ON u.id = f.user.id WHERE f.id = :favoriteId")
+    Optional<User> findByFavoriteId(Integer favoriteId);
 }

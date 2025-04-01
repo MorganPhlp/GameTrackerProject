@@ -20,9 +20,6 @@ public interface FavoriteGameService {
     boolean isGameFavoritedByUser(Integer userId, Integer gameId);
     FavoriteGameDto getFavoriteById(Integer favoriteId);
 
-    // Gestion des listes
-    void clearUserFavorites(Integer userId);
-
     //Statistiques
     Long getTotalFavoritesCountForGame(Integer gameId);
     Map<String, Long> getMostFavoritedGames(int limit);
@@ -40,6 +37,4 @@ public interface FavoriteGameService {
     //Compter le nombre de jeux favoris pour un utilisateur
     Long countFavoritesByUser(Integer userId);
 
-    //Supprimer un jeu favori pour un utilisateur spécifique
-    void deleteFavoriteByUserAndGame(Integer userId, Integer gameId);
 }
