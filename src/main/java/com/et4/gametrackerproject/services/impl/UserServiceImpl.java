@@ -1,5 +1,6 @@
 package com.et4.gametrackerproject.services.impl;
 
+import com.et4.gametrackerproject.dto.ChangerMdpUserDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.FriendshipStatus;
 import com.et4.gametrackerproject.enums.OnlineStatus;
@@ -19,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -463,5 +466,42 @@ public class UserServiceImpl implements UserService {
 
         // TODO : Exporter les données de l'utilisateur dans un fichier JSON
         return "";
+    }
+
+    @Override
+    public UserDto changerMdp(ChangerMdpUserDto dto) {
+        validate(dto);//verification entre le mot de passe et la confirmation
+        Optional<User> userOptional = userRepository.findById(dto.getId()) ;
+        if (userOptional.isEmpty()){
+            log.warn("Aucun user trouvé avec l'ID {}", dto.getId());
+            throw new EntityNotFoundException("Aucun user trouvé avec l'ID "+dto.getId(), ErrorCodes.USER_NOT_FOUND);
+        }
+        User user = userOptional.get();//recupération de l'utilisateur
+        user.setPassword(dto.getPassword());//modification du mot de passe
+
+        return UserDto.fromEntity(userRepository.save(user));
+    }
+
+    private void validate(ChangerMdpUserDto dto) {
+        if(dto == null) {
+            log.warn("Impossible de modifier le mot de passe : ChangerMdpUserDto est null");
+            throw new InvalidEntityException("Aucune info n'a été fournie pour changer de mdp",
+                    ErrorCodes.USER_CHANGE_PASSWORD_OBJECT_NOT_VALID);
+        }
+        if(dto.getId() == null) {
+            log.warn("Impossible de modifier le mot de passe : L'ID de l'utilisateur est null");
+            throw new InvalidEntityException("L'ID de l'utilisateur est null",
+                    ErrorCodes.USER_CHANGE_PASSWORD_OBJECT_NOT_VALID);
+        }
+        if(!StringUtils.hasLength(dto.getPassword()) || !StringUtils.hasLength(dto.getConfirmPassword())) {
+            log.warn("Impossible de modifier le mot de passe : Le mot de passe ou la confirmation est null");
+            throw new InvalidEntityException("Le mot de passe ou la confirmation est null",
+                    ErrorCodes.USER_CHANGE_PASSWORD_OBJECT_NOT_VALID);
+        }
+        if (!dto.getPassword().equals((dto.getConfirmPassword()))) {
+            log.warn("Impossible de modifier le mot de passe : Le mot de passe et la confirmation ne correspondent pas");
+            throw new InvalidEntityException("Le mot de passe et la confirmation ne correspondent pas",
+                    ErrorCodes.USER_CHANGE_PASSWORD_OBJECT_NOT_VALID);
+        }
     }
 }

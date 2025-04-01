@@ -25,6 +25,8 @@ public class GameDto {
 
     private String name;
 
+    private String imageUrl;
+
     private String url;
 
     private String description;
@@ -83,6 +85,7 @@ public class GameDto {
                 .creationDate(game.getCreationDate())
                 .lastModifiedDate(game.getLastModifiedDate())
                 .name(game.getName())
+                .imageUrl(game.getImageUrl())
                 .url(game.getUrl())
                 .description(game.getDescription())
                 .category(game.getCategory())
@@ -110,6 +113,7 @@ public class GameDto {
                 .lastModifiedDate(gameDto.getLastModifiedDate())
                 .name(gameDto.getName())
                 .url(gameDto.getUrl())
+                .imageUrl(gameDto.getImageUrl())
                 .description(gameDto.getDescription())
                 .category(gameDto.getCategory())
                 .averageRating(gameDto.getAverageRating())

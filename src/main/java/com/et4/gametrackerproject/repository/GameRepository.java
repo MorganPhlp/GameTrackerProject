@@ -6,11 +6,9 @@ import com.et4.gametrackerproject.model.Game;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +17,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 
     // Recherches de base
     Optional<Game> findByUrl(String url);
+
+    // Récupération de l'URL de l'image d'un jeu
+    @Query("SELECT g.imageUrl FROM Game g WHERE g.id = :id")
+    String findImageUrlById(@Param("id") Integer id);
 
     List<Game> findByName(String name);
 

@@ -109,6 +109,14 @@ public interface GameApi {
     })
     Optional<Game> getGameByUrl(@PathVariable String url);
 
+    @GetMapping(value = APP_ROOT + "/game/image/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Récupérer l'URL de l'image d'un jeu par son ID",description = "Récupérer l'URL de l'image d'un jeu par son ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "URL de l'image trouvée"),
+            @ApiResponse(responseCode = "404", description = "Aucune image trouvée")
+    })
+    String getImageUrlByID(@PathVariable Integer id);
+
     // Recherche des jeux par nom exact
     @GetMapping(value = APP_ROOT + "/game/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Récupérer des jeux par nom",description = "Récupérer des jeux par nom")

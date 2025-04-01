@@ -3,10 +3,8 @@ package com.et4.gametrackerproject.services;
 import com.et4.gametrackerproject.dto.FriendshipDto;
 import com.et4.gametrackerproject.dto.UserDto;
 import com.et4.gametrackerproject.enums.FriendshipStatus;
-import com.et4.gametrackerproject.model.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface FriendshipService {
 
@@ -48,6 +46,6 @@ public interface FriendshipService {
     void removeAllFriendshipsForUser(Integer userId);
 
     List<UserDto> suggestFriends(Integer userId);
-    List<FriendshipDto> getFriendshipsForUserByStatus(User user, FriendshipStatus status);
+    List<FriendshipDto> getFriendshipsForUserByStatus(Integer userId, FriendshipStatus status);
 
 }
