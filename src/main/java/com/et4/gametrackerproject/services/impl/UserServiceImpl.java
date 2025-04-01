@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -36,9 +37,10 @@ public class UserServiceImpl implements UserService {
     private final GameRecommendationRepository gameRecommendationRepository;
     private final MessageRepository messageRepository;
     private final ReportRepository reportRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository, FavoriteGameRepository favoriteGameRepository, UserSanctionRepository userSanctionRepository, GameRecommendationRepository gameRecommendationRepository, MessageRepository messageRepository, ReportRepository reportRepository) {
+    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository, FavoriteGameRepository favoriteGameRepository, UserSanctionRepository userSanctionRepository, GameRecommendationRepository gameRecommendationRepository, MessageRepository messageRepository, ReportRepository reportRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.avatarRepository = avatarRepository;
         this.friendshipRepository = friendshipRepository;
@@ -47,6 +49,7 @@ public class UserServiceImpl implements UserService {
         this.gameRecommendationRepository = gameRecommendationRepository;
         this.messageRepository = messageRepository;
         this.reportRepository = reportRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -58,6 +61,9 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("Create User {}", userDto);
+
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(encodedPassword);
 
         return UserDto.fromEntity(userRepository.save(UserDto.toEntity(userDto)));
     }
@@ -79,6 +85,17 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("Update User {}", userDto);
+
+        UserDto user = userRepository.findById(userId)
+                .map(UserDto::fromEntity)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND));
+
+        if(!user.getPassword().equals(userDto.getPassword())) {
+            String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+            userDto.setPassword(encodedPassword);
+        } else {
+            userDto.setPassword(user.getPassword());
+        }
 
         return UserDto.fromEntity(userRepository.save(UserDto.toEntity(userDto)));
     }
@@ -207,8 +224,9 @@ public class UserServiceImpl implements UserService {
 
         log.info("Reset password for User with id {}", userId);
 
-        // TODO : Hasher le mot de passe avant de le sauvegarder
-        userRepository.updateUserPassword(userId, newPassword);
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        userRepository.updateUserPassword(userId, encodedPassword);
     }
 
     @Override
@@ -524,7 +542,8 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("Aucun user trouvé avec l'ID "+dto.getId(), ErrorCodes.USER_NOT_FOUND);
         }
         User user = userOptional.get();//recupération de l'utilisateur
-        user.setPassword(dto.getPassword());//modification du mot de passe
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setPassword(encodedPassword);//modification du mot de passe
 
         return UserDto.fromEntity(userRepository.save(user));
     }
