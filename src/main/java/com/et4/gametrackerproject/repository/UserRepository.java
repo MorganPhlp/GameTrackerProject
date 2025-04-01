@@ -121,4 +121,11 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query("SELECT COUNT(f) FROM Friendship f WHERE (f.user1.id = :userId OR f.user2.id = :userId) AND f.status = 'ACCEPTED'")
     Long countFriendsByUserId(@Param("userId") Integer userId);
+
+
+    // Rechercher les utilisateurs par sanctionsReceived et par sanctionsDistributed
+    @Query("SELECT u FROM User u JOIN u.sanctionsDistributed s " +
+            "JOIN u.sanctionsReceived sr " +
+            "WHERE s.id = :sanctionId OR sr.id = :sanctionId")
+    Optional<User> findByUserSanctionId(@Param("sanctionId") Integer sanctionId);
 }

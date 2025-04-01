@@ -9,18 +9,15 @@ import com.et4.gametrackerproject.enums.ScreenTheme;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidEntityException;
-import com.et4.gametrackerproject.model.User;
-import com.et4.gametrackerproject.repository.AvatarRepository;
-import com.et4.gametrackerproject.repository.FriendshipRepository;
-import com.et4.gametrackerproject.repository.UserRepository;
+import com.et4.gametrackerproject.exception.InvalidOperationException;
+import com.et4.gametrackerproject.model.*;
+import com.et4.gametrackerproject.repository.*;
 import com.et4.gametrackerproject.services.UserService;
 import com.et4.gametrackerproject.validator.UserValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -34,14 +31,22 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
     private final FriendshipRepository friendshipRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final FavoriteGameRepository favoriteGameRepository;
+    private final UserSanctionRepository userSanctionRepository;
+    private final GameRecommendationRepository gameRecommendationRepository;
+    private final MessageRepository messageRepository;
+    private final ReportRepository reportRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository, FavoriteGameRepository favoriteGameRepository, UserSanctionRepository userSanctionRepository, GameRecommendationRepository gameRecommendationRepository, MessageRepository messageRepository, ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.avatarRepository = avatarRepository;
         this.friendshipRepository = friendshipRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.favoriteGameRepository = favoriteGameRepository;
+        this.userSanctionRepository = userSanctionRepository;
+        this.gameRecommendationRepository = gameRecommendationRepository;
+        this.messageRepository = messageRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -51,9 +56,6 @@ public class UserServiceImpl implements UserService {
             log.error("User is not valid: {}", errors);
             throw new InvalidEntityException("User is not valid", ErrorCodes.USER_NOT_VALID,errors);
         }
-
-        String hashedPassword = passwordEncoder.encode(userDto.getPassword());
-        userDto.setPassword(hashedPassword);
 
         log.info("Create User {}", userDto);
 
@@ -76,15 +78,6 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("User id " + userId + " is not the same as userDto id " + userDto.getId(), ErrorCodes.USER_NOT_FOUND);
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND));
-
-        if(!userDto.getPassword().equals(user.getPassword())) {
-            String hashedPassword = passwordEncoder.encode(userDto.getPassword());
-            userDto.setPassword(hashedPassword);
-        }
-
-        UserValidator.validate(userDto);
-
         log.info("Update User {}", userDto);
 
         return UserDto.fromEntity(userRepository.save(UserDto.toEntity(userDto)));
@@ -101,9 +94,47 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND);
         }
 
-        log.info("Delete User with id {}", userId);
+        Optional<FavoriteGame> favorites = favoriteGameRepository.findFavoriteGameByUserId(userId);
+        if (favorites.isPresent()) {
+            log.error("Cet utilisateur a des jeux favoris, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des jeux favoris, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
 
-        // TODO : Verifier que les relations de cet utilisateur sont bien supprimées avant de le supprimer
+        Optional<UserSanction> userSanctions = userSanctionRepository.findByUserId(userId);
+        if (userSanctions.isPresent()) {
+            log.error("Cet utilisateur a des sanctions, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des sanctions, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<GameRecommendation> gameRecommendations = gameRecommendationRepository.findByUserId(userId);
+        if (gameRecommendations.isPresent()) {
+            log.error("Cet utilisateur a des recommandations de jeux, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des recommandations de jeux, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<Message> messages = messageRepository.findByUserId(userId);
+        if (messages.isPresent()) {
+            log.error("Cet utilisateur a des messages, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des messages, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<Report> reports = reportRepository.findByUserId(userId);
+        if (reports.isPresent()) {
+            log.error("Cet utilisateur a des rapports, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des rapports, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<Friendship> friendships = friendshipRepository.findByUserId(userId);
+        if (friendships.isPresent()) {
+            log.error("Cet utilisateur a des amitiés, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des amitiés, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
         userRepository.deleteById(userId);
     }
 
@@ -141,16 +172,15 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByEmail(String email) {
         if(email == null) {
             log.error("Email is null");
-            throw new UsernameNotFoundException("Email is null");
+            throw new EntityNotFoundException("Email is null", ErrorCodes.USER_NOT_FOUND);
         }
 
         log.info("Get User with email {}", email);
 
         return userRepository.findByEmail(email)
                 .map(UserDto::fromEntity)
-                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User with email " + email + " not found", ErrorCodes.USER_NOT_FOUND));
     }
-
 
     @Override
     public Page<UserDto> getAllUsers(Pageable pageable) {
@@ -159,6 +189,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable).map(UserDto::fromEntity);
     }
 
+    // TODO : Ajouter la logique de hashage du mot de passe et du choix de mot de passe
     @Override
     public void resetPassword(Integer userId, String newPassword) {
         if(userId == null) {
@@ -176,9 +207,8 @@ public class UserServiceImpl implements UserService {
 
         log.info("Reset password for User with id {}", userId);
 
-        String hashedPassword = passwordEncoder.encode(newPassword);
-
-        userRepository.updateUserPassword(userId, hashedPassword);
+        // TODO : Hasher le mot de passe avant de le sauvegarder
+        userRepository.updateUserPassword(userId, newPassword);
     }
 
     @Override
@@ -494,11 +524,7 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("Aucun user trouvé avec l'ID "+dto.getId(), ErrorCodes.USER_NOT_FOUND);
         }
         User user = userOptional.get();//recupération de l'utilisateur
-
-        String hashedPassword = passwordEncoder.encode(dto.getPassword());//hashage du mot de passe
-        user.setPassword(hashedPassword);//modification du mot de passe
-
-        UserValidator.validate(UserDto.fromEntity(user));
+        user.setPassword(dto.getPassword());//modification du mot de passe
 
         return UserDto.fromEntity(userRepository.save(user));
     }

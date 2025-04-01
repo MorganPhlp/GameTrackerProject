@@ -5,7 +5,11 @@ import com.et4.gametrackerproject.enums.SanctionType;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidEntityException;
+import com.et4.gametrackerproject.exception.InvalidOperationException;
+import com.et4.gametrackerproject.model.FavoriteGame;
+import com.et4.gametrackerproject.model.User;
 import com.et4.gametrackerproject.model.UserSanction;
+import com.et4.gametrackerproject.repository.UserRepository;
 import com.et4.gametrackerproject.repository.UserSanctionRepository;
 import com.et4.gametrackerproject.repository.WinStreakRepository;
 import com.et4.gametrackerproject.services.UserSanctionService;
@@ -18,15 +22,18 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
 public class UserSanctionServiceImpl implements UserSanctionService {
 
     private final UserSanctionRepository userSanctionRepository;
+    private final UserRepository userRepository;
 
-    public UserSanctionServiceImpl(UserSanctionRepository userSanctionRepository) {
+    public UserSanctionServiceImpl(UserSanctionRepository userSanctionRepository, UserRepository userRepository) {
         this.userSanctionRepository = userSanctionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -69,7 +76,7 @@ public class UserSanctionServiceImpl implements UserSanctionService {
     }
 
     @Override
-    public void removeSanction(Integer sanctionId) {
+    public void deleteSanction(Integer sanctionId) {
         if(sanctionId == null){
             log.error("Erreur de validation : L'ID de la sanction doit être valide");
             throw new EntityNotFoundException("L'id est nul", ErrorCodes.USER_SANCTION_NOT_FOUND);
@@ -77,6 +84,13 @@ public class UserSanctionServiceImpl implements UserSanctionService {
         if(!userSanctionRepository.existsById(sanctionId)){
             log.error("Erreur de validation : Aucune sanction n'a cet ID");
             throw new EntityNotFoundException("Aucune sanction n'a cet ID", ErrorCodes.USER_SANCTION_NOT_FOUND);
+        }
+
+        Optional<User> users = userRepository.findByUserSanctionId(sanctionId);
+        if (users.isPresent()) {
+            log.error("On peut pas supprimer la sanction, l'utilisateur contient des sanctions");
+            throw new InvalidOperationException("On peut pas supprimer la sanction, l'utilisateur contient des sanctions",
+                    ErrorCodes.USER_SANCTION_ALREADY_USED);
         }
 
         log.info("Remove sanction with ID {}", sanctionId);

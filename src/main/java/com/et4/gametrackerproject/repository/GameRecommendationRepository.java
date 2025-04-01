@@ -56,4 +56,7 @@ public interface GameRecommendationRepository extends JpaRepository<GameRecommen
     @Query("SELECT gr FROM GameRecommendation gr WHERE LOWER(gr.message) LIKE LOWER(CONCAT('%', :searchQuery, '%'))")
     Page<GameRecommendation> findByMessageContainingIgnoreCase(@Param("searchQuery") String searchQuery, Pageable pageable);
 
+    // Rechercher une recommandation par son userId
+    @Query("SELECT gr FROM GameRecommendation gr WHERE gr.sender.id = :userId OR gr.receiver.id = :userId")
+    Optional<GameRecommendation> findByUserId(Integer userId);
 }
