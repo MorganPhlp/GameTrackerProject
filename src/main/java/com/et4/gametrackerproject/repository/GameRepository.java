@@ -107,4 +107,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
             "JOIN GameProgress gp ON g.id = gp.game.id " +
             "WHERE gp.id = :progressId")
     Optional<Game> findByGameProgressId(Integer progressId);
+
+    // Recherche des jeux par ID de GameRating
+    @Query("SELECT g FROM Game g " +
+            "JOIN GameRating gr ON g.id = gr.game.id " +
+            "WHERE gr.id = :ratingId")
+    Optional<Game> findByGameRatingId(Integer ratingId);
 }

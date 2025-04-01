@@ -154,4 +154,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     //trouver des utilisateurs par id de game progress
     @Query("SELECT u FROM User u JOIN GameProgress gp ON u.id = gp.user.id WHERE gp.id = :progressId")
     Optional<User> findByGameProgressId(Integer progressId);
+
+    //trouver des utilisateurs par id de game rating
+    @Query("SELECT u FROM User u JOIN GameRating gr ON u.id = gr.user.id WHERE gr.id = :ratingId")
+    Optional<User> findByGameRatingId(Integer ratingId);
 }

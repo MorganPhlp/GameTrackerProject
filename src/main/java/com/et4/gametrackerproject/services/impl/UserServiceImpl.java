@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         List<String> errors = UserValidator.validate(userDto);
         if (!errors.isEmpty()) {
-            log.error("User is not valid: {}", errors);
+            log.error("User invalide: {}", errors);
             throw new InvalidEntityException("User is not valid", ErrorCodes.USER_NOT_VALID,errors);
         }
 
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidEntityException("User is not valid", ErrorCodes.USER_NOT_VALID, errors);
         }
         if(!userRepository.existsById(userId)) {
-            log.error("User with id {} not found", userId);
+            log.error("User non trouvé avec l'id {}", userId);
             throw new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND);
         }
         if(!userId.equals(userDto.getId())) {
