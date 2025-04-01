@@ -42,10 +42,6 @@ public interface UserApi {
     })
     void deleteUser(@PathVariable Integer userId);
 
-    @GetMapping("/test-password")
-    public ResponseEntity<?> testPasswordEncoding(@RequestParam String rawPassword, @RequestParam String encodedPassword);
-
-
     // Récupération
 
     @GetMapping(value = APP_ROOT + "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)

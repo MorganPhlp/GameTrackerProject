@@ -90,10 +90,13 @@ public class UserServiceImpl implements UserService {
                 .map(UserDto::fromEntity)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND));
 
-        if(!user.getPassword().equals(userDto.getPassword())) {
+        // Ne faites rien si le champ du mot de passe est vide lors de la mise à jour
+        if (StringUtils.hasText(userDto.getPassword())) {
+            // Un nouveau mot de passe a été fourni, hachez-le
             String encodedPassword = passwordEncoder.encode(userDto.getPassword());
             userDto.setPassword(encodedPassword);
         } else {
+            // Aucun nouveau mot de passe fourni, conservez l'ancien
             userDto.setPassword(user.getPassword());
         }
 
@@ -206,7 +209,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable).map(UserDto::fromEntity);
     }
 
-    // TODO : Ajouter la logique de hashage du mot de passe et du choix de mot de passe
     @Override
     public void resetPassword(Integer userId, String newPassword) {
         if(userId == null) {
@@ -217,16 +219,16 @@ public class UserServiceImpl implements UserService {
             log.error("New password is null");
             throw new InvalidEntityException("New password is null", ErrorCodes.USER_NOT_VALID);
         }
-        if(!userRepository.existsById(userId)) {
-            log.error("User with id {} not found", userId);
-            throw new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND);
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND));
 
         log.info("Reset password for User with id {}", userId);
 
         String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
 
-        userRepository.updateUserPassword(userId, encodedPassword);
+        userRepository.save(user);
+        log.info("Password reset successfully for User with id {}", userId);
     }
 
     @Override

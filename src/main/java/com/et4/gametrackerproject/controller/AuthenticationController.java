@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,8 +63,7 @@ public class AuthenticationController {
         try {
             log.info("Authentication attempt for user: {}", request.getLogin());
 
-            // Tentative d'authentification
-            authenticationManager.authenticate(
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getLogin(),
                             request.getPassword()
@@ -70,6 +71,8 @@ public class AuthenticationController {
             );
 
             log.info("User authenticated successfully: {}", request.getLogin());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Si aucune exception n'est lancée, récupère les détails complets de l'utilisateur
             final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getLogin());
