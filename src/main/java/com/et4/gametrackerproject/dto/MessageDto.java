@@ -18,10 +18,8 @@ public class MessageDto {
 
     private Instant lastModifiedDate;
 
-    @JsonIgnore
     private UserDto sender;
 
-    @JsonIgnore
     private UserDto receiver;
 
     private String content;
