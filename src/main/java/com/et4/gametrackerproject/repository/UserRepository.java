@@ -166,4 +166,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     //trouver le receiver ou le sender grace au messageId
     @Query("SELECT u FROM User u JOIN Message m ON (u.id = m.sender.id OR u.id = m.receiver.id) WHERE m.id = :messageId")
     Optional<User> findByMessageId(@Param("messageId") Integer messageId);
+
+    //trouver l'user par la notification Id
+    @Query("SELECT u FROM User u JOIN Notification n ON u.id = n.user.id WHERE n.id = :notificationId")
+    Optional<User> findByNotificationId(@Param("notificationId") Integer notificationId);
 }
