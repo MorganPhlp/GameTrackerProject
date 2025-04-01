@@ -9,10 +9,9 @@ import com.et4.gametrackerproject.enums.ScreenTheme;
 import com.et4.gametrackerproject.exception.EntityNotFoundException;
 import com.et4.gametrackerproject.exception.ErrorCodes;
 import com.et4.gametrackerproject.exception.InvalidEntityException;
-import com.et4.gametrackerproject.model.User;
-import com.et4.gametrackerproject.repository.AvatarRepository;
-import com.et4.gametrackerproject.repository.FriendshipRepository;
-import com.et4.gametrackerproject.repository.UserRepository;
+import com.et4.gametrackerproject.exception.InvalidOperationException;
+import com.et4.gametrackerproject.model.*;
+import com.et4.gametrackerproject.repository.*;
 import com.et4.gametrackerproject.services.UserService;
 import com.et4.gametrackerproject.validator.UserValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +31,22 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
     private final FriendshipRepository friendshipRepository;
+    private final FavoriteGameRepository favoriteGameRepository;
+    private final UserSanctionRepository userSanctionRepository;
+    private final GameRecommendationRepository gameRecommendationRepository;
+    private final MessageRepository messageRepository;
+    private final ReportRepository reportRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository) {
+    public UserServiceImpl(UserRepository userRepository, AvatarRepository avatarRepository, FriendshipRepository friendshipRepository, FavoriteGameRepository favoriteGameRepository, UserSanctionRepository userSanctionRepository, GameRecommendationRepository gameRecommendationRepository, MessageRepository messageRepository, ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.avatarRepository = avatarRepository;
         this.friendshipRepository = friendshipRepository;
+        this.favoriteGameRepository = favoriteGameRepository;
+        this.userSanctionRepository = userSanctionRepository;
+        this.gameRecommendationRepository = gameRecommendationRepository;
+        this.messageRepository = messageRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -85,9 +94,47 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("User with id " + userId + " not found", ErrorCodes.USER_NOT_FOUND);
         }
 
-        log.info("Delete User with id {}", userId);
+        Optional<FavoriteGame> favorites = favoriteGameRepository.findFavoriteGameByUserId(userId);
+        if (favorites.isPresent()) {
+            log.error("Cet utilisateur a des jeux favoris, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des jeux favoris, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
 
-        // TODO : Verifier que les relations de cet utilisateur sont bien supprimées avant de le supprimer
+        Optional<UserSanction> userSanctions = userSanctionRepository.findByUserId(userId);
+        if (userSanctions.isPresent()) {
+            log.error("Cet utilisateur a des sanctions, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des sanctions, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<GameRecommendation> gameRecommendations = gameRecommendationRepository.findByUserId(userId);
+        if (gameRecommendations.isPresent()) {
+            log.error("Cet utilisateur a des recommandations de jeux, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des recommandations de jeux, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<Message> messages = messageRepository.findByUserId(userId);
+        if (messages.isPresent()) {
+            log.error("Cet utilisateur a des messages, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des messages, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<Report> reports = reportRepository.findByUserId(userId);
+        if (reports.isPresent()) {
+            log.error("Cet utilisateur a des rapports, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des rapports, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
+
+        Optional<Friendship> friendships = friendshipRepository.findByUserId(userId);
+        if (friendships.isPresent()) {
+            log.error("Cet utilisateur a des amitiés, impossible de le supprimer");
+            throw new InvalidOperationException("Cet utilisateur a des amitiés, impossible de le supprimer",
+                    ErrorCodes.USER_ALREADY_USED);
+        }
         userRepository.deleteById(userId);
     }
 

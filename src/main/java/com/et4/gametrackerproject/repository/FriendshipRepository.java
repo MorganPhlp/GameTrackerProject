@@ -82,4 +82,8 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
 
     @Query("SELECT f FROM Friendship f WHERE f.user1.id = :userId OR f.user2.id = :userId")
     List<Friendship> findAllByUserId(@Param("userId") Integer id);
+
+    // Trouver une amitié par ID d'utilisateur
+    @Query("SELECT f FROM Friendship f WHERE f.user1.id = :userId OR f.user2.id = :userId")
+    Optional<Friendship> findByUserId(Integer userId);
 }
