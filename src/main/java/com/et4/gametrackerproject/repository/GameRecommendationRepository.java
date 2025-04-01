@@ -59,4 +59,8 @@ public interface GameRecommendationRepository extends JpaRepository<GameRecommen
     // Rechercher une recommandation par son userId
     @Query("SELECT gr FROM GameRecommendation gr WHERE gr.sender.id = :userId OR gr.receiver.id = :userId")
     Optional<GameRecommendation> findByUserId(Integer userId);
+
+    // Rechercher une recommandation par son gameId
+    @Query("SELECT gr FROM GameRecommendation gr WHERE gr.game.id = :gameId")
+    Optional<GameRecommendation> findByGameId(Integer id);
 }

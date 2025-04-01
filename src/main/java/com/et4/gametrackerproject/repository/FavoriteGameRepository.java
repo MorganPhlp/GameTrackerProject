@@ -54,4 +54,8 @@ public interface FavoriteGameRepository extends JpaRepository<FavoriteGame,Integ
     // Récupérer un jeu favori par l'id de l'utilisateur
     @Query("SELECT f FROM FavoriteGame f WHERE f.user.id = :userId")
     Optional<FavoriteGame> findFavoriteGameByUserId(Integer userId);
-    }
+
+    // Récupérer un jeu favori par l'id du jeu
+    @Query("SELECT f FROM FavoriteGame f WHERE f.game.id = :gameId")
+    Optional<FavoriteGame> findByGameId(Integer id);
+}

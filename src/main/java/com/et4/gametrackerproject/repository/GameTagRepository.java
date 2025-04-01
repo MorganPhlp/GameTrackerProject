@@ -39,4 +39,7 @@ public interface GameTagRepository extends JpaRepository<GameTag,Integer> {
     @Query("SELECT gt.tag, COUNT(gt) as tagCount FROM GameTag gt GROUP BY gt.tag ORDER BY tagCount DESC")
     List<Object[]> findMostPopularTags(Pageable pageable);
 
+    // Trouver les tags par id de jeu
+    @Query("SELECT gt FROM GameTag gt WHERE gt.game.id = :id")
+    Optional<GameTag> findByGameId(Integer id);
 }

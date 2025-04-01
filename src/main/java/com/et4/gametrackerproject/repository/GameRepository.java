@@ -3,6 +3,7 @@ package com.et4.gametrackerproject.repository;
 import com.et4.gametrackerproject.enums.DifficultyLevel;
 import com.et4.gametrackerproject.enums.GameCategory;
 import com.et4.gametrackerproject.model.Game;
+import com.et4.gametrackerproject.model.GameComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -119,4 +120,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
             "JOIN GameRecommendation gr ON g.id = gr.game.id " +
             "WHERE gr.id = :recommendationId")
     Optional<Game> findByGameRecommendationId(Integer recommendationId);
+
+    // Recherche des jeux par ID de Game
+    @Query("SELECT g FROM Game g " +
+            "JOIN GameTag gt ON g.id = gt.game.id " +
+            "WHERE gt.id = :tagId")
+    Optional<GameComment> findByGameId(Integer id);
 }

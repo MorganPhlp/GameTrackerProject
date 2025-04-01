@@ -80,4 +80,8 @@ public interface GameCommentRepository extends JpaRepository<GameComment,Integer
     // Trouver les commentaires selon GameCommentLike Id
     @Query("SELECT gc FROM GameComment gc JOIN gc.likes gcl WHERE gcl.id = :likeId")
     Optional<GameComment> findByGameCommentLikeId(Integer likeId);
+
+    // Trouver les commentaires selon Game Id
+    @Query("SELECT gc FROM GameComment gc WHERE gc.game.id = :gameId")
+    Optional<GameComment> findByGameId(Integer id);
 }
