@@ -1,6 +1,7 @@
 package com.et4.gametrackerproject.services.auth;
 
 import com.et4.gametrackerproject.dto.UserDto;
+import com.et4.gametrackerproject.model.auth.CustomUserDetails;
 import com.et4.gametrackerproject.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,16 @@ public class ApplicationUserDetailsService implements UserDetailsService {
             UserDto user = userService.getUserByEmail(email);
             log.info("User found: {}", user.getEmail());
 
-            return new User(user.getEmail(), user.getPassword(), new ArrayList<>());
+            return new CustomUserDetails(
+                    user.getEmail(),
+                    user.getPassword(),
+                    new ArrayList<>(),
+                    user.getId()  // Ajouter l'ID utilisateur ici
+            );
         } catch (Exception e) {
             log.error("Failed to load user: {}", e.getMessage());
             throw new UsernameNotFoundException("User not found with email: " + email, e);
         }
     }
+
 }
