@@ -43,4 +43,6 @@ public interface GameTagRepository extends JpaRepository<GameTag,Integer> {
     @Query("SELECT gt FROM GameTag gt WHERE gt.game.id = :id")
     Optional<GameTag> findByGameId(Integer id);
 
+    //trouver les gametag par id de tag
+    Optional<GameTag> findByTagId(Integer tagId);
 }
