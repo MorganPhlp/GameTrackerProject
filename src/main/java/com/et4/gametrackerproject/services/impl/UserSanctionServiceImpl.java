@@ -92,9 +92,6 @@ public class UserSanctionServiceImpl implements UserSanctionService {
             throw new InvalidOperationException("On peut pas supprimer la sanction, l'utilisateur contient des sanctions",
                     ErrorCodes.USER_SANCTION_ALREADY_USED);
         }
-
-        log.info("Remove sanction with ID {}", sanctionId);
-        // TODO : Check si d'autres choses à supprimer avant
         userSanctionRepository.deleteById(sanctionId);
     }
 

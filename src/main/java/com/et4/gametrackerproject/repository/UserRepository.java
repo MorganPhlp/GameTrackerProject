@@ -174,4 +174,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     //trouver l'user selon le report Id soit à l'aide du reported_id, soit resolver_id, soit reporter_id
     @Query("SELECT u FROM User u JOIN Report r ON (u.id = r.reported.id OR u.id = r.resolver.id OR u.id = r.reporter.id) WHERE r.id = :reportId")
     Optional<User> findByReportId(@Param("reportId") Integer reportId);
+
+    //Touver des user par UserAchievementId
+    @Query("SELECT u FROM User u JOIN UserAchievement ua ON u.id = ua.user.id WHERE ua.id = :userAchievementId")
+    Optional<User> findByUserAchievementId(@Param("userAchievementId") Integer userAchievementId);
 }
