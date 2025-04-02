@@ -170,4 +170,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     //trouver l'user par la notification Id
     @Query("SELECT u FROM User u JOIN Notification n ON u.id = n.user.id WHERE n.id = :notificationId")
     Optional<User> findByNotificationId(@Param("notificationId") Integer notificationId);
+
+    //trouver l'user selon le report Id soit à l'aide du reported_id, soit resolver_id, soit reporter_id
+    @Query("SELECT u FROM User u JOIN Report r ON (u.id = r.reported.id OR u.id = r.resolver.id OR u.id = r.reporter.id) WHERE r.id = :reportId")
+    Optional<User> findByReportId(@Param("reportId") Integer reportId);
 }
