@@ -58,6 +58,8 @@ public class SecurityConfiguration {
                                 "/webjars/**",
                                 "/gametracker/v1/users/create",
                                 "/gametracker/v1/game/create",
+                                "/gametracker/v1/game/{gameId}",
+                                "/gametracker/v1/game/name/{gameName}",
                                 "/gametracker/v1/game/{id}/update",
                                 "/gametracker/v1/game/delete/**",
                                 "/v3/api-docs/**").permitAll()

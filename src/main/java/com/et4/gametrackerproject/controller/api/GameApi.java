@@ -118,7 +118,7 @@ public interface GameApi {
     String getImageUrlByID(@PathVariable Integer id);
 
     // Recherche des jeux par nom exact
-    @GetMapping(value = APP_ROOT + "/game/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/game/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Récupérer des jeux par nom",description = "Récupérer des jeux par nom")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Liste des jeux trouvée"),
