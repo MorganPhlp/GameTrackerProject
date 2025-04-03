@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                                 "/gametracker/v1/game/{gameId}",
                                 "/gametracker/v1/game/name/{gameName}",
                                 "/gametracker/v1/game/{id}/update",
+                                "/gametracker/v1/game/newest",
                                 "/gametracker/v1/game/delete/**",
                                 "/v3/api-docs/**").permitAll()
 
