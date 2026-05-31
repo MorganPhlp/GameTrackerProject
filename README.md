@@ -57,7 +57,7 @@ Le backend fournit les services nécessaires au fonctionnement de l'application 
 Une documentation Swagger est disponible afin de faciliter l'exploration et le test des différents endpoints REST exposés par l'application.
 
 <p align="center">
-  <img width="75%" alt="Capture d&#39;écran 2026-05-08 001001" src="https://github.com/user-attachments/assets/e62a24cb-662f-494f-b5b5-d082151dedbe" />
+  <img width="60%" height="389" alt="image" src="https://github.com/user-attachments/assets/986b7514-9740-460b-ace2-57bdbc5c7ead" />
 </p>
 
 ---
@@ -68,8 +68,6 @@ Une documentation Swagger est disponible afin de faciliter l'exploration et le t
 
 * Java
 * Spring Boot
-* Spring Data JPA
-* Spring Security
 * Swagger / OpenAPI
 
 ### Base de données
@@ -84,15 +82,6 @@ Une documentation Swagger est disponible afin de faciliter l'exploration et le t
 
 ---
 
-## Architecture
-
-<p align="center">
-  <img width="75%" src="AJOUTER_SCHEMA_ARCHITECTURE_ICI" />
-</p>
-
-Le backend communique avec le frontend Angular via une API REST et persiste les données dans une base MySQL exécutée dans un conteneur Docker.
-
----
 
 # Configuration de l'environnement GameTracker
 
