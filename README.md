@@ -9,7 +9,7 @@ Le backend expose les différentes API nécessaires au fonctionnement de la plat
 L'application s'appuie sur une base de données **MySQL** exécutée dans un conteneur **Docker**, facilitant le déploiement et la reproductibilité de l'environnement de développement.
 
 <p align="center">
-  <img width="75%" src="AJOUTER_CAPTURE_BACKEND_ICI" />
+  <img width="75%" alt="Capture d&#39;écran 2026-05-08 001001" src="https://github.com/user-attachments/assets/af2d4bb9-663d-47fb-a6bb-d61e3c4242e0" />
 </p>
 
 ### Dépôt Frontend
@@ -57,7 +57,7 @@ Le backend fournit les services nécessaires au fonctionnement de l'application 
 Une documentation Swagger est disponible afin de faciliter l'exploration et le test des différents endpoints REST exposés par l'application.
 
 <p align="center">
-  <img width="60%" height="389" alt="image" src="https://github.com/user-attachments/assets/986b7514-9740-460b-ace2-57bdbc5c7ead" />
+  <img width="60%" alt="image" src="https://github.com/user-attachments/assets/986b7514-9740-460b-ace2-57bdbc5c7ead" />
 </p>
 
 ---
